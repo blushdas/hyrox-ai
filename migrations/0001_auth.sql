@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "sessions" (
     "id" text NOT NULL,
     "sessionToken" text NOT NULL,
     "userId" text NOT NULL DEFAULT NULL,
-    "expires" datetime NOT NULL DEFAULT NULL, 
+    "expires" datetime NOT NULL DEFAULT NULL,
     PRIMARY KEY (sessionToken)
 );
 
@@ -29,14 +29,14 @@ CREATE TABLE IF NOT EXISTS "users" (
     "name" text DEFAULT NULL,
     "email" text DEFAULT NULL,
     "emailVerified" datetime DEFAULT NULL,
-    "image" text DEFAULT NULL, 
+    "image" text DEFAULT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS "verification_tokens" (
     "identifier" text NOT NULL,
     "token" text NOT NULL DEFAULT NULL,
-    "expires" datetime NOT NULL DEFAULT NULL, 
+    "expires" datetime NOT NULL DEFAULT NULL,
     PRIMARY KEY (token)
 );
 
