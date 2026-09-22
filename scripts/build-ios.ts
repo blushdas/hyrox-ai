@@ -13,6 +13,9 @@ try {
     recursive: true,
     filter: (source) => source !== join(root, "src/app/api"),
   });
+  // App opens straight to the dashboard, not the marketing landing page.
+  // Web build (npm run build) is untouched — this only swaps the copy.
+  cpSync(join(root, "scripts/ios-app-entry.tsx"), join(staging, "src/app/page.tsx"));
   for (const file of ["public", "package.json", "tsconfig.json", "next.config.ts", "postcss.config.mjs"]) {
     cpSync(join(root, file), join(staging, file), { recursive: true });
   }
