@@ -1,0 +1,50 @@
+COMMAND: /usr/bin/curl -s http://localhost:3000/api/auth/providers
+EXIT: 0
+{"google":{"id":"google","name":"Google","type":"oidc","signinUrl":"http://localhost:3000/api/auth/signin/google","callbackUrl":"http://localhost:3000/api/auth/callback/google"},"apple":{"id":"apple","name":"Apple","type":"oidc","signinUrl":"http://localhost:3000/api/auth/signin/apple","callbackUrl":"http://localhost:3000/api/auth/callback/apple"}}
+
+COMMAND: /usr/bin/curl -s http://localhost:3000/api/auth/session
+EXIT: 0
+null
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/dashboard
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fdashboard
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/onboarding
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fonboarding
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/plan
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fplan
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/profile
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fprofile
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/session/abc
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fsession%2Fabc
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/dashboard/?x=1
+EXIT: 0
+HTTP/1.1 308 Permanent Redirect
+location: /dashboard?x=1
+
+COMMAND: /usr/bin/curl -sI http://localhost:3000/
+EXIT: 0
+HTTP/1.1 200 OK
+
+COMMAND: /usr/bin/curl -s -X POST http://localhost:3000/api/waitlist -H content-type: application/json -d {"email":"codex-check@example.com"}
+EXIT: 0
+{"message":"Success","count":2}
+
+COMMAND: /usr/bin/curl -sI -H cookie: authjs.session-token=notavalidtoken http://localhost:3000/dashboard
+EXIT: 0
+HTTP/1.1 307 Temporary Redirect
+location: /sign-in?callbackUrl=%2Fdashboard

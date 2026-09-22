@@ -1,0 +1,9 @@
+Command: npx eslint src/auth.ts src/proxy.ts src/lib/auth src/app/sign-in src/app/api/auth src/app/(app)/profile/page.tsx src/app/layout.tsx src/components/shared/native-auth-gate.tsx src/components/landing/header.tsx scripts/build-ios.ts vitest.config.ts next.config.ts e2e/navigation.spec.ts
+
+/Users/troy/.claude/worktrees/finisher-cloudflare-auth/src/app/(app)/profile/page.tsx
+  19:20  warning  'updateProfile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (0 errors, 1 warning)
+
+
+Exit: 0

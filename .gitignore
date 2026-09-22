@@ -53,3 +53,9 @@ docs/qa/*/after/*.png
 
 # session-local, not app code
 .claude/
+
+.dev.vars
+.wrangler/
+*.p8
+!.env.example
+.open-next/

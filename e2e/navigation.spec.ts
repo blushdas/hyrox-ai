@@ -3,10 +3,10 @@ import { test, expect } from "@playwright/test"
 // ─── Navigation flows ────────────────────────────────────────────────────────
 // Tests that routing works: header links land on the right pages.
 
-test("Sign In link navigates to /onboarding", async ({ page }) => {
+test("Sign In link navigates to /sign-in", async ({ page }) => {
   await page.goto("/")
   await page.getByRole("link", { name: "Sign In" }).click()
-  await expect(page).toHaveURL(/\/onboarding/)
+  await expect(page).toHaveURL(/\/sign-in/)
 })
 
 test("App nav link navigates to /onboarding", async ({ page }) => {

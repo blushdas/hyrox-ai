@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
+import { Capacitor } from "@capacitor/core"
+import { getAuthOrigin } from "@/lib/auth/auth-origin"
 import { toast } from "sonner"
 import { Edit2, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -135,6 +138,15 @@ export default function ProfilePage() {
             <RotateCcw className="w-4 h-4 mr-2" />
             Redo Onboarding
           </Button>
+          <Button variant="outline" className="w-full mt-3" onClick={async () => {
+            if (Capacitor.isNativePlatform()) {
+              const origin = getAuthOrigin()
+              if (!origin) { toast.error("Hosted authentication is not configured"); return }
+              window.location.href = `${origin}/api/auth/signout?callbackUrl=${encodeURIComponent(`${origin}/sign-in`)}`
+              return
+            }
+            await signOut({ callbackUrl: "/sign-in" })
+          }}>Sign out</Button>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ try {
   // Build a disposable copy: never rename the live API or overwrite .next.
   cpSync(join(root, "src"), join(staging, "src"), {
     recursive: true,
-    filter: (source) => source !== join(root, "src/app/api"),
+    filter: (source) => source !== join(root, "src/app/api") && source !== join(root, "src/proxy.ts"),
   });
   // App opens straight to the dashboard, not the marketing landing page.
   // Web build (npm run build) is untouched — this only swaps the copy.

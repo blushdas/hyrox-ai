@@ -1,0 +1,12 @@
+AUTH_SECRET: present
+AUTH_GOOGLE_ID: absent
+AUTH_GOOGLE_SECRET: absent
+AUTH_APPLE_ID: absent
+AUTH_APPLE_SECRET: absent
+APPLE_TEAM_ID: absent
+APPLE_KEY_ID: absent
+APPLE_PRIVATE_KEY: absent
+QA_EMAIL: absent
+QA_PASSWORD: absent
+TOTP_SECRET: absent
+NEXT_PUBLIC_AUTH_ORIGIN: absent
