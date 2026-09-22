@@ -41,3 +41,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Capacitor iOS generated dependencies and build products
+/ios/Pods/
+/ios/DerivedData/
+/ios/build/
+
+# QA screenshot binaries — text manifest tracked, images go via PR CDN
+docs/qa/*/before/*.png
+docs/qa/*/after/*.png
+
+# session-local, not app code
+.claude/

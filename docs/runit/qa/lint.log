@@ -1,0 +1,2 @@
+> finisher@0.1.0 lint
+> eslint scripts/build-ios.ts capacitor.config.ts next.config.ts src/app/(app)/session/[id]/page.tsx src/app/(app)/session/[id]/session-detail.tsx

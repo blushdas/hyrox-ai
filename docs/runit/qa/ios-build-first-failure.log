@@ -1,0 +1,83 @@
+> node --experimental-strip-types scripts/build-ios.ts
+▲ Next.js 16.1.6 (webpack)
+  Creating an optimized production build ...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 1/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 2/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 3/3...
+Retrying 1/3...
+Retrying 2/3...
+Retrying 3/3...
+AggregateError:
+    at ignore-listed frames {
+  code: 'ETIMEDOUT'
+}
+Failed to compile.
+src/app/layout.tsx
+`next/font` error:
+Failed to fetch `Inter` from Google Fonts.
+src/app/layout.tsx
+An error occurred in `next/font`.
+NextFontError: Failed to fetch `Inter` from Google Fonts.
+    at nextFontError (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/@next/font/dist/next-font-error.js:8:17)
+    at nextFontGoogleFontLoader (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:97:49)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Span.traceAsyncFn (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/trace/trace.js:157:20)
+    at async /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js:90:87
+    at async Span.traceAsyncFn (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/trace/trace.js:157:20)
+    at tryRunOrWebpackError (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:316134)
+    at __webpack_require_module__ (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:131536)
+    at __nested_webpack_require_161494__ (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:130971)
+    at /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:131828
+    at symbolIterator (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+    at Hook.eval [as callAsync] (eval at create (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
+    at /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:130691
+    at symbolIterator (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
+    at timesSync (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:5027)
+-- inner error --
+NextFontError: Failed to fetch `Inter` from Google Fonts.
+    at nextFontError (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/@next/font/dist/next-font-error.js:8:17)
+    at nextFontGoogleFontLoader (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:97:49)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Span.traceAsyncFn (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/trace/trace.js:157:20)
+    at async /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js:90:87
+    at async Span.traceAsyncFn (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/trace/trace.js:157:20)
+    at Object.<anonymous> (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[15].oneOf[2].use[1]!/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[15].oneOf[2].use[2]!/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"],"variable":"--font-inter"}],"variableName":"inter"}:1:7)
+    at /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:962757
+    at Hook.eval [as call] (eval at create (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:14:9002), <anonymous>:7:1)
+    at /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:131569
+    at tryRunOrWebpackError (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:316088)
+    at __webpack_require_module__ (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:131536)
+    at __nested_webpack_require_161494__ (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:130971)
+    at /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/webpack/bundle5.js:29:131828
+    at symbolIterator (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+Generated code for /Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[15].oneOf[2].use[1]!/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[15].oneOf[2].use[2]!/Users/troy/.claude/worktrees/finisher-capacitor-ios/node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"],"variable":"--font-inter"}],"variableName":"inter"}
+> Build failed because of webpack errors
+file:///Users/troy/.claude/worktrees/finisher-capacitor-ios/scripts/build-ios.ts:28
+  if (result.status !== 0) throw new Error(`iOS export failed (exit ${result.status}, signal ${result.signal})`);
+                                 ^
+Error: iOS export failed (exit 1, signal null)
+    at file:///Users/troy/.claude/worktrees/finisher-capacitor-ios/scripts/build-ios.ts:28:34
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Node.js v22.23.1

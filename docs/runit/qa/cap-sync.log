@@ -1,0 +1,8 @@
+✔ Copying web assets from out to ios/App/App/public in 98.99ms
+✔ Creating capacitor.config.json in ios/App/App in 348.50μs
+✔ copy ios in 107.42ms
+✔ Updating iOS plugins in 1.06ms
+[info] All Capacitor plugins have a Package.swift file and will be included in Package.swift
+[info] Writing Package.swift
+✔ update ios in 16.77ms
+[info] Sync finished in 0.136s
