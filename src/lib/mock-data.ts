@@ -1,5 +1,5 @@
 import type { Session, WeekPlan, Phase, SessionType, ExerciseSet } from "./types"
-import { BEGINNER_PLAN_SESSIONS } from "./hyrox-plan-data"
+import { BEGINNER_PLAN_SESSIONS, OPEN_PLAN_SESSIONS, PRO_PLAN_SESSIONS } from "./hyrox-plan-data"
 
 // Session templates by type
 function makeSession(
@@ -174,6 +174,36 @@ export function generateBeginnerPlan(_raceDate: string): WeekPlan[] {
     const { phase, phaseWeek, totalPhaseWeeks } = getPhaseInfo(w)
     const rawSessions = BEGINNER_PLAN_SESSIONS.filter(s => s.week === w)
 
+    const sessions: Session[] = rawSessions.map(raw => {
+      const mainExercises = raw.workout.map(parseWorkoutLine).filter((e): e is ExerciseSet => e !== null)
+      return makeSession(
+        `w${raw.week}-d${raw.day}`,
+        raw.week,
+        raw.day,
+        raw.type,
+        raw.phase,
+        raw.title,
+        raw.duration,
+        raw.notes.join(" "),
+        // A timed-only workout (Week 12 Thursday) must not become an empty block.
+        mainExercises.length ? mainExercises : raw.workout.map(exercise => ({ exercise })),
+      )
+    })
+
+    weeks.push({ week: w, phase, phaseWeek, totalPhaseWeeks, sessions })
+  }
+
+  return weeks
+}
+
+// 5-day/week, 12-week plan from real HYROX Open data
+export function generateOpenPlan(_raceDate: string): WeekPlan[] {
+  const weeks: WeekPlan[] = []
+
+  for (let w = 1; w <= 12; w++) {
+    const { phase, phaseWeek, totalPhaseWeeks } = getPhaseInfo(w)
+    const rawSessions = OPEN_PLAN_SESSIONS.filter(s => s.week === w)
+
     const sessions: Session[] = rawSessions.map(raw =>
       makeSession(
         `w${raw.week}-d${raw.day}`,
@@ -184,7 +214,37 @@ export function generateBeginnerPlan(_raceDate: string): WeekPlan[] {
         raw.title,
         raw.duration,
         raw.notes.join(" "),
-        raw.workout.map(parseWorkoutLine).filter((e): e is ExerciseSet => e !== null),
+        // Keep source instructions the shared parser skips, including timed runs.
+        raw.workout.map(line => parseWorkoutLine(line) ?? { exercise: line }),
+      )
+    )
+
+    weeks.push({ week: w, phase, phaseWeek, totalPhaseWeeks, sessions })
+  }
+
+  return weeks
+}
+
+// 5-day/week, 12-week plan from real HYROX Pro data
+export function generateProPlan(_raceDate: string): WeekPlan[] {
+  const weeks: WeekPlan[] = []
+
+  for (let w = 1; w <= 12; w++) {
+    const { phase, phaseWeek, totalPhaseWeeks } = getPhaseInfo(w)
+    const rawSessions = PRO_PLAN_SESSIONS.filter(s => s.week === w)
+
+    const sessions: Session[] = rawSessions.map(raw =>
+      makeSession(
+        `w${raw.week}-d${raw.day}`,
+        raw.week,
+        raw.day,
+        raw.type,
+        raw.phase,
+        raw.title,
+        raw.duration,
+        raw.notes.join(" "),
+        // Keep source instructions the shared parser skips, including timed runs.
+        raw.workout.map(line => parseWorkoutLine(line) ?? { exercise: line }),
       )
     )
 

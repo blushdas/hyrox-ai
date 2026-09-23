@@ -16,7 +16,7 @@ export function SessionCard({ session, isToday }: SessionCardProps) {
   const colors = sessionTypeColors[session.type]
 
   return (
-    <Link href={`/app/session/${session.id}`}>
+    <Link href={`/session/${session.id}`}>
       <div
         className={cn(
           "flex items-center gap-3 px-4 py-3.5 border-b border-[#1A1A1A] hover:bg-[rgba(255,255,255,0.03)] transition-colors cursor-pointer",
