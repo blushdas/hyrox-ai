@@ -1,3 +1,0 @@
-Command: python3 source comparison against git show HEAD:src/app/onboarding/page.tsx
-Removed only the PlanLoader import and conditional render from working source, then asserted exact equality with HEAD. Asserted tracked src diff contains only onboarding/page.tsx.
-PASS: onboarding source identical after removing loader import/render; tracked generation/store/step sources unchanged
