@@ -51,6 +51,11 @@ next-env.d.ts
 docs/qa/*/before/*.png
 docs/qa/*/after/*.png
 
+# codex/checkit pipeline scaffolding — transient, never app code
+docs/codex-*.md
+docs/qa/
+docs/runit/
+
 # session-local, not app code
 .claude/
 
