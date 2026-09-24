@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/shared/logo"
 import { useAthleteStore } from "@/stores/athlete-store"
 import { usePlanGenerator } from "@/hooks/use-plan-generator"
+import { PlanLoader } from "@/components/app/onboarding/plan-loader"
 import { StepRace } from "@/components/app/onboarding/step-race"
 import { StepFitness } from "@/components/app/onboarding/step-fitness"
 import { StepBiometrics } from "@/components/app/onboarding/step-biometrics"
@@ -84,6 +85,8 @@ export default function OnboardingPage() {
     <StepAvailability key={4} data={data} onChange={updateData} />,
     <StepAssessment key={5} data={data} onChange={updateData} />,
   ]
+
+  if (loading) return <PlanLoader />
 
   return (
     <div className="min-h-screen bg-background flex lg:flex-row flex-col">
