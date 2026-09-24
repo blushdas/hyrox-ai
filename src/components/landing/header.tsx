@@ -47,7 +47,7 @@ export function LandingHeader() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/onboarding">
+            <Link href="/sign-in">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-white">
                 Sign In
               </Button>

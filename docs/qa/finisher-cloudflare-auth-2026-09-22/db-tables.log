@@ -1,0 +1,48 @@
+
+ ⛅️ wrangler 4.136.2
+────────────────────
+Resource location: local
+
+Use --remote if you want to access the remote instance.
+
+🌀 Executing on local database finisher-db (<REPLACE_WITH_ID_FROM_wrangler_d1_create>) from .wrangler/state/v3/d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 2 commands executed successfully.
+[
+  {
+    "results": [
+      {
+        "name": "d1_migrations"
+      },
+      {
+        "name": "sqlite_sequence"
+      },
+      {
+        "name": "_cf_METADATA"
+      },
+      {
+        "name": "accounts"
+      },
+      {
+        "name": "sessions"
+      },
+      {
+        "name": "users"
+      },
+      {
+        "name": "verification_tokens"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]

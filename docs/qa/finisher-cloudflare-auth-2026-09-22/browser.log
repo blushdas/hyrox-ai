@@ -1,0 +1,13 @@
+{"width":390,"overflow":false}
+R1: http://localhost:3000/sign-in
+R1-desktop: http://localhost:3000/sign-in
+R2: https://accounts.google.com/signin/oauth/error [Error 401: invalid_client]
+R6: http://localhost:3000/sign-in?callbackUrl=%2Fdashboard
+R5: http://localhost:3000/sign-in?callbackUrl=%2Fprofile
+R6-onboarding: http://localhost:3000/sign-in?callbackUrl=%2Fonboarding
+R6-plan: http://localhost:3000/sign-in?callbackUrl=%2Fplan
+R6-session: http://localhost:3000/sign-in?callbackUrl=%2Fsession%2Fabc
+R1-error: http://localhost:3000/sign-in?error=access_denied
+R7: http://localhost:3000/
+POST /api/auth/signin/google
+Page errors: []
