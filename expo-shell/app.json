@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Finisher Dev",
+    "slug": "finisher-expo-shell",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "scheme": "finisherdev",
+    "backgroundColor": "#0F1A0E",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ai.hyrox.finisher.dev"
+    },
+    "android": {
+      "package": "ai.hyrox.finisher.dev"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
