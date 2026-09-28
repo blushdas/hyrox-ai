@@ -24,13 +24,19 @@ export function StepAvailability({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">Training availability</h2>
-        <p className="text-muted-foreground text-sm">Be honest — the plan only works if you can show up.</p>
+        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">
+          Training availability
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Be honest — the plan only works if you can show up.
+        </p>
       </div>
 
       <div className="space-y-5">
         <div>
-          <label className="text-sm font-medium text-foreground mb-3 block">Days per week</label>
+          <label className="text-sm font-medium text-foreground mb-3 block">
+            Days per week
+          </label>
           <div className="space-y-0">
             {dayOptions.map((opt) => (
               <button
@@ -46,20 +52,23 @@ export function StepAvailability({ data, onChange }: Props) {
               >
                 <div className="text-left">
                   <div className="font-semibold text-sm">{opt.label}</div>
-                  <div className="text-[13px] text-muted-foreground mt-0.5">{opt.desc}</div>
-                </div>
-                {data.daysPerWeek === opt.value && (
-                  <div className="w-4 h-4 rounded-xs bg-primary flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-xs bg-primary-foreground" />
+                  <div className="text-[13px] text-muted-foreground mt-0.5">
+                    {opt.desc}
                   </div>
-                )}
+                </div>
+                <span
+                  aria-hidden="true"
+                  className={`size-4 shrink-0 rounded-xs border ${data.daysPerWeek === opt.value ? "border-accent bg-accent" : "border-hairline-strong"}`}
+                />
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium text-foreground mb-3 block">Session length</label>
+          <label className="text-sm font-medium text-foreground mb-3 block">
+            Session length
+          </label>
           <div className="flex flex-col">
             {durationOptions.map((opt) => (
               <button
@@ -73,7 +82,11 @@ export function StepAvailability({ data, onChange }: Props) {
                     : "border-border bg-surface-2 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                {opt.label}
+                <span className="font-mono">{opt.label}</span>
+                <span
+                  aria-hidden="true"
+                  className={`size-4 border ${data.sessionLength === opt.value ? "bg-accent border-accent" : "border-hairline-strong"}`}
+                />
               </button>
             ))}
           </div>

@@ -13,14 +13,21 @@ const geist = Geist({
 
 const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: tokens.bg }
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: tokens.bg,
+}
 
 export const metadata: Metadata = {
   title: "FINISHER — HYROX Training App",
-  description: "Your personalized HYROX race-day training plan. Built from the official coaching manual.",
+  description:
+    "Your personalized HYROX race-day training plan. Built from the official coaching manual.",
   openGraph: {
     title: "FINISHER — HYROX Training App",
-    description: "Personalized HYROX training plans. Every session. Every rep. Every week to race day.",
+    description:
+      "Personalized HYROX training plans. Every session. Every rep. Every week to race day.",
     type: "website",
   },
 }
@@ -32,7 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geist.variable} ${mono.variable} antialiased min-h-screen bg-background text-foreground`}>
+      <body
+        className={`${geist.variable} ${mono.variable} antialiased min-h-screen bg-background text-foreground`}
+      >
         <StoreHydrator />
         <NativeAuthGate>{children}</NativeAuthGate>
         <Toaster />

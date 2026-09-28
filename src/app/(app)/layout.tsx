@@ -3,6 +3,8 @@ import { PlanGuard } from "@/components/app/plan-guard"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AppShell><PlanGuard>{children}</PlanGuard></AppShell>
+    <AppShell>
+      <PlanGuard>{children}</PlanGuard>
+    </AppShell>
   )
 }

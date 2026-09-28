@@ -18,15 +18,21 @@ const buttonVariants = cva(
         link: "text-accent underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-11", xs: "h-11", sm: "h-11", lg: "h-12",
-        icon: "size-11 p-0", "icon-xs": "size-11 p-0", "icon-sm": "size-11 p-0", "icon-lg": "size-12 p-0",
+        default: "h-11",
+        xs: "h-11",
+        sm: "h-11",
+        lg: "h-12",
+        icon: "size-11 p-0",
+        "icon-xs": "size-11 p-0",
+        "icon-sm": "size-11 p-0",
+        "icon-lg": "size-12 p-0",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
     },
-  }
+  },
 )
 
 function Button({

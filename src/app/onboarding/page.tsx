@@ -16,7 +16,13 @@ import { StepAssessment } from "@/components/app/onboarding/step-assessment"
 import type { AthleteProfile } from "@/lib/types"
 
 const TOTAL_STEPS = 5
-const STEP_LABELS = ["Race Details", "Fitness Baseline", "About You", "Availability", "Self-Assessment"]
+const STEP_LABELS = [
+  "Race Details",
+  "Fitness Baseline",
+  "About You",
+  "Availability",
+  "Self-Assessment",
+]
 
 const defaults: Partial<AthleteProfile> = {
   raceDate: "",
@@ -49,7 +55,10 @@ export default function OnboardingPage() {
   function validateStep(): boolean {
     if (step === 1) {
       const weeksToRace = data.raceDate
-        ? Math.floor((new Date(data.raceDate).getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000))
+        ? Math.floor(
+            (new Date(data.raceDate).getTime() - Date.now()) /
+              (7 * 24 * 60 * 60 * 1000),
+          )
         : 0
       return !!data.raceDate && weeksToRace >= 4
     }
@@ -107,19 +116,23 @@ export default function OnboardingPage() {
                       isDone
                         ? "bg-primary text-primary-foreground"
                         : isActive
-                        ? "bg-accent-soft text-primary border border-primary"
-                        : "bg-muted text-muted-foreground"
+                          ? "bg-accent-soft text-primary border border-primary"
+                          : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {isDone ? <span className="size-2 bg-accent-ink" /> : String(stepNum).padStart(2,"0")}
+                    {isDone ? (
+                      <span className="size-2 bg-accent-ink" />
+                    ) : (
+                      String(stepNum).padStart(2, "0")
+                    )}
                   </div>
                   <span
                     className={`text-sm transition-colors ${
                       isDone
                         ? "text-text-2"
                         : isActive
-                        ? "text-foreground font-semibold"
-                        : "text-muted-foreground"
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground"
                     }`}
                   >
                     {label}
@@ -131,7 +144,8 @@ export default function OnboardingPage() {
         </div>
 
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Race day is counting down.<br />
+          Race day is counting down.
+          <br />
           Let&apos;s build your plan.
         </p>
       </div>
@@ -147,7 +161,9 @@ export default function OnboardingPage() {
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <div className="font-mono text-[11px] uppercase tracking-wider text-text-3">{String(step).padStart(2,"0")} / 05 · {STEP_LABELS[step-1]}</div>
+          <div className="font-mono text-[11px] uppercase tracking-wider text-text-3">
+            {String(step).padStart(2, "0")} / 05 · {STEP_LABELS[step - 1]}
+          </div>
         </div>
 
         {/* Progress bar — mobile only */}
@@ -159,30 +175,45 @@ export default function OnboardingPage() {
         </div>
 
         {/* Step content */}
-        <div key={step} className="flex-1 w-full max-w-[680px] mx-auto px-4 py-8">
+        <div
+          key={step}
+          className="flex-1 w-full max-w-[680px] mx-auto px-4 py-8"
+        >
           {stepComponents[step - 1]}
         </div>
 
         {/* Footer action */}
         <div className="sticky bottom-0 w-full max-w-[680px] mx-auto bg-background p-4 pb-[calc(env(safe-area-inset-bottom)+16px)] border-t border-border">
-          {step === 1 && data.raceDate && (() => {
-            const weeks = Math.floor((new Date(data.raceDate).getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000))
-            if (weeks < 4) {
-              return (
-                <div className="mb-3 p-3 bg-surface-1 border-l border-danger">
-                  <p className="text-[13px] text-danger">Race is less than 4 weeks away. We need at least 4 weeks for a meaningful plan.</p>
-                </div>
+          {step === 1 &&
+            data.raceDate &&
+            (() => {
+              const weeks = Math.floor(
+                (new Date(data.raceDate).getTime() - Date.now()) /
+                  (7 * 24 * 60 * 60 * 1000),
               )
-            }
-            return null
-          })()}
+              if (weeks < 4) {
+                return (
+                  <div className="mb-3 p-3 bg-surface-1 border-l border-danger">
+                    <p className="text-[13px] text-danger">
+                      Race is less than 4 weeks away. We need at least 4 weeks
+                      for a meaningful plan.
+                    </p>
+                  </div>
+                )
+              }
+              return null
+            })()}
 
           <Button
             onClick={handleNext}
             disabled={!validateStep() || loading}
             className="w-full h-12 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-40"
           >
-            {loading ? "Building your plan..." : step === TOTAL_STEPS ? "Build My Plan" : "Continue"}
+            {loading
+              ? "Building your plan..."
+              : step === TOTAL_STEPS
+                ? "Build My Plan"
+                : "Continue"}
           </Button>
         </div>
       </div>

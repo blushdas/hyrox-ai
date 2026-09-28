@@ -29,8 +29,12 @@ export function StepAssessment({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">Where are you right now?</h2>
-        <p className="text-muted-foreground text-sm">Be honest. This is just for calibration — not judgment.</p>
+        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">
+          Where are you right now?
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Be honest. This is just for calibration — not judgment.
+        </p>
       </div>
 
       <div className="space-y-0">
@@ -39,7 +43,7 @@ export function StepAssessment({ data, onChange }: Props) {
             key={level.value}
             type="button"
             aria-pressed={data.fitnessLevel === level.value}
-                onClick={() => onChange({ fitnessLevel: level.value })}
+            onClick={() => onChange({ fitnessLevel: level.value })}
             className={`w-full p-4 border-b text-left transition-colors ${
               data.fitnessLevel === level.value
                 ? "border-primary bg-accent-soft"
@@ -48,10 +52,14 @@ export function StepAssessment({ data, onChange }: Props) {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className={`font-semibold text-sm mb-1 ${data.fitnessLevel === level.value ? "text-foreground" : "text-foreground"}`}>
+                <div
+                  className={`font-semibold text-sm mb-1 ${data.fitnessLevel === level.value ? "text-foreground" : "text-foreground"}`}
+                >
                   {level.label}
                 </div>
-                <div className="text-[13px] text-muted-foreground leading-relaxed">{level.desc}</div>
+                <div className="text-[13px] text-muted-foreground leading-relaxed">
+                  {level.desc}
+                </div>
               </div>
               <div
                 className={`w-5 h-5 rounded-xs border-2 shrink-0 mt-0.5 transition-colors ${
@@ -73,7 +81,10 @@ export function StepAssessment({ data, onChange }: Props) {
 
       <div className="p-3 bg-surface-1 border border-hairline rounded-sm">
         <p className="text-[13px] text-muted-foreground">
-          <span className="text-primary font-medium">Ready to build your plan.</span> After this, we&apos;ll generate your personalized 12-week program.
+          <span className="text-primary font-medium">
+            Ready to build your plan.
+          </span>{" "}
+          After this, we&apos;ll generate your personalized 12-week program.
         </p>
       </div>
     </div>

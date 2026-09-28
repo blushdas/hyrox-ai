@@ -18,13 +18,19 @@ export function StepRace({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">When&apos;s your race?</h2>
-        <p className="text-muted-foreground text-sm">We&apos;ll build your plan backwards from race day.</p>
+        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">
+          When&apos;s your race?
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          We&apos;ll build your plan backwards from race day.
+        </p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Race Date *</label>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            Race Date *
+          </label>
           <Input
             aria-label="Race Date"
             type="date"
@@ -36,7 +42,9 @@ export function StepRace({ data, onChange }: Props) {
         </div>
 
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Location (optional)</label>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            Location (optional)
+          </label>
           <Input
             aria-label="Location"
             type="text"
@@ -48,7 +56,9 @@ export function StepRace({ data, onChange }: Props) {
         </div>
 
         <div>
-          <label className="text-sm font-medium text-foreground mb-3 block">Category</label>
+          <label className="text-sm font-medium text-foreground mb-3 block">
+            Category
+          </label>
           <div className="space-y-0">
             {categories.map((cat) => (
               <button
@@ -64,13 +74,14 @@ export function StepRace({ data, onChange }: Props) {
               >
                 <div className="text-left">
                   <div className="font-semibold text-sm">{cat.label}</div>
-                  <div className="text-[13px] text-muted-foreground mt-0.5">{cat.desc}</div>
-                </div>
-                {data.category === cat.value && (
-                  <div className="w-4 h-4 rounded-xs bg-primary flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-xs bg-primary-foreground" />
+                  <div className="text-[13px] text-muted-foreground mt-0.5">
+                    {cat.desc}
                   </div>
-                )}
+                </div>
+                <span
+                  aria-hidden="true"
+                  className={`size-4 shrink-0 rounded-xs border ${data.category === cat.value ? "border-accent bg-accent" : "border-hairline-strong"}`}
+                />
               </button>
             ))}
           </div>
