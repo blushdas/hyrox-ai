@@ -18,7 +18,6 @@ export function SignInButtons() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const listener = App.addListener("appUrlOpen", ({ url }) => {
-      if (!url.startsWith("finisher://")) return;
       void (async () => {
         setPending(true);
         setFailed(false);
