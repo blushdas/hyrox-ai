@@ -10,5 +10,3 @@ export const sessionTypeMeta: Record<SessionType, { code: string; label: string;
   recovery: { code: "REC", label: "Recovery", intensity: 1 },
   rest: { code: "REST", label: "Rest", intensity: 0 },
 }
-// Transitional adapter for the Train components replaced in phase two.
-export const sessionTypeColors = Object.fromEntries(Object.entries(sessionTypeMeta).map(([key, value]) => [key, { label: value.label, bg: tokens.accent, text: tokens["text-1"] }])) as Record<SessionType, { label: string; bg: string; text: string }>
