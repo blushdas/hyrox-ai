@@ -215,7 +215,7 @@ export function RequestToTrainButton({ coach: c }: { coach: Coach }) {
   const { coachRequests, requestCoach, cancelCoachRequest } = usePeopleStore()
   const pending = coachRequests[c.id]
   return (
-    <div className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom)) mt-8 border-t bg-background py-4 lg:bottom-0">
+    <div className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))] mt-8 border-t bg-background py-4 lg:bottom-0">
       <Button
         className="w-full"
         variant={pending ? "secondary" : "default"}

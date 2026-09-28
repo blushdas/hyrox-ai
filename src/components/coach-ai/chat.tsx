@@ -178,7 +178,7 @@ export function Composer({
         e.preventDefault()
         onSend()
       }}
-      className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom)) z-30 -mx-4 mt-auto border-t bg-surface-1 px-4 py-3 sm:-mx-6 sm:px-6 lg:bottom-0"
+      className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))] z-30 -mx-4 mt-auto border-t bg-surface-1 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6 lg:bottom-0"
     >
       {value.length > 1800 && (
         <div

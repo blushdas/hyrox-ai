@@ -1,0 +1,6 @@
+Attempt: @Browser /coach-ai -> /sign-in?callbackUrl=%2Fcoach-ai -> Continue with Google
+GET /api/auth/providers 500
+Error: AUTH_SECRET is required for authentication
+    at <unknown> (src/auth.ts:25:22)
+ClientFetchError: Failed to execute 'json' on 'Response': Unexpected end of JSON input.
+Both affected routes also attempted at 390x844 and 1280x800 with Playwright; browser.json and screenshots show redirects. No auth bypass added.
