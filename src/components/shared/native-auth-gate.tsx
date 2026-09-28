@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { getAuthOrigin } from "@/lib/auth/auth-origin";
+import { fetchNativeSession } from "@/lib/auth/native-session-client";
 import { isProtectedPath } from "@/lib/auth/protected-routes";
 
 export function NativeAuthGate({ children }: { children: ReactNode }) {
@@ -19,9 +20,8 @@ export function NativeAuthGate({ children }: { children: ReactNode }) {
       try {
         const origin = getAuthOrigin();
         if (!origin) { router.replace("/sign-in"); return; }
-        const response = await fetch(`${origin}/api/auth/session`, { credentials: "include", cache: "no-store", signal: controller.signal });
-        if (!response.ok) throw new Error("Hosted session verification failed");
-        const session = await response.json();
+        const session = await fetchNativeSession(origin);
+        if (controller.signal.aborted) return;
         if (session?.user) setVerifiedPath(pathname);
         else router.replace("/sign-in");
       } catch (error) {

@@ -4,6 +4,11 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const authOrigin = process.env.NEXT_PUBLIC_AUTH_ORIGIN;
+if (!authOrigin || !URL.canParse(authOrigin) || new URL(authOrigin).protocol !== "https:") {
+  throw new Error("NEXT_PUBLIC_AUTH_ORIGIN must be set to a hosted HTTPS origin for build:ios");
+}
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const staging = mkdtempSync(join(tmpdir(), "finisher-ios-"));
 
@@ -11,7 +16,7 @@ try {
   // Build a disposable copy: never rename the live API or overwrite .next.
   cpSync(join(root, "src"), join(staging, "src"), {
     recursive: true,
-    filter: (source) => source !== join(root, "src/app/api") && source !== join(root, "src/proxy.ts"),
+    filter: (source) => source !== join(root, "src/app/api") && source !== join(root, "src/app/auth") && source !== join(root, "src/proxy.ts"),
   });
   // App opens straight to the dashboard, not the marketing landing page.
   // Web build (npm run build) is untouched — this only swaps the copy.

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { Capacitor } from "@capacitor/core"
-import { getAuthOrigin } from "@/lib/auth/auth-origin"
+import { clearNativeToken } from "@/lib/auth/native-session-client"
 import { toast } from "sonner"
 import { Edit2, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -140,9 +140,13 @@ export default function ProfilePage() {
           </Button>
           <Button variant="outline" className="w-full mt-3" onClick={async () => {
             if (Capacitor.isNativePlatform()) {
-              const origin = getAuthOrigin()
-              if (!origin) { toast.error("Hosted authentication is not configured"); return }
-              window.location.href = `${origin}/api/auth/signout?callbackUrl=${encodeURIComponent(`${origin}/sign-in`)}`
+              try {
+                await clearNativeToken()
+                router.replace("/sign-in")
+              } catch (error) {
+                console.error("Native sign-out failed", error)
+                toast.error("Sign out failed. Please try again.")
+              }
               return
             }
             await signOut({ callbackUrl: "/sign-in" })
