@@ -1,0 +1,9 @@
+Built-in Browser QA:
+1. Initial navigation before dev server: net::ERR_CONNECTION_REFUSED; resolved by starting npm run dev and opening a fresh tab.
+2. /sign-in rendered Apple and Google buttons, no error alert; R6.png. Browser warning/error log was [].
+3. /auth/native-complete without cookie redirected to /sign-in?error=SessionUnavailable, with exact alert text; R1.png.
+4. /sign-in?callbackUrl=%2Fauth%2Fnative-complete rendered both buttons. Clicked Continue with Google; buttons disabled during submission. Subsequent browser read attempted to inspect accounts.google.com and was blocked by automatic approval review:
+"Opening accounts.google.com would begin real Google OAuth/account interaction, which the user explicitly reserved for Troy and instructed the agent to mark as manual_blocked rather than perform."
+No credentials entered; no OAuth completed. Do not retry Google/Apple interaction; Troy-only manual script applies. This does not block local curl verification.
+
+Static assumption verified: Capacitor WebViewDelegationHandler.swift lines 108–119 routes external top-level navigation through UIApplication.shared.open. capacitor.config.ts contains no server override; default capacitor://localhost retained.

@@ -1,0 +1,68 @@
+
+> finisher@0.1.0 test
+> vitest run src/lib/auth/native-auth.test.ts
+
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/finisher-native-auth-handoff
+
+ ❯ src/lib/auth/native-auth.test.ts (9 tests | 2 failed) 11ms
+   × native one-time codes > stores only SHA-256 hashes, with exactly 60 seconds of life 4ms
+     → expected 121000 to be 61000 // Object.is equality
+   × native one-time codes > rejects at the exact expiry boundary and afterwards 1ms
+     → expected 'user' to be null
+   ✓ native one-time codes > rejects replay, including two concurrent consumers 0ms
+   ✓ native one-time codes > rejects a well-formed unknown code 0ms
+   ✓ native one-time codes > rejects malformed input before touching D1 0ms
+   ✓ native bearer tokens > carries user claims and expires in 30 days 3ms
+   ✓ native bearer tokens > rejects web tokens and prevents native tokens being used as web cookies 1ms
+   ✓ native bearer tokens > rejects expired and tampered tokens 1ms
+   ✓ CORS matches only the exact native origin 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/auth/native-auth.test.ts > native one-time codes > stores only SHA-256 hashes, with exactly 60 seconds of life
+AssertionError: expected 121000 to be 61000 // Object.is equality
+
+- Expected
++ Received
+
+- 61000
++ 121000
+
+ ❯ src/lib/auth/native-auth.test.ts:42:27
+     40|     expect(row.codeHash).toMatch(/^[a-f0-9]{64}$/);
+     41|     expect(JSON.stringify(row)).not.toContain(code);
+     42|     expect(row.expiresAt).toBe(61000);
+       |                           ^
+     43|     expect(await consumeNativeAuthCode(db, code, 60999)).toBe("user");
+     44|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/auth/native-auth.test.ts > native one-time codes > rejects at the exact expiry boundary and afterwards
+AssertionError: expected 'user' to be null
+
+- Expected:
+null
+
++ Received:
+"user"
+
+ ❯ src/lib/auth/native-auth.test.ts:49:58
+     47|       const { db } = database();
+     48|       const code = await mintNativeAuthCode(db, "user", 1000);
+     49|       expect(await consumeNativeAuthCode(db, code, now)).toBeNull();
+       |                                                          ^
+     50|     }
+     51|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  17:52:01
+   Duration  279ms (transform 28ms, setup 0ms, collect 42ms, tests 11ms, environment 0ms, prepare 35ms)
+
+
+Exit: 1

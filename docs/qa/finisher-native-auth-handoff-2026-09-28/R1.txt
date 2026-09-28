@@ -1,0 +1,21 @@
+GET /auth/native-complete without cookie
+HTTP/1.1 302 Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+cache-control: no-store
+location: http://localhost:3000/sign-in?error=SessionUnavailable
+Date: Mon, 28 Sep 2026 09:51:44 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+
+GET /auth/native-complete with seeded Auth.js cookie and malicious callbackUrl
+HTTP/1.1 302 Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+cache-control: no-store
+location: finisher://auth?code=hKJntWAXDzD4ECKepKaNy-Z3PxdCNZkNP5wr3hf33T4
+Date: Mon, 28 Sep 2026 09:51:44 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked

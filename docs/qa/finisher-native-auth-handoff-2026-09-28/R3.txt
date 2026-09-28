@@ -1,0 +1,139 @@
+GET session valid
+HTTP/1.1 200 OK
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"user":{"id":"native-qa","name":"Native QA","email":"native-qa@example.invalid","image":null}}
+
+GET session missing
+HTTP/1.1 401 Unauthorized
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"Unauthorized"}
+
+GET session tampered
+HTTP/1.1 401 Unauthorized
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"Unauthorized"}
+
+GET session expired
+HTTP/1.1 401 Unauthorized
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"Unauthorized"}
+
+GET session web-cookie
+HTTP/1.1 401 Unauthorized
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"Unauthorized"}
+
+OPTIONS /api/native-auth/exchange Origin capacitor://localhost
+HTTP/1.1 204 No Content
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: POST, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+
+OPTIONS /api/native-auth/exchange Origin https://evil.example
+HTTP/1.1 204 No Content
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+cache-control: no-store
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+
+OPTIONS /api/native-auth/session Origin capacitor://localhost
+HTTP/1.1 204 No Content
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: Origin
+access-control-allow-headers: Authorization, Content-Type
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: capacitor://localhost
+cache-control: no-store
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+
+OPTIONS /api/native-auth/session Origin https://evil.example
+HTTP/1.1 204 No Content
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+cache-control: no-store
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+
+GET session hostile origin
+HTTP/1.1 200 OK
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+cache-control: no-store
+content-type: application/json
+Date: Mon, 28 Sep 2026 09:51:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"user":{"id":"native-qa","name":"Native QA","email":"native-qa@example.invalid","image":null}}

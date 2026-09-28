@@ -1,0 +1,15 @@
+
+> finisher@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/finisher-native-auth-handoff
+
+ ✓ src/lib/auth/protected-routes.test.ts (21 tests) 2ms
+ ✓ src/lib/auth/apple-client-secret.test.ts (1 test) 5ms
+ ✓ src/lib/auth/native-auth.test.ts (9 tests) 9ms
+
+ Test Files  3 passed (3)
+      Tests  31 passed (31)
+   Start at  17:52:03
+   Duration  302ms (transform 92ms, setup 0ms, collect 118ms, tests 17ms, environment 0ms, prepare 180ms)
