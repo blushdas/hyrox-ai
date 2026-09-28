@@ -1,9 +1,12 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { isProtectedPath } from "@/lib/auth/protected-routes";
 
 export async function proxy(request: NextRequest) {
-  const secret = process.env.AUTH_SECRET;
+  const context = await getCloudflareContext({ async: true });
+  const env = context.env as typeof context.env & { AUTH_SECRET?: string };
+  const secret = env.AUTH_SECRET || process.env.AUTH_SECRET;
   const token = secret ? await getToken({ req: request, secret, secureCookie: request.nextUrl.protocol === "https:" }) : null;
   if (isProtectedPath(request.nextUrl.pathname) && !token) {
     const target = new URL("/sign-in", request.url);
