@@ -45,6 +45,6 @@ export function SignInButtons() {
   return <div className="space-y-4">
     <Button className="w-full h-12" variant="outline" disabled={pending} onClick={() => login("apple")}>Continue with Apple</Button>
     <Button className="w-full h-12" disabled={pending} onClick={() => login("google")}>Continue with Google</Button>
-    {(params.has("error") || failed) && <p role="alert" className="text-sm text-red-400">Sign-in was cancelled or failed. Please try again.</p>}
+    {(params.has("error") || failed) && <p role="alert" className="text-sm text-danger">Sign-in was cancelled or failed. Please try again.</p>}
   </div>;
 }

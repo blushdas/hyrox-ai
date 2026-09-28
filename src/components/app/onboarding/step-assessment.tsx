@@ -29,39 +29,40 @@ export function StepAssessment({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-black text-white mb-2">Where are you right now?</h2>
+        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">Where are you right now?</h2>
         <p className="text-muted-foreground text-sm">Be honest. This is just for calibration — not judgment.</p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-0">
         {levels.map((level) => (
           <button
             key={level.value}
             type="button"
-            onClick={() => onChange({ fitnessLevel: level.value })}
-            className={`w-full p-4 rounded-xl border text-left transition-all ${
+            aria-pressed={data.fitnessLevel === level.value}
+                onClick={() => onChange({ fitnessLevel: level.value })}
+            className={`w-full p-4 border-b text-left transition-colors ${
               data.fitnessLevel === level.value
-                ? "border-primary bg-primary/10"
-                : "border-border bg-surface hover:border-border/80"
+                ? "border-primary bg-accent-soft"
+                : "border-border bg-surface-2 hover:border-border/80"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className={`font-semibold text-sm mb-1 ${data.fitnessLevel === level.value ? "text-white" : "text-white"}`}>
+                <div className={`font-semibold text-sm mb-1 ${data.fitnessLevel === level.value ? "text-foreground" : "text-foreground"}`}>
                   {level.label}
                 </div>
-                <div className="text-xs text-muted-foreground leading-relaxed">{level.desc}</div>
+                <div className="text-[13px] text-muted-foreground leading-relaxed">{level.desc}</div>
               </div>
               <div
-                className={`w-5 h-5 rounded-full border-2 shrink-0 mt-0.5 transition-colors ${
+                className={`w-5 h-5 rounded-xs border-2 shrink-0 mt-0.5 transition-colors ${
                   data.fitnessLevel === level.value
                     ? "border-primary bg-primary"
                     : "border-border"
                 }`}
               >
                 {data.fitnessLevel === level.value && (
-                  <div className="w-full h-full rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                  <div className="w-full h-full rounded-xs flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-xs bg-primary-foreground" />
                   </div>
                 )}
               </div>
@@ -70,8 +71,8 @@ export function StepAssessment({ data, onChange }: Props) {
         ))}
       </div>
 
-      <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-        <p className="text-xs text-muted-foreground">
+      <div className="p-3 bg-surface-1 border border-hairline rounded-sm">
+        <p className="text-[13px] text-muted-foreground">
           <span className="text-primary font-medium">Ready to build your plan.</span> After this, we&apos;ll generate your personalized 12-week program.
         </p>
       </div>

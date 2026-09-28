@@ -96,3 +96,7 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0ms !important; transition-duration: 0ms !important; scroll-behavior: auto !important; }
 }
+
+@keyframes plan-progress { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+.plan-progress { animation: plan-progress 1.5s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .plan-progress { animation: none; transform: none; width: 100%; } }
