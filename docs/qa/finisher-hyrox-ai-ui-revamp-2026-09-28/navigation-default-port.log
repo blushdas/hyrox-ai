@@ -1,0 +1,145 @@
+
+Running 3 tests using 3 workers
+
+(node:3971) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3971) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 390px (11.2s)
+  ✘  1 [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 1280px (11.7s)
+  ✘  3 [chromium] › e2e/navigation.spec.ts:14:5 › sign-in remains directly accessible (12.2s)
+
+
+  1) [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 1280px ───────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/sign-in\?callbackUrl=%2Fdashboard$/[39m
+    Received string:  [31m"http://localhost:3000/"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    7 × unexpected value "http://localhost:3000/"[22m
+
+
+       6 |     await page.setViewportSize(viewport)
+       7 |     await page.goto("/")
+    >  8 |     await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard$/)
+         |                        ^
+       9 |     await expect(page.getByRole("heading", { name: "Sign in", exact: true })).toBeVisible()
+      10 |     await expect(page.getByRole("button", { name: "Continue with Google" })).toBeVisible()
+      11 |   })
+        at /Users/troy/.claude/worktrees/hyrox-ai-ui-revamp/e2e/navigation.spec.ts:8:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-1280px-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-1280px-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/navigation-root-enters-the-dashboard-auth-flow-at-1280px-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-1280px-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-root-enters-the-dashboard-auth-flow-at-1280px-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 390px ────────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/sign-in\?callbackUrl=%2Fdashboard$/[39m
+    Received string:  [31m"http://localhost:3000/"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    8 × unexpected value "http://localhost:3000/"[22m
+
+
+       6 |     await page.setViewportSize(viewport)
+       7 |     await page.goto("/")
+    >  8 |     await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard$/)
+         |                        ^
+       9 |     await expect(page.getByRole("heading", { name: "Sign in", exact: true })).toBeVisible()
+      10 |     await expect(page.getByRole("button", { name: "Continue with Google" })).toBeVisible()
+      11 |   })
+        at /Users/troy/.claude/worktrees/hyrox-ai-ui-revamp/e2e/navigation.spec.ts:8:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-390px-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-390px-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/navigation-root-enters-the-dashboard-auth-flow-at-390px-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-root-enters-the-dashboard-auth-flow-at-390px-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-root-enters-the-dashboard-auth-flow-at-390px-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/navigation.spec.ts:14:5 › sign-in remains directly accessible ────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('button', { name: 'Continue with Apple' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('button', { name: 'Continue with Apple' })[22m
+
+
+      14 | test("sign-in remains directly accessible", async ({ page }) => {
+      15 |   await page.goto("/sign-in")
+    > 16 |   await expect(page.getByRole("button", { name: "Continue with Apple" })).toBeVisible()
+         |                                                                           ^
+      17 |   await expect(page.getByRole("button", { name: "Continue with Google" })).toBeVisible()
+      18 | })
+      19 |
+        at /Users/troy/.claude/worktrees/hyrox-ai-ui-revamp/e2e/navigation.spec.ts:16:75
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/navigation-sign-in-remains-directly-accessible-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/navigation-sign-in-remains-directly-accessible-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/navigation-sign-in-remains-directly-accessible-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-sign-in-remains-directly-accessible-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-sign-in-remains-directly-accessible-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 1280px ────────
+    [chromium] › e2e/navigation.spec.ts:5:7 › root enters the dashboard auth flow at 390px ─────────
+    [chromium] › e2e/navigation.spec.ts:14:5 › sign-in remains directly accessible ─────────────────

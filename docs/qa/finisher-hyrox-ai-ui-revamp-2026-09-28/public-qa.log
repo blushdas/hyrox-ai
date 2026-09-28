@@ -1,0 +1,34 @@
+[
+  {
+    "route": "/sign-in",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in",
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  {
+    "route": "/",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fdashboard",
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  {
+    "route": "/sign-in",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in",
+    "scrollWidth": 1280,
+    "innerWidth": 1280
+  },
+  {
+    "route": "/",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fdashboard",
+    "scrollWidth": 1280,
+    "innerWidth": 1280
+  },
+  {
+    "action": "Continue with Google",
+    "status": 500
+  }
+]
