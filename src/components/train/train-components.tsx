@@ -257,7 +257,7 @@ export function PlanWeekRow({
     <button
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b border-l-2 px-3 py-4 text-left ${active ? "border-l-accent bg-accent-soft" : "border-l-transparent"}`}
+      className={`grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b px-3 py-4 text-left ${active ? "bg-accent-soft text-accent" : ""}`}
     >
       <span className="font-mono text-[13px]">
         WK {String(r.week).padStart(2, "0")}

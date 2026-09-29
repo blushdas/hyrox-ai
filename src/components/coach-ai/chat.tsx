@@ -1,6 +1,8 @@
 "use client"
 import { useEffect, useRef } from "react"
 import Link from "next/link"
+import { motion, useReducedMotion } from "framer-motion"
+import { motionTransition } from "@/lib/motion"
 import { ArrowUp, Square } from "lucide-react"
 import type { ChatMessage, Citation } from "@/lib/coach-ai/types"
 import { MAX_MESSAGE_CHARS, SUGGESTED_PROMPTS } from "@/lib/coach-ai/mock-coach"
@@ -111,6 +113,7 @@ export function ChatThread({
   messages: ChatMessage[]
   onRetry: () => void
 }) {
+  const reduced = useReducedMotion()
   const end = useRef<HTMLDivElement>(null)
   const follow = useRef(true)
   useEffect(() => {
@@ -134,7 +137,11 @@ export function ChatThread({
       aria-relevant="additions text"
     >
       {messages.map((m) => (
-        <div key={m.id}>
+        <motion.div key={m.id} data-message-motion
+          initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={motionTransition(reduced, true)}
+        >
           {m.role === "user" ? (
             <UserMessage message={m} />
           ) : (
@@ -146,7 +153,7 @@ export function ChatThread({
               }
             />
           )}
-        </div>
+        </motion.div>
       ))}
       <div ref={end} />
     </div>

@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
+import { DURATION_FAST, PLAN_DURATION, motionTransition, planStages } from "@/lib/motion"
 import { useRouter } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -47,6 +49,21 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1)
   const [data, setData] = useState<Partial<AthleteProfile>>(defaults)
   const [loading, setLoading] = useState(false)
+  const [elapsed, setElapsed] = useState(0)
+  const [now] = useState(() => Date.now())
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    if (!loading) return
+    let boundary = 0
+    const timers = planStages.map((stage) => {
+      boundary += stage.duration
+      const at = boundary
+      return setTimeout(() => setElapsed(at), at)
+    })
+    timers.push(setTimeout(() => router.push("/dashboard"), PLAN_DURATION + DURATION_FAST * 1000))
+    return () => timers.forEach(clearTimeout)
+  }, [loading, router])
 
   function updateData(updates: Partial<AthleteProfile>) {
     setData((prev) => ({ ...prev, ...updates }))
@@ -56,7 +73,7 @@ export default function OnboardingPage() {
     if (step === 1) {
       const weeksToRace = data.raceDate
         ? Math.floor(
-            (new Date(data.raceDate).getTime() - Date.now()) /
+            (new Date(data.raceDate).getTime() - now) /
               (7 * 24 * 60 * 60 * 1000),
           )
         : 0
@@ -82,9 +99,6 @@ export default function OnboardingPage() {
     generatePlan(profile)
     setOnboardingComplete(true)
 
-    setTimeout(() => {
-      router.push("/dashboard")
-    }, 800)
   }
 
   const stepComponents = [
@@ -95,7 +109,7 @@ export default function OnboardingPage() {
     <StepAssessment key={5} data={data} onChange={updateData} />,
   ]
 
-  if (loading) return <PlanLoader />
+  if (loading) return <PlanLoader elapsed={elapsed} />
 
   return (
     <div className="min-h-screen bg-background flex lg:flex-row flex-col">
@@ -168,19 +182,25 @@ export default function OnboardingPage() {
 
         {/* Progress bar — mobile only */}
         <div className="h-0.5 bg-hairline">
-          <div
-            className="h-full bg-accent"
-            style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+          <motion.div
+            className="h-full origin-left bg-accent"
+            initial={false}
+            animate={{ scaleX: step / TOTAL_STEPS }}
+            transition={motionTransition(reduced)}
           />
         </div>
 
         {/* Step content */}
-        <div
+        <motion.div
           key={step}
+          data-onboarding-step={step}
+          initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={motionTransition(reduced)}
           className="flex-1 w-full max-w-[680px] mx-auto px-4 py-8"
         >
           {stepComponents[step - 1]}
-        </div>
+        </motion.div>
 
         {/* Footer action */}
         <div className="sticky bottom-0 w-full max-w-[680px] mx-auto bg-background p-4 pb-[calc(env(safe-area-inset-bottom)+16px)] border-t border-border">
@@ -188,7 +208,7 @@ export default function OnboardingPage() {
             data.raceDate &&
             (() => {
               const weeks = Math.floor(
-                (new Date(data.raceDate).getTime() - Date.now()) /
+                (new Date(data.raceDate).getTime() - now) /
                   (7 * 24 * 60 * 60 * 1000),
               )
               if (weeks < 4) {

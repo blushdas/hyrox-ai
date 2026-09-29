@@ -123,18 +123,31 @@ export function ErrorState({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-export function Skeleton() {
+export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "plan" | "coach-ai" | "people" | "profile" }) {
   return (
-    <div
-      aria-label="Loading plan"
-      role="status"
-      className="space-y-4 py-6 motion-safe:animate-pulse"
-    >
-      <div className="h-60 rounded-md border" />
-      <div className="h-24 border" />
-      {[1, 2, 3, 4].map((n) => (
-        <div key={n} className="h-20 border-b" />
-      ))}
+    <div aria-label={`Loading ${variant}`} role="status" className="space-y-5 py-6 motion-safe:animate-pulse">
+      <div aria-hidden="true" className="space-y-5">
+        <div className="h-3 w-28 rounded-sm bg-surface-2" />
+        <div className="h-7 w-40 rounded-sm bg-surface-2" />
+        <div className="h-px bg-hairline" />
+        {variant === "dashboard" && <>
+          <div className="h-60 rounded-md border bg-surface-1 p-5"><div className="mt-8 h-6 w-2/3 bg-surface-2" /><div className="mt-6 h-11 bg-surface-2" /></div>
+          <div className="grid grid-cols-7 gap-2">{Array.from({ length: 7 }, (_, i) => <div key={i} className="h-16 rounded-sm bg-surface-1" />)}</div>
+        </>}
+        {variant === "profile" && <div className="flex items-center gap-4 py-3"><div className="size-16 rounded-full bg-surface-2" /><div className="h-4 w-1/2 bg-surface-2" /></div>}
+        {variant === "coach-ai" ? <>
+          <div className="h-10 border-b bg-surface-1" />
+          <div className="ml-auto h-16 w-3/4 rounded-md bg-surface-2" />
+          <div className="h-28 w-5/6 rounded-md bg-surface-1" />
+          <div className="mt-32 h-14 rounded-md border bg-surface-2" />
+        </> : Array.from({ length: variant === "plan" ? 6 : 4 }, (_, i) => (
+          <div key={i} className={`flex items-center gap-4 border-b py-4 ${variant === "plan" ? "h-24" : "h-20"}`}>
+            {variant === "people" && <div className="size-10 shrink-0 rounded-full bg-surface-2" />}
+            <div className="flex-1 space-y-3"><div className="h-3 w-1/3 bg-surface-2" /><div className={`h-2 bg-surface-1 ${variant === "plan" ? "w-4/5" : "w-2/3"}`} /></div>
+            <div className="h-3 w-10 bg-surface-2" />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -181,7 +194,7 @@ export function Sheet({
       onCancel={onClose}
       onClose={onClose}
       aria-label={title}
-      className="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[90dvh] w-full max-w-none overflow-y-auto rounded-t-lg border bg-surface-1 p-4 pb-[calc(env(safe-area-inset-bottom)+24px)] text-foreground backdrop:bg-background sm:mx-auto sm:max-w-lg"
+      className="motion-sheet fixed inset-x-0 top-auto bottom-0 m-0 max-h-[90dvh] w-full max-w-none overflow-y-auto rounded-t-lg border bg-surface-1 p-4 pb-[calc(env(safe-area-inset-bottom)+24px)] text-foreground sm:mx-auto sm:max-w-lg"
     >
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-[22px] font-semibold">{title}</h2>
