@@ -13,7 +13,11 @@ export async function proxy(request: NextRequest) {
     target.searchParams.set("callbackUrl", request.nextUrl.pathname + request.nextUrl.search);
     return NextResponse.redirect(target);
   }
-  if (request.nextUrl.pathname === "/sign-in" && token) return NextResponse.redirect(new URL("/dashboard", request.url));
+  if (request.nextUrl.pathname === "/sign-in" && token) {
+    // Only the native completion path may bypass the signed-in dashboard redirect.
+    if (request.nextUrl.searchParams.get("callbackUrl") === "/auth/native-complete") return NextResponse.next();
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
   return NextResponse.next();
 }
 
