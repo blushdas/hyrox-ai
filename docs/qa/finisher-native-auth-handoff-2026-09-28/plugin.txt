@@ -1,8 +1,0 @@
-Verified plugin: @aparajita/capacitor-secure-storage@8.0.1
-Primary source: https://github.com/aparajita/capacitor-secure-storage
-README: explicitly targets Capacitor 8; iOS uses encrypted system Keychain.
-Installed Package.swift: capacitor-swift-pm from 8.0.0; KeychainSwift from 21.0.0.
-Installed index.js: registerPlugin('SecureStorage'), iOS native implementation.
-Client explicitly rejects non-native platforms and unavailable native plugin before storage calls.
-Token uses whenUnlockedThisDeviceOnly, sync=false; never web storage fallback.
-Exactly one new direct npm dependency. cap sync ios lists it as an iOS plugin.

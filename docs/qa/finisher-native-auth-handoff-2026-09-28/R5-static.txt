@@ -1,5 +1,0 @@
-src/lib/auth/native-session-client.ts: no credentials: "include"
-src/components/shared/native-auth-gate.tsx: no credentials: "include"
-src/app/sign-in/sign-in-buttons.tsx: no credentials: "include"
-src/app/(app)/profile/page.tsx: no credentials: "include"
-Native fetch uses Authorization: Bearer and credentials: omit. No-token and 401 return null; gate redirects to /sign-in. Sign-out awaits clearNativeToken before redirect. Simulator behavior remains manual_blocked.
