@@ -1,0 +1,9 @@
+PASS preserved handler src/app/onboarding/page.tsx validateStep
+PASS preserved handler src/app/onboarding/page.tsx handleNext
+PASS preserved handler src/app/onboarding/page.tsx updateData
+PASS preserved handler src/app/(app)/profile/page.tsx handleRaceDateSave
+PASS preserved handler src/app/(app)/profile/page.tsx handleResetOnboarding
+PASS preserved handler src/app/(app)/session/[id]/session-detail.tsx handleComplete
+PASS preserved handler src/app/(app)/session/[id]/session-detail.tsx handleSkip
+PASS preserved handler src/app/sign-in/sign-in-buttons.tsx login
+PASS every untouchable file and dependency manifest byte-identical to origin/main

@@ -13,9 +13,15 @@ export function Logo({ className, size = "md" }: LogoProps) {
   }
 
   return (
-    <span className={cn("font-black tracking-tighter", sizeClasses[size], className)}>
+    <span
+      className={cn(
+        "font-semibold tracking-tight",
+        sizeClasses[size],
+        className,
+      )}
+    >
       <span className="text-primary">F</span>
-      <span className="text-white">INISHER</span>
+      <span className="text-foreground">INISHER</span>
     </span>
   )
 }

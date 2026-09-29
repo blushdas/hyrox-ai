@@ -1,0 +1,42 @@
+import type { Coach, CoachFilters } from "./types"
+export const DEFAULT_FILTERS: CoachFilters = {
+  query: "",
+  specialties: [],
+  level: "any",
+  availability: "any",
+  verifiedOnly: false,
+}
+export function filterCoaches(
+  coaches: Coach[],
+  filters: CoachFilters,
+): Coach[] {
+  const q = filters.query.trim().toLowerCase()
+  return coaches.filter(
+    (c) =>
+      (!q ||
+        [c.name, c.headline, c.location].some((s) =>
+          s.toLowerCase().includes(q),
+        )) &&
+      (!filters.specialties.length ||
+        filters.specialties.some((s) => c.specialties.includes(s))) &&
+      (filters.level === "any" || c.levels.includes(filters.level)) &&
+      (filters.availability === "any" ||
+        c.availability === filters.availability) &&
+      (!filters.verifiedOnly || c.verified),
+  )
+}
+export function sortCoaches(coaches: Coach[]): Coach[] {
+  const order = { open: 0, waitlist: 1, full: 2 }
+  return [...coaches].sort(
+    (a, b) =>
+      Number(b.verified) - Number(a.verified) ||
+      order[a.availability] - order[b.availability] ||
+      a.name.localeCompare(b.name),
+  )
+}
+export const countActiveFilters = (f: CoachFilters): number =>
+  Number(Boolean(f.query.trim())) +
+  f.specialties.length +
+  Number(f.level !== "any") +
+  Number(f.availability !== "any") +
+  Number(f.verifiedOnly)

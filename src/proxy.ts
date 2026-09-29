@@ -18,4 +18,4 @@ export async function proxy(request: NextRequest) {
 }
 
 // Next requires literal matchers for build-time analysis; tested against authMatcher.
-export const config = { matcher: ["/dashboard/:path*", "/onboarding/:path*", "/plan/:path*", "/profile/:path*", "/session/:path*", "/sign-in"] };
+export const config = { matcher: ["/dashboard/:path*", "/onboarding/:path*", "/plan/:path*", "/profile/:path*", "/session/:path*", "/coach-ai/:path*", "/people/:path*", "/sign-in"] };

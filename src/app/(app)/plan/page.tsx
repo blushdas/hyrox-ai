@@ -1,82 +1,55 @@
 "use client"
 
 import { usePlanStore } from "@/stores/plan-store"
-import { IntensityChart } from "@/components/app/intensity-chart"
-
-const SESSION_TYPE_META = [
-  { label: "Foundation / Power", color: "#EF4444", dot: "bg-red-500" },
-  { label: "Engine Builder", color: "#3B82F6", dot: "bg-blue-500" },
-  { label: "Aerobic / Recovery", color: "#22C55E", dot: "bg-green-500" },
-  { label: "Race Simulation", color: "#8B5CF6", dot: "bg-violet-500" },
-]
-
+import { useRouter } from "next/navigation"
+import { PageHeader, Section, Skeleton } from "@/components/shell/primitives"
+import { TrainSegments, PlanWeekRow } from "@/components/train/train-components"
+import { getPlanOverview } from "@/lib/train/selectors"
+import type { Phase } from "@/lib/types"
+const descriptions: Record<Phase, string> = {
+  foundation: "Movement prep and aerobic foundation.",
+  base: "Build a consistent aerobic foundation.",
+  build: "Develop pace and station volume.",
+  peak: "Practice race pace and full simulations.",
+  taper: "Sharpen, recover, arrive ready.",
+}
 export default function PlanPage() {
-  const { plan, currentWeek } = usePlanStore()
-
-  if (!plan) {
-    return (
-      <div className="flex-1 flex items-center justify-center p-6">
-        <p className="text-muted-foreground text-sm">No plan yet. Complete onboarding to generate your plan.</p>
-      </div>
-    )
-  }
-
+  const { plan, currentWeek, setCurrentWeek } = usePlanStore()
+  const router = useRouter()
+  if (!plan) return <Skeleton />
+  const rows = getPlanOverview(plan)
+  const phases = [...new Set(rows.map((r) => r.phase))]
+  const maxLoad = Math.max(0, ...rows.map((r) => r.load))
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-xl font-bold text-white">Training Load</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">12-week intensity overview</p>
-      </div>
-
-      {/* Chart card */}
-      <div className="bg-card border border-border rounded-xl p-4">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Weekly Intensity</span>
-          <span className="text-xs text-primary font-medium">Week {currentWeek} of {plan.totalWeeks}</span>
-        </div>
-        <IntensityChart plan={plan} currentWeek={currentWeek} />
-      </div>
-
-      {/* Legend */}
-      <div className="bg-card border border-border rounded-xl p-4">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-3">Session Types</p>
-        <div className="grid grid-cols-2 gap-2">
-          {SESSION_TYPE_META.map(({ label, color, dot }) => (
-            <div key={label} className="flex items-center gap-2">
-              <span
-                className={`w-2.5 h-2.5 rounded-full shrink-0 ${dot}`}
-                style={{ backgroundColor: color }}
+    <>
+      <PageHeader
+        title="Plan"
+        meta={`${plan.totalWeeks} WEEKS · RACE ${new Date(plan.raceDate + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`}
+      />
+      <TrainSegments plan />
+      {phases.map((phase) => {
+        const group = rows.filter((r) => r.phase === phase)
+        return (
+          <Section
+            key={phase}
+            label={`${phase} · WK ${group[0].week}–${group[group.length - 1].week}`}
+          >
+            <p className="mb-4 text-sm text-text-2">{descriptions[phase]}</p>
+            {group.map((row) => (
+              <PlanWeekRow
+                key={row.week}
+                row={row}
+                maxLoad={maxLoad}
+                active={row.week === currentWeek}
+                onSelect={() => {
+                  setCurrentWeek(row.week)
+                  router.push("/dashboard")
+                }}
               />
-              <span className="text-xs text-muted-foreground">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Phase breakdown */}
-      <div className="bg-card border border-border rounded-xl p-4">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-3">Phase Breakdown</p>
-        <div className="space-y-2">
-          {[
-            { label: "Base", weeks: "1–4", color: "#3B82F6", desc: "Movement prep + aerobic foundation" },
-            { label: "Build", weeks: "5–8", color: "#F97316", desc: "Pace development + station volume" },
-            { label: "Peak", weeks: "9–11", color: "#EF4444", desc: "Race-pace intervals + full simulations" },
-            { label: "Taper", weeks: "12", color: "#22C55E", desc: "Sharpen, recover, race ready" },
-          ].map(({ label, weeks, color, desc }) => (
-            <div key={label} className="flex items-start gap-3">
-              <div className="w-1 h-full min-h-[36px] rounded-full shrink-0 mt-0.5" style={{ backgroundColor: color }} />
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-semibold text-white">{label}</span>
-                  <span className="text-xs text-muted-foreground">Weeks {weeks}</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+            ))}
+          </Section>
+        )
+      })}
+    </>
   )
 }

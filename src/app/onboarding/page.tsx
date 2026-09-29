@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronLeft, Check } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/shared/logo"
 import { useAthleteStore } from "@/stores/athlete-store"
@@ -16,7 +16,13 @@ import { StepAssessment } from "@/components/app/onboarding/step-assessment"
 import type { AthleteProfile } from "@/lib/types"
 
 const TOTAL_STEPS = 5
-const STEP_LABELS = ["Race Details", "Fitness Baseline", "About You", "Availability", "Self-Assessment"]
+const STEP_LABELS = [
+  "Race Details",
+  "Fitness Baseline",
+  "About You",
+  "Availability",
+  "Self-Assessment",
+]
 
 const defaults: Partial<AthleteProfile> = {
   raceDate: "",
@@ -49,7 +55,10 @@ export default function OnboardingPage() {
   function validateStep(): boolean {
     if (step === 1) {
       const weeksToRace = data.raceDate
-        ? Math.floor((new Date(data.raceDate).getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000))
+        ? Math.floor(
+            (new Date(data.raceDate).getTime() - Date.now()) /
+              (7 * 24 * 60 * 60 * 1000),
+          )
         : 0
       return !!data.raceDate && weeksToRace >= 4
     }
@@ -91,7 +100,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-background flex lg:flex-row flex-col">
       {/* ── Desktop Left Panel ────────────────────────────────── */}
-      <div className="hidden lg:flex flex-col w-[380px] border-r border-border p-10 justify-between shrink-0">
+      <div className="hidden lg:flex flex-col w-[320px] border-r border-border p-10 justify-between shrink-0">
         <div>
           <Logo size="md" />
 
@@ -103,23 +112,27 @@ export default function OnboardingPage() {
               return (
                 <div key={label} className="flex items-center gap-4">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
+                    className={`w-7 h-7 rounded-xs font-mono flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
                       isDone
                         ? "bg-primary text-primary-foreground"
                         : isActive
-                        ? "bg-primary/20 text-primary border border-primary"
-                        : "bg-muted text-muted-foreground"
+                          ? "bg-accent-soft text-primary border border-primary"
+                          : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {isDone ? <Check className="w-3.5 h-3.5" /> : stepNum}
+                    {isDone ? (
+                      <span className="size-2 bg-accent-ink" />
+                    ) : (
+                      String(stepNum).padStart(2, "0")
+                    )}
                   </div>
                   <span
                     className={`text-sm transition-colors ${
                       isDone
-                        ? "text-muted-foreground line-through"
+                        ? "text-text-2"
                         : isActive
-                        ? "text-white font-semibold"
-                        : "text-muted-foreground"
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground"
                     }`}
                   >
                     {label}
@@ -131,72 +144,76 @@ export default function OnboardingPage() {
         </div>
 
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Race day is counting down.<br />
+          Race day is counting down.
+          <br />
           Let&apos;s build your plan.
         </p>
       </div>
 
       {/* ── Right Panel (mobile: full / desktop: flex-1) ─────── */}
-      <div className="flex flex-col flex-1">
+      <div className="flex min-w-0 flex-col flex-1">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center gap-3 p-4 pt-[calc(env(safe-area-inset-top)+16px)] border-b border-border">
           <button
             onClick={() => (step > 1 ? setStep(step - 1) : router.push("/"))}
-            className="p-2 -ml-2 text-muted-foreground hover:text-white transition-colors"
+            aria-label="Previous step"
+            className="flex size-11 items-center justify-center text-text-2"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <Logo size="sm" className="lg:hidden" />
-          <div className="text-xs text-muted-foreground">{step}/{TOTAL_STEPS}</div>
+          <div className="font-mono text-[11px] uppercase tracking-wider text-text-3">
+            {String(step).padStart(2, "0")} / 05 · {STEP_LABELS[step - 1]}
+          </div>
         </div>
 
         {/* Progress bar — mobile only */}
-        <div className="h-1 bg-border lg:hidden">
+        <div className="h-0.5 bg-hairline">
           <div
-            className="h-full bg-primary transition-all duration-500"
+            className="h-full bg-accent"
             style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
           />
         </div>
 
-        {/* Step labels — mobile only */}
-        <div className="flex px-4 pt-3 gap-1 lg:hidden">
-          {STEP_LABELS.map((label, i) => (
-            <div
-              key={label}
-              className={`text-[10px] font-medium transition-colors ${
-                i + 1 === step ? "text-primary" : i + 1 < step ? "text-muted-foreground" : "text-border"
-              }`}
-            >
-              {label}{i < STEP_LABELS.length - 1 && " ·"}
-            </div>
-          ))}
-        </div>
-
         {/* Step content */}
-        <div key={step} className="flex-1 px-4 py-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div
+          key={step}
+          className="flex-1 w-full max-w-[680px] mx-auto px-4 py-8"
+        >
           {stepComponents[step - 1]}
         </div>
 
         {/* Footer action */}
-        <div className="p-4 border-t border-border">
-          {step === 1 && data.raceDate && (() => {
-            const weeks = Math.floor((new Date(data.raceDate).getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000))
-            if (weeks < 4) {
-              return (
-                <div className="mb-3 p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
-                  <p className="text-xs text-destructive">Race is less than 4 weeks away. We need at least 4 weeks for a meaningful plan.</p>
-                </div>
+        <div className="sticky bottom-0 w-full max-w-[680px] mx-auto bg-background p-4 pb-[calc(env(safe-area-inset-bottom)+16px)] border-t border-border">
+          {step === 1 &&
+            data.raceDate &&
+            (() => {
+              const weeks = Math.floor(
+                (new Date(data.raceDate).getTime() - Date.now()) /
+                  (7 * 24 * 60 * 60 * 1000),
               )
-            }
-            return null
-          })()}
+              if (weeks < 4) {
+                return (
+                  <div className="mb-3 p-3 bg-surface-1 border-l border-danger">
+                    <p className="text-[13px] text-danger">
+                      Race is less than 4 weeks away. We need at least 4 weeks
+                      for a meaningful plan.
+                    </p>
+                  </div>
+                )
+              }
+              return null
+            })()}
 
           <Button
             onClick={handleNext}
             disabled={!validateStep() || loading}
             className="w-full h-12 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-40"
           >
-            {loading ? "Building your plan..." : step === TOTAL_STEPS ? "Build My Plan" : "Continue"}
+            {loading
+              ? "Building your plan..."
+              : step === TOTAL_STEPS
+                ? "Build My Plan"
+                : "Continue"}
           </Button>
         </div>
       </div>
