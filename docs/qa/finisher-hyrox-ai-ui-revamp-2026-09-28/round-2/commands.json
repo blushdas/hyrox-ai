@@ -1,0 +1,52 @@
+[
+  {
+    "name": "install",
+    "command": "npm install",
+    "exit": 0
+  },
+  {
+    "name": "build",
+    "command": "npm run build",
+    "exit": 0
+  },
+  {
+    "name": "types",
+    "command": "npx tsc --noEmit",
+    "exit": 0
+  },
+  {
+    "name": "tests",
+    "command": "npm test",
+    "exit": 0
+  },
+  {
+    "name": "lint",
+    "command": "npm run lint",
+    "exit": 1
+  },
+  {
+    "name": "console",
+    "command": "grep -rn \"console.log\" src",
+    "exit": 1
+  },
+  {
+    "name": "hex",
+    "command": "grep -rEn \"#[0-9A-Fa-f]{3,8}\\b\" src/app src/components | grep -v globals.css",
+    "exit": 1
+  },
+  {
+    "name": "styles",
+    "command": "grep -rEn \"backdrop-blur|bg-gradient|linear-gradient|radial-gradient|shadow-(sm|md|lg|xl|2xl)|Sparkles|violet-|purple-|indigo-|fuchsia-\" src",
+    "exit": 1
+  },
+  {
+    "name": "untouchable",
+    "command": "git diff origin/main --stat -- src/hooks/use-plan-generator.ts src/stores/plan-store.ts src/stores/athlete-store.ts src/lib/mock-data.ts src/lib/hyrox-plan-data.ts src/auth.ts",
+    "exit": 0
+  },
+  {
+    "name": "navigation",
+    "command": "npx playwright test e2e/navigation.spec.ts",
+    "exit": 0
+  }
+]

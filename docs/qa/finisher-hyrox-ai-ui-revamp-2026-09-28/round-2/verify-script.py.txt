@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess,json,re
+root=Path('/Users/troy/.claude/worktrees/hyrox-ai-ui-revamp');q=root/'docs/qa/finisher-hyrox-ai-ui-revamp-2026-09-28/round-2';q.mkdir(parents=True,exist_ok=True)
+commands=[('install','npm install'),('build','npm run build'),('types','npx tsc --noEmit'),('tests','npm test'),('lint','npm run lint'),('console','grep -rn "console.log" src'),('hex','grep -rEn "#[0-9A-Fa-f]{3,8}\\b" src/app src/components | grep -v globals.css'),('styles','grep -rEn "backdrop-blur|bg-gradient|linear-gradient|radial-gradient|shadow-(sm|md|lg|xl|2xl)|Sparkles|violet-|purple-|indigo-|fuchsia-" src'),('untouchable','git diff origin/main --stat -- src/hooks/use-plan-generator.ts src/stores/plan-store.ts src/stores/athlete-store.ts src/lib/mock-data.ts src/lib/hyrox-plan-data.ts src/auth.ts'),('navigation','npx playwright test e2e/navigation.spec.ts')]
+results=[]
+for name,cmd in commands:
+ r=subprocess.run(cmd,shell=True,cwd=root,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ (q/f'{name}.log').write_text(r.stdout);results.append({'name':name,'command':cmd,'exit':r.returncode});print(name,r.returncode,flush=True)
+(q/'commands.json').write_text(json.dumps(results,indent=2)+'\n')

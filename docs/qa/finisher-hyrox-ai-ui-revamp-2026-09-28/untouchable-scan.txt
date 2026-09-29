@@ -1,0 +1,5 @@
+$ git diff origin/main --stat -- src/hooks/use-plan-generator.ts src/stores/plan-store.ts src/stores/athlete-store.ts src/lib/mock-data.ts src/lib/hyrox-plan-data.ts src/auth.ts
+exit: 0
+stdout:
+
+stderr:

@@ -1,0 +1,2 @@
+import { defineConfig } from '/Users/troy/.claude/worktrees/hyrox-ai-ui-revamp/node_modules/@playwright/test/index.mjs'
+export default defineConfig({testDir:'/Users/troy/.claude/worktrees/hyrox-ai-ui-revamp/e2e',use:{baseURL:'http://localhost:3001',screenshot:'only-on-failure'},reporter:'list',outputDir:'/tmp/finisher-navigation-results'})

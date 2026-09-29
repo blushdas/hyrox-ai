@@ -1,0 +1,194 @@
+[
+  {
+    "route": "/dashboard",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fdashboard",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/plan",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fplan",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/session/w1-d1",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fsession%2Fw1-d1",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/session/does-not-exist",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fsession%2Fdoes-not-exist",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/coach-ai",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fcoach-ai",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/c-001",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fc-001",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/does-not-exist",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fdoes-not-exist",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/join",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fjoin",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/profile",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fprofile",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/onboarding",
+    "width": 390,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fonboarding",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/dashboard",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fdashboard",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/plan",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fplan",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/session/w1-d1",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fsession%2Fw1-d1",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/session/does-not-exist",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fsession%2Fdoes-not-exist",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/coach-ai",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fcoach-ai",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/c-001",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fc-001",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/does-not-exist",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fdoes-not-exist",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/people/coaches/join",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fpeople%2Fcoaches%2Fjoin",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/profile",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fprofile",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  },
+  {
+    "route": "/onboarding",
+    "width": 1280,
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fonboarding",
+    "status": "manual_blocked",
+    "label": "HUMAN_SECRET_NEEDED",
+    "reason": "OAuth provider endpoint returns HTTP 500: AUTH_SECRET is required for authentication; layout behind the gate not inspected."
+  }
+]

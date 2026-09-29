@@ -24,54 +24,69 @@ export function StepAvailability({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-black text-white mb-2">Training availability</h2>
-        <p className="text-muted-foreground text-sm">Be honest — the plan only works if you can show up.</p>
+        <h2 className="text-[22px] leading-7 font-semibold tracking-tight text-foreground mb-2">
+          Training availability
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Be honest — the plan only works if you can show up.
+        </p>
       </div>
 
       <div className="space-y-5">
         <div>
-          <label className="text-sm font-medium text-white mb-3 block">Days per week</label>
-          <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground mb-3 block">
+            Days per week
+          </label>
+          <div className="space-y-0">
             {dayOptions.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
+                aria-pressed={data.daysPerWeek === opt.value}
                 onClick={() => onChange({ daysPerWeek: opt.value })}
-                className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
+                className={`w-full flex items-center justify-between p-4 border-b transition-colors ${
                   data.daysPerWeek === opt.value
-                    ? "border-primary bg-primary/10 text-white"
-                    : "border-border bg-surface text-muted-foreground hover:border-border/80"
+                    ? "border-primary bg-accent-soft text-foreground"
+                    : "border-border bg-surface-2 text-muted-foreground hover:border-border/80"
                 }`}
               >
                 <div className="text-left">
                   <div className="font-semibold text-sm">{opt.label}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
-                </div>
-                {data.daysPerWeek === opt.value && (
-                  <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                  <div className="text-[13px] text-muted-foreground mt-0.5">
+                    {opt.desc}
                   </div>
-                )}
+                </div>
+                <span
+                  aria-hidden="true"
+                  className={`size-4 shrink-0 rounded-xs border ${data.daysPerWeek === opt.value ? "border-accent bg-accent" : "border-hairline-strong"}`}
+                />
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium text-white mb-3 block">Session length</label>
-          <div className="grid grid-cols-2 gap-2">
+          <label className="text-sm font-medium text-foreground mb-3 block">
+            Session length
+          </label>
+          <div className="flex flex-col">
             {durationOptions.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
+                aria-pressed={data.sessionLength === opt.value}
                 onClick={() => onChange({ sessionLength: opt.value })}
-                className={`p-3 rounded-xl border text-sm font-medium transition-all ${
+                className={`min-h-11 flex items-center justify-between p-3 border-b text-left text-sm font-medium transition-colors ${
                   data.sessionLength === opt.value
-                    ? "border-primary bg-primary/10 text-white"
-                    : "border-border bg-surface text-muted-foreground hover:border-border/80"
+                    ? "border-primary bg-accent-soft text-foreground"
+                    : "border-border bg-surface-2 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                {opt.label}
+                <span className="font-mono">{opt.label}</span>
+                <span
+                  aria-hidden="true"
+                  className={`size-4 border ${data.sessionLength === opt.value ? "bg-accent border-accent" : "border-hairline-strong"}`}
+                />
               </button>
             ))}
           </div>
