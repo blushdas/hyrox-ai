@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-29T00:00:00Z",
+  "title": "Design System: hyrox-ai",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Go Green", "canonical": "#22C55E", "tonalRamp": ["#052e16", "#14532d", "#166534", "#16a34a", "#22c55e", "#4ade80", "#86efac", "#dcfce7"] },
+      "background": { "role": "neutral", "displayName": "Void Black", "canonical": "#0A0A0A", "tonalRamp": ["#0a0a0a", "#0d0d0d", "#111111", "#161616", "#1a1a1a", "#1f1f1f", "#3d3d3d", "#6b7280"] },
+      "text-muted": { "role": "neutral", "displayName": "Muted Slate", "canonical": "#6B7280", "tonalRamp": ["#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6"] },
+      "destructive": { "role": "secondary", "displayName": "Alert Red", "canonical": "#EF4444", "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#dc2626", "#ef4444", "#f87171", "#fca5a5", "#fee2e2"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Race countdown and hero numbers only." },
+      "body": { "displayName": "Body", "purpose": "Rows, descriptions, most UI text." },
+      "label": { "displayName": "Label", "purpose": "Nav labels and status tags." }
+    },
+    "shadows": [
+      { "name": "fab", "value": "0 10px 15px -3px rgba(0,0,0,0.6)", "purpose": "Lifts the bottom-nav center FAB above the bar. Only resting shadow in the system." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default easing for entrances and route transitions." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Taps, hover, state confirmation." },
+      { "name": "duration-base", "value": "220ms", "purpose": "Route transitions and sheet open." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Go Green action, one per screen area.",
+      "html": "<button class=\"ds-btn-primary\">Start session</button>",
+      "css": ".ds-btn-primary { background: #22C55E; color: #000; height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; font-weight: 500; transition: opacity 150ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { opacity: 0.8; } .ds-btn-primary:focus-visible { outline: none; border-color: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.5); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lift Black fill for secondary actions.",
+      "html": "<button class=\"ds-btn-secondary\">Skip</button>",
+      "css": ".ds-btn-secondary { background: #161616; color: #fff; height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 150ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-secondary:hover { background: rgba(22,22,22,0.8); } .ds-btn-secondary:focus-visible { outline: none; border-color: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.5); }"
+    },
+    {
+      "name": "Session Row",
+      "kind": "custom",
+      "refersTo": "session-row",
+      "description": "List row: type dot, title, day and duration, status tag.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-dot\"></span><div class=\"ds-row-body\"><div class=\"ds-row-title\">Engine Builder</div><div class=\"ds-row-meta\">Tue · 60 min</div></div><span class=\"ds-row-status\">Done</span></div>",
+      "css": ".ds-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #1A1A1A; background: #0A0A0A; transition: background 150ms; } .ds-row:hover { background: rgba(255,255,255,0.03); } .ds-dot { width: 6px; height: 6px; border-radius: 9999px; background: #3B82F6; flex-shrink: 0; } .ds-row-body { flex: 1; min-width: 0; } .ds-row-title { font-size: 14px; font-weight: 500; color: #fff; } .ds-row-meta { font-size: 12px; color: #6B7280; margin-top: 2px; } .ds-row-status { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; }"
+    },
+    {
+      "name": "Bottom Nav Item",
+      "kind": "nav",
+      "refersTo": "bottom-nav",
+      "description": "Icon plus 10px label; active turns green with a 2px top edge.",
+      "html": "<div class=\"ds-nav\"><a class=\"ds-nav-item ds-active\">Home</a><a class=\"ds-nav-item\">Plan</a><a class=\"ds-nav-item\">Profile</a></div>",
+      "css": ".ds-nav { display: flex; justify-content: space-around; background: #0D0D0D; border-top: 1px solid #1A1A1A; height: 64px; align-items: center; } .ds-nav-item { font-size: 10px; font-weight: 500; color: #6B7280; padding: 8px 16px; transition: color 150ms; } .ds-nav-item:hover { color: #fff; } .ds-active { color: #22C55E; border-top: 2px solid #22C55E; margin-top: -1px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Race Clock",
+    "overview": "Everything reads like a stopwatch: tight, tabular, decisive. The surface is near-black and flat. A single green (#22C55E) is the go signal and appears only where the athlete should act or where something is live.",
+    "keyCharacteristics": [
+      "Flat, tonal layering with hairline borders; no resting shadows.",
+      "One accent, green, used sparingly and only for go/active/live.",
+      "Compact type on a 14px body, tabular numerals for times and counts.",
+      "Motion is 150 to 250ms, exponential ease-out, and collapses to a plain fade under prefers-reduced-motion.",
+      "One-handed, thumb-reachable controls; the bottom nav is the primary navigation on mobile."
+    ],
+    "rules": [
+      { "name": "The One Go Signal Rule", "body": "Green marks what is active, live, or actionable, and covers well under 10% of any screen.", "section": "colors" },
+      { "name": "The Marker Not Fill Rule", "body": "Session-type hues appear as dots and chart strokes. They never flood a row or card.", "section": "colors" },
+      { "name": "The Tabular Rule", "body": "Any number that changes or is compared uses tabular numerals so digits never jitter.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Shadows appear only on the FAB and on overlays that must sit above the page.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the green (#22C55E) as the only accent and reserve it for active, live, or actionable elements.",
+      "Do show real progress in loaders: named stages for AI plan generation, skeletons shaped like the content they replace.",
+      "Do keep transitions 150 to 250ms with exponential ease-out; animate transform and opacity only.",
+      "Do honor prefers-reduced-motion by collapsing every animation to a plain fade or instant change.",
+      "Do use tabular numerals for times, counts, and countdowns.",
+      "Do build depth from tonal steps and 1px hairlines."
+    ],
+    "donts": [
+      "Don't use generic SaaS or AI slop: purple gradients, sparkle icons, or chatbot shimmer.",
+      "Don't add gamified clutter: confetti, XP bars, or popping badges.",
+      "Don't use bouncy or playful easing, and don't use slow cinematic fades that make a gym-side tap feel laggy.",
+      "Don't use border-left or border-right wider than 1px as a colored accent on rows or cards.",
+      "Don't put a shadow on cards or rows at rest.",
+      "Don't fill rows or cards with session-type hues; keep them to dots and chart strokes.",
+      "Don't animate layout properties (width, height, top, left, margin).",
+      "Don't block input during an animation; taps must register immediately."
+    ]
+  }
+}
