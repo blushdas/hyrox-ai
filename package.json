@@ -15,7 +15,8 @@
     "build:ios": "node --experimental-strip-types scripts/build-ios.ts",
     "test": "vitest run",
     "db:migrate:local": "wrangler d1 migrations apply finisher-db --local",
-    "db:migrate": "wrangler d1 migrations apply finisher-db --remote"
+    "db:migrate": "wrangler d1 migrations apply finisher-db --remote",
+    "deploy": "opennextjs-cloudflare build && wrangler deploy"
   },
   "dependencies": {
     "@aparajita/capacitor-secure-storage": "^8.0.1",

@@ -1,37 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FINISHER (hyrox-ai)
 
-## Getting Started
+A Next.js App Router app for Hyrox training plans, deployed as a Cloudflare Worker (OpenNext) with a Capacitor iOS shell.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Secrets live in `.env.local` (never committed).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Checks before opening a PR:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm test
+```
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
+Nothing deploys automatically. After a PR merges, deploy the `finisher` Worker by hand from an up-to-date `main`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git pull
+npm run deploy
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`npm run deploy` runs `opennextjs-cloudflare build` and then `wrangler deploy`. Then smoke test production: switch between tabs, hard-reload `/dashboard`, and run the plan loader.
 
-## Deploy on Vercel
+Extra steps only when the change needs them:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Database migration:** if the PR added files under `migrations/`, run `npm run db:migrate` (applies to the remote D1 database `finisher-db`). Use `npm run db:migrate:local` for local.
+- **iOS app:** if the change affects the native bundle, run `npm run build:ios`, then build and archive in Xcode.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# hyrox-ai
+## Scripts
+
+- `npm run dev`: local dev server.
+- `npm run build`: Next.js production build.
+- `npm test`: Vitest unit tests.
+- `npm run test:e2e`: Playwright end-to-end tests.
+- `npm run deploy`: build and deploy the Worker.
+- `npm run db:migrate`: apply D1 migrations to the remote database.
+- `npm run build:ios`: stage the web build for the iOS shell.
