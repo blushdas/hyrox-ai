@@ -1,5 +1,0 @@
-Check: every bottom-[ token closes before whitespace or a quote in src code.
-src/components/people/people-components.tsx:218: bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))]
-src/components/coach-ai/chat.tsx:181: bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))]
-src/app/(app)/session/[id]/session-detail.tsx:116: bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))]
-Result: 3 checked; 0 malformed.

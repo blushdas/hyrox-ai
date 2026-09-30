@@ -1,7 +1,0 @@
-Attempt: @Browser localhost:3001/sign-in -> Continue with Google.
-GET /api/auth/providers -> HTTP 500.
-Server literal error: Error: AUTH_SECRET is required for authentication
-    at <unknown> (src/auth.ts:25:22)
-Browser literal error: ClientFetchError: Unexpected end of JSON input. Read more at https://errors.authjs.dev#autherror
-Read-only .env.local presence check: AUTH_SECRET absent; AUTH_GOOGLE_ID present; AUTH_GOOGLE_SECRET present; QA_EMAIL present; QA_PASSWORD present; TOTP_SECRET absent. No values printed.
-Auth never reached Google credential entry. No credentials invented, no auth bypass added.

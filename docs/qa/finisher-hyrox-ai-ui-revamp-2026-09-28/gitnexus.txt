@@ -1,3 +1,0 @@
-Command: gitnexus impact AppShell --repo hyrox-ai
-Literal error: Repository "hyrox-ai" not found. Available: troyxyz-site, claw-code-main, z21-landing-page, frc-manila, kanban-board, oha-ae-v2, middleware, lobbyhub-eja-logbook, niic-ai, daryle-ai-ae, astra-qa-hub, oha-ae, lobbyhub-eja-mobile-shell-primitives
-TOOLING_ABSENT: repository absent from index; proceeded as handoff permits.
