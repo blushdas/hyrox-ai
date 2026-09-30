@@ -1,5 +1,0 @@
-$ grep -rEn "#[0-9A-Fa-f]{3,8}\b" src/app src/components | grep -v globals.css
-exit: 1
-stdout:
-
-stderr:

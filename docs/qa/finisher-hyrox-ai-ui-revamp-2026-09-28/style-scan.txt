@@ -1,5 +1,0 @@
-$ grep -rEn "backdrop-blur|bg-gradient|linear-gradient|radial-gradient|shadow-(sm|md|lg|xl|2xl)|Sparkles|violet-|purple-|indigo-|fuchsia-" src
-exit: 1
-stdout:
-
-stderr:

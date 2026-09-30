@@ -1,3 +1,0 @@
-$ npx eslint src/components/coach-ai/chat.tsx src/components/people/people-components.tsx
-exit: 0
-(no output)

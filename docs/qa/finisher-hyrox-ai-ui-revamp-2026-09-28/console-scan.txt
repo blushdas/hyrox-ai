@@ -1,5 +1,0 @@
-$ grep -rn "console.log" src
-exit: 1
-stdout:
-
-stderr:

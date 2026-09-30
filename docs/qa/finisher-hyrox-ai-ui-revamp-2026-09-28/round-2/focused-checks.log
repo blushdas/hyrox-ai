@@ -1,4 +1,0 @@
-sticky bottom rule: PASS bottom:calc(var(--tab-bar-h) + env(safe-area-inset-bottom))
-composer safe-area padding: PASS padding-bottom:calc(.75rem + env(safe-area-inset-bottom))
-PASS no imports/references to deleted bottom-nav/sidebar-nav files (grep exit 1, empty output).
-PASS hero file byte-identical to 875ce86.
