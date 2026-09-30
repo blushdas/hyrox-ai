@@ -16,6 +16,8 @@ const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
   themeColor: tokens.bg,
 }
