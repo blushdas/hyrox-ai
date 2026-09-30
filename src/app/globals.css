@@ -45,6 +45,9 @@
   --radius-lg: 10px;
 }
 :root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
   --bg: #0a0b0a;
   --surface-1: #101210;
   --surface-2: #161916;
@@ -103,7 +106,8 @@
   a,
   input,
   textarea {
-    transition-duration: 120ms;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--ease-out-expo);
   }
 }
 ::-webkit-scrollbar {
@@ -122,28 +126,36 @@
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
-  *::after {
+  *::after,
+  *::backdrop {
     animation-duration: 0ms !important;
     transition-duration: 0ms !important;
     scroll-behavior: auto !important;
   }
 }
 
-@keyframes plan-progress {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(400%);
-  }
+/* Keep the dialog in the top layer during its visual exit, without delaying close(). */
+.motion-sheet {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo),
+    display var(--duration-base) allow-discrete,
+    overlay var(--duration-base) allow-discrete;
 }
-.plan-progress {
-  animation: plan-progress 1.5s linear infinite;
+.motion-sheet[open] {
+  opacity: 1;
+  transform: translateY(0);
 }
-@media (prefers-reduced-motion: reduce) {
-  .plan-progress {
-    animation: none;
-    transform: none;
-    width: 100%;
-  }
+.motion-sheet::backdrop {
+  background: var(--background);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out-expo),
+    display var(--duration-base) allow-discrete,
+    overlay var(--duration-base) allow-discrete;
+}
+.motion-sheet[open]::backdrop { opacity: 0.8; }
+@starting-style {
+  .motion-sheet[open] { opacity: 0; transform: translateY(100%); }
+  .motion-sheet[open]::backdrop { opacity: 0; }
 }
