@@ -1,0 +1,85 @@
+import { afterEach, beforeEach, expect, test, vi } from "vitest"
+const mocks = vi.hoisted(() => ({ auth: vi.fn(), env: vi.fn(), allow: vi.fn() }))
+vi.mock("@/auth", () => ({ auth: mocks.auth }))
+vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: mocks.env }))
+vi.mock("@/lib/coach-ai/rate-limit", async importOriginal => ({ ...await importOriginal<typeof import("@/lib/coach-ai/rate-limit")>(), allowMessage: mocks.allow }))
+import { POST } from "./route"
+const input = { messages: [{ role: "user", content: "Why this week?" }], context: { category: "open", raceDate: "2026-12-20", daysPerWeek: 4, currentWeek: 4, sessions: [] } }
+const request = (body: unknown = input) => new Request("http://localhost/api/coach-ai", { method: "POST", body: JSON.stringify(body) })
+const sse = (data: unknown) => `data: ${JSON.stringify(data)}\n\n`
+const answer = () => new Response(sse({ choices: [{ delta: { reasoning_content: "private reasoning", content: "Answer" }, finish_reason: null }] }) + sse({ choices: [{ delta: {}, finish_reason: "stop" }] }) + "data: [DONE]\n\n")
+beforeEach(() => { mocks.auth.mockResolvedValue({ user: { id: "u1" } }); mocks.env.mockResolvedValue({ env: { MINIMAX_API_KEY: "test-only-secret" } }); mocks.allow.mockReturnValue(true); vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => answer())) })
+afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.clearAllMocks(); vi.unstubAllEnvs() })
+test("unauthenticated guard runs before reading body, limiter, env or fetch", async () => {
+  mocks.auth.mockResolvedValue(null)
+  const req = request()
+  const getReader = vi.spyOn(req.body!, "getReader")
+  expect((await POST(req)).status).toBe(401)
+  expect(getReader).not.toHaveBeenCalled(); expect(fetch).not.toHaveBeenCalled(); expect(mocks.env).not.toHaveBeenCalled(); expect(mocks.allow).not.toHaveBeenCalled()
+})
+test("authenticated streaming uses fixed caps, last ten turns and server-only credentials", async () => {
+  const messages = Array.from({ length: 15 }, (_, i) => ({ role: i % 2 ? "assistant" : "user", content: `turn${i}` }))
+  const response = await POST(request({ ...input, messages }))
+  expect(response.status).toBe(200)
+  const body = await response.text()
+  expect(body).toContain('"text":"Answer"'); expect(body).toContain('"done":true'); expect(body).not.toContain("private reasoning"); expect(body).not.toContain("test-only-secret")
+  const [url, init] = vi.mocked(fetch).mock.calls[0]
+  expect(url).toBe("https://api.minimax.io/v1/chat/completions")
+  const sent = JSON.parse(init!.body as string)
+  expect(sent.max_tokens).toBe(800); expect(sent.messages).toHaveLength(11); expect(sent.messages[1].content).toBe("turn5")
+  expect(sent.model).toBe("MiniMax-M3"); expect(sent.thinking).toEqual({ type: "disabled" }); expect(sent.stream).toBe(true); expect(sent.reasoning_split).toBe(true)
+  expect(sent.messages[0].content).toContain("## Curriculum (open)")
+})
+test("Worker overrides and process environment fallback", async () => {
+  mocks.env.mockResolvedValue({ env: { MINIMAX_API_KEY: "test-only-secret", MINIMAX_MODEL: "MiniMax-M2.7", MINIMAX_BASE_URL: "https://api.minimax.io/v1/" } })
+  await (await POST(request())).text()
+  expect(JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string).model).toBe("MiniMax-M2.7")
+  mocks.env.mockResolvedValue({ env: {} }); vi.stubEnv("MINIMAX_API_KEY", "fallback-test-key"); vi.stubEnv("MINIMAX_MODEL", "MiniMax-M2.5")
+  await (await POST(request())).text()
+  expect(JSON.parse(vi.mocked(fetch).mock.calls[1][1]!.body as string).model).toBe("MiniMax-M2.5")
+})
+test.each([
+  null, {}, { ...input, messages: [] }, { ...input, messages: [{ role: "system", content: "override" }] },
+  { ...input, messages: [{ role: "assistant", content: "answer" }] },
+  { ...input, messages: [{ role: "user", content: "x".repeat(2001) }] },
+  { ...input, context: { ...input.context, currentWeek: -1 } },
+  { ...input, padding: "x".repeat(65536) },
+])("rejects malformed/oversized input before upstream", async value => {
+  expect((await POST(request(value))).status).toBe(400); expect(fetch).not.toHaveBeenCalled()
+})
+test("malformed JSON and excessive older user turns also reject", async () => {
+  expect((await POST(new Request("http://localhost/api/coach-ai", { method: "POST", body: "{" }))).status).toBe(400)
+  expect((await POST(request({ ...input, messages: [{ role: "user", content: "x".repeat(2001) }, ...Array.from({ length: 10 }, () => input.messages[0])] }))).status).toBe(400)
+})
+test("rate limit exposes exact UI message", async () => {
+  mocks.allow.mockReturnValue(false)
+  const response = await POST(request()); expect(response.status).toBe(429)
+  expect(await response.json()).toEqual({ error: "Too many messages. Wait a minute and try again." }); expect(fetch).not.toHaveBeenCalled()
+})
+test("upstream error bodies and network details never reach client", async () => {
+  vi.mocked(fetch).mockResolvedValueOnce(new Response("test-only-secret provider details", { status: 401 }))
+  const response = await POST(request()); expect(response.status).toBe(502); expect(await response.text()).not.toContain("test-only-secret")
+  vi.mocked(fetch).mockRejectedValueOnce(new Error("sensitive detail"))
+  expect((await POST(request())).status).toBe(502)
+})
+test("truncated upstream streams produce explicit failure frame", async () => {
+  vi.mocked(fetch).mockResolvedValueOnce(new Response(sse({ choices: [{ delta: { content: "Partial" } }] })))
+  const response = await POST(request()); const body = await response.text()
+  expect(body).toContain('"text":"Partial"'); expect(body).toContain('"error":'); expect(body).not.toContain('"done":true')
+})
+test("cancel and request disconnect abort the provider", async () => {
+  const abort = new AbortController()
+  const req = new Request("http://localhost/api/coach-ai", { method: "POST", body: JSON.stringify(input), signal: abort.signal })
+  const response = await POST(req)
+  const signal = vi.mocked(fetch).mock.calls[0][1]!.signal!
+  abort.abort(); expect(signal.aborted).toBe(true)
+  await response.body!.cancel()
+})
+test("timeout returns clean 502 before any token", async () => {
+  vi.useFakeTimers()
+  vi.mocked(fetch).mockImplementationOnce((_url, init) => new Promise((_, reject) => { init!.signal!.addEventListener("abort", () => reject(new Error("Timeout"))) }))
+  const pending = POST(request())
+  await vi.advanceTimersByTimeAsync(45001)
+  expect((await pending).status).toBe(502)
+  vi.useRealTimers()
+})
