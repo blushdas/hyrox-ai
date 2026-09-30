@@ -194,7 +194,7 @@ export default function OnboardingPage() {
         <motion.div
           key={step}
           data-onboarding-step={step}
-          initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={motionTransition(reduced)}
           className="flex-1 w-full max-w-[680px] mx-auto px-4 py-8"
