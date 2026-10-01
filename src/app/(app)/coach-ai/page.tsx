@@ -27,9 +27,9 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
     today: getTodayIsoWeekday(new Date()),
     sessionId,
   }
-  const send = (prompt: string) => {
+  const send = (prompt: string, webSearch = false) => {
     if (!prompt.trim() || chat.isStreaming) return
-    chat.send(prompt, context)
+    chat.send(prompt, context, webSearch)
     setValue("")
   }
   return (
@@ -68,7 +68,7 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
       <Composer
         value={value}
         onChange={setValue}
-        onSend={() => send(value)}
+        onSend={(webSearch) => send(value, webSearch)}
         streaming={chat.isStreaming}
         onStop={chat.stop}
       />

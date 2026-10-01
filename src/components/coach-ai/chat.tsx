@@ -8,8 +8,11 @@ import type { ChatMessage, Citation } from "@/lib/coach-ai/types"
 import { MAX_MESSAGE_CHARS, SUGGESTED_PROMPTS } from "@/lib/coach-ai/mock-coach"
 import { MonoLabel } from "@/components/shell/primitives"
 import { StreamingMarkdown, citationAnchor } from "./markdown"
+import { parseCoachTake } from "@/lib/coach-ai/coach-take"
+import { CoachTakeCard } from "./coach-take-card"
 import { MessageActions } from "./message-actions"
 import { useRevealedText } from "./use-revealed-text"
+import { Thinking } from "./thinking"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
     <div className="border-b py-4">
@@ -53,13 +56,17 @@ export function AssistantMessage({
   onRetry,
   retryDisabled,
   lastAssistant,
+  searching = false,
 }: {
   message: ChatMessage
   onRetry: () => void
   retryDisabled: boolean
   lastAssistant: boolean
+  searching?: boolean
 }) {
+  const take = m.status === "complete" ? parseCoachTake(m.content) : null
   const revealed = useRevealedText(m.content, m.status === "streaming")
+  const thinking = m.status === "streaming" && m.content.length === 0
   return (
     <div>
       {m.status === "error" ? (
@@ -75,11 +82,14 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          <StreamingMarkdown text={revealed}streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />
+          {thinking ? <Thinking searching={searching} /> : take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
             ))}
+            {m.webSources?.map((source, i) => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" aria-label={`Web source ${m.citations.length + i + 1}: ${source.host}`} title={source.title} className="flex min-h-11 max-w-full items-center gap-2 rounded-sm border border-hairline bg-surface-2 px-3 font-mono text-[11px]">
+              <span className="text-accent">{m.citations.length + i + 1}</span><span className="truncate">{source.host}</span><span className="text-text-3">Web</span>
+            </a>)}
           </div>
           {m.status === "complete" && <MessageActions content={m.content} regenerate={lastAssistant} disabled={retryDisabled} onRetry={onRetry} />}
         </>
@@ -144,7 +154,7 @@ export function ChatThread({
   return (
     <div ref={root} className="min-w-0 space-y-7 py-6">
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</div>
-      {messages.map((m) => (
+      {messages.map((m, index) => (
         <motion.div key={m.id} data-message-motion
           initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -157,6 +167,7 @@ export function ChatThread({
               message={m}
               onRetry={onRetry}
               lastAssistant={m.id === lastAssistant?.id}
+              searching={messages[index - 1]?.webSearch === true}
               retryDisabled={
                 streaming || (lastUser?.content.length ?? 0) > MAX_MESSAGE_CHARS
               }
@@ -182,10 +193,16 @@ export function Composer({
 }: {
   value: string
   onChange: (s: string) => void
-  onSend: () => void
+  onSend: (webSearch: boolean) => void
   streaming: boolean
   onStop: () => void
 }) {
+  const [webSearch, setWebSearch] = useState(false)
+  const send = () => {
+    if (streaming || !value.trim()) return
+    onSend(webSearch)
+    setWebSearch(false)
+  }
   const input = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
     if (input.current) {
@@ -197,7 +214,7 @@ export function Composer({
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        onSend()
+        send()
       }}
       className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))] z-30 -mx-4 mt-auto border-t bg-surface-1 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6 lg:bottom-0"
     >
@@ -208,6 +225,9 @@ export function Composer({
           {value.length} / {MAX_MESSAGE_CHARS}
         </div>
       )}
+      <button type="button" aria-pressed={webSearch} onClick={() => setWebSearch(!webSearch)} className={`mb-2 min-h-11 rounded-sm border px-3 text-sm ${webSearch ? "border-accent bg-accent text-accent-ink" : "border-hairline bg-surface-2 text-text-2"}`}>
+        Search web
+      </button>
       <div className="flex items-end gap-3">
         <textarea
           ref={input}
@@ -219,7 +239,7 @@ export function Composer({
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault()
-              if (!streaming) onSend()
+              if (!streaming) send()
             }
           }}
           className="min-h-11 min-w-0 flex-1 resize-none rounded-sm bg-surface-2 px-3 py-3 text-[15px] placeholder:text-text-3"
