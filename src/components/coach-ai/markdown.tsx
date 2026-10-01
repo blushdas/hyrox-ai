@@ -15,7 +15,7 @@ function Inlines({ nodes, citationCount, messageId }: { nodes: Inline[] } & Omit
       case "code": return <code key={i} className="rounded-sm bg-surface-2 px-1 py-0.5 font-mono text-[13px]">{node.text}</code>
       case "bold": return <strong key={i} className="font-semibold text-text-1">{children}</strong>
       case "italic": return <em key={i}>{children}</em>
-      case "link": return <a key={i} href={node.href} className="text-accent underline underline-offset-4">{children}</a>
+      case "link": return <a key={i} href={node.href} target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-4">{children}</a>
       case "citation": return node.index > 0 && node.index <= citationCount
         ? <a key={i} href={`#${citationAnchor(messageId, node.index)}`} aria-label={`Source ${node.index}`} className="px-0.5 align-super font-mono text-[10px] text-accent">[{node.index}]</a>
         : <Fragment key={i}>[{node.index}]</Fragment>
