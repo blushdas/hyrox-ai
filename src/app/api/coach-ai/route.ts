@@ -13,13 +13,14 @@ export async function POST(request: Request): Promise<Response> {
   let input
   try { input = await readRequest(request) }
   catch { return Response.json({ error: "Invalid request. Keep messages under 2000 characters." }, { status: 400 }) }
-  if (!allowMessage(session.user.id)) return Response.json({ error: RATE_LIMIT_MESSAGE }, { status: 429 })
+  if (!allowMessage(session.user.id)) return Response.json({ error: RATE_LIMIT_MESSAGE }, { status: 429, headers: { "Retry-After": String(allowMessage.retryAfter(session.user.id)) } })
   const abort = new AbortController()
   const disconnect = () => abort.abort()
   request.signal.addEventListener("abort", disconnect, { once: true })
   if (request.signal.aborted) abort.abort()
   const timer = setTimeout(() => abort.abort(), 45000)
-  const cleanup = () => { clearTimeout(timer); request.signal.removeEventListener("abort", disconnect) }
+  let firstByteTimer: ReturnType<typeof setTimeout> | undefined
+  const cleanup = () => { clearTimeout(timer); clearTimeout(firstByteTimer); request.signal.removeEventListener("abort", disconnect) }
   try {
     const { env } = await getCloudflareContext({ async: true })
     const bindings = env as typeof env & Bindings
@@ -27,6 +28,7 @@ export async function POST(request: Request): Promise<Response> {
     const key = read("MINIMAX_API_KEY")
     if (!key) throw new Error("Missing provider configuration")
     const model = read("MINIMAX_MODEL") || "MiniMax-M3"
+    firstByteTimer = setTimeout(() => abort.abort(), 30000)
     const response = await fetch(`${(read("MINIMAX_BASE_URL") || "https://api.minimax.io/v1").replace(/\/$/, "")}/chat/completions`, {
       method: "POST", signal: abort.signal,
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
@@ -35,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
         messages: [{ role: "system", content: buildSystemPrompt({ tier: tierForCategory(input.context.category), context: input.context }) }, ...input.messages] }),
     })
     if (!response.ok || !response.body) throw new Error("Upstream unavailable")
-    const tokens = minimaxTokens(response.body)
+    const tokens = minimaxTokens(response.body, () => clearTimeout(firstByteTimer))
     // Fail with 502 while headers are still mutable, including empty/reasoning-only replies.
     const first = await tokens.next()
     if (first.done) throw new Error("Empty upstream answer")

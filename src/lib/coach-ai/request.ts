@@ -9,8 +9,8 @@ const integer = (v: unknown, min: number, max: number): v is number => Number.is
 export function validateRequest(value: unknown): CoachRequest {
   if (!object(value) || !Array.isArray(value.messages) || !value.messages.length || !object(value.context)) throw new Error("Invalid request")
   const messages = value.messages.map((m): CoachRequest["messages"][number] => {
-    if (!object(m) || (m.role !== "user" && m.role !== "assistant") || !text(m.content, m.role === "user" ? 2000 : 12000) || !m.content.trim()) throw new Error("Invalid message")
-    return { role: m.role, content: m.content }
+    if (!object(m) || (m.role !== "user" && m.role !== "assistant") || (typeof m.content !== "string" || (m.role === "user" && m.content.length > 2000)) || !m.content.trim()) throw new Error("Invalid message")
+    return { role: m.role, content: m.content.slice(0, 2000) }
   })
   if (messages.at(-1)?.role !== "user") throw new Error("Last turn must be user")
   const c = value.context

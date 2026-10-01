@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest"
-const mocks = vi.hoisted(() => ({ auth: vi.fn(), env: vi.fn(), allow: vi.fn() }))
+const mocks = vi.hoisted(() => ({ auth: vi.fn(), env: vi.fn(), allow: Object.assign(vi.fn(), { retryAfter: vi.fn() }) }))
 vi.mock("@/auth", () => ({ auth: mocks.auth }))
 vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: mocks.env }))
 vi.mock("@/lib/coach-ai/rate-limit", async importOriginal => ({ ...await importOriginal<typeof import("@/lib/coach-ai/rate-limit")>(), allowMessage: mocks.allow }))
@@ -8,8 +8,8 @@ const input = { messages: [{ role: "user", content: "Why this week?" }], context
 const request = (body: unknown = input) => new Request("http://localhost/api/coach-ai", { method: "POST", body: JSON.stringify(body) })
 const sse = (data: unknown) => `data: ${JSON.stringify(data)}\n\n`
 const answer = () => new Response(sse({ choices: [{ delta: { reasoning_content: "private reasoning", content: "Answer" }, finish_reason: null }] }) + sse({ choices: [{ delta: {}, finish_reason: "stop" }] }) + "data: [DONE]\n\n")
-beforeEach(() => { mocks.auth.mockResolvedValue({ user: { id: "u1" } }); mocks.env.mockResolvedValue({ env: { MINIMAX_API_KEY: "test-only-secret" } }); mocks.allow.mockReturnValue(true); vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => answer())) })
-afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.clearAllMocks(); vi.unstubAllEnvs() })
+beforeEach(() => { mocks.auth.mockResolvedValue({ user: { id: "u1" } }); mocks.env.mockResolvedValue({ env: { MINIMAX_API_KEY: "test-only-secret" } }); mocks.allow.mockReturnValue(true); mocks.allow.retryAfter.mockReturnValue(42); vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => answer())) })
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.clearAllMocks(); vi.unstubAllEnvs() })
 test("unauthenticated guard runs before reading body, limiter, env or fetch", async () => {
   mocks.auth.mockResolvedValue(null)
   const req = request()
@@ -54,6 +54,8 @@ test("malformed JSON and excessive older user turns also reject", async () => {
 test("rate limit exposes exact UI message", async () => {
   mocks.allow.mockReturnValue(false)
   const response = await POST(request()); expect(response.status).toBe(429)
+  expect(response.headers.get("Retry-After")).toBe("42")
+  expect(mocks.allow.retryAfter).toHaveBeenCalledWith("u1")
   expect(await response.json()).toEqual({ error: "Too many messages. Wait a minute and try again." }); expect(fetch).not.toHaveBeenCalled()
 })
 test("upstream error bodies and network details never reach client", async () => {
@@ -75,11 +77,56 @@ test("cancel and request disconnect abort the provider", async () => {
   abort.abort(); expect(signal.aborted).toBe(true)
   await response.body!.cancel()
 })
-test("timeout returns clean 502 before any token", async () => {
+test("fetch with no headers aborts at 30 seconds", async () => {
   vi.useFakeTimers()
   vi.mocked(fetch).mockImplementationOnce((_url, init) => new Promise((_, reject) => { init!.signal!.addEventListener("abort", () => reject(new Error("Timeout"))) }))
   const pending = POST(request())
-  await vi.advanceTimersByTimeAsync(45001)
+  await vi.advanceTimersByTimeAsync(29999)
+  expect(vi.mocked(fetch).mock.calls[0][1]!.signal!.aborted).toBe(false)
+  await vi.advanceTimersByTimeAsync(1)
   expect((await pending).status).toBe(502)
   vi.useRealTimers()
+})
+
+test.each([2000, 2001, 12001])("assistant history of %i chars is accepted and capped at 2000", async length => {
+  const content = "a".repeat(length)
+  const response = await POST(request({ ...input, messages: [{ role: "assistant", content }, ...input.messages] }))
+  expect(response.status).toBe(200)
+  await response.text()
+  const sent = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string)
+  expect(sent.messages[1]).toEqual({ role: "assistant", content: content.slice(0, 2000) })
+  expect(sent.messages[2]).toEqual(input.messages[0])
+})
+test("headers alone do not satisfy the 30-second first-byte deadline", async () => {
+  vi.useFakeTimers()
+  vi.mocked(fetch).mockImplementationOnce(async (_url, init) => new Response(new ReadableStream({
+    start(controller) { init!.signal!.addEventListener("abort", () => controller.error(new Error("Timeout"))) },
+  })))
+  const pending = POST(request())
+  await vi.advanceTimersByTimeAsync(29999)
+  expect(vi.mocked(fetch).mock.calls[0][1]!.signal!.aborted).toBe(false)
+  await vi.advanceTimersByTimeAsync(1)
+  const response = await pending
+  expect(response.status).toBe(502)
+  expect(await response.json()).toEqual({ error: "Coach is unavailable right now. Please try again." })
+})
+test("first body byte clears the early deadline; 45-second total bound remains", async () => {
+  vi.useFakeTimers()
+  let upstream!: ReadableStreamDefaultController<Uint8Array>
+  vi.mocked(fetch).mockImplementationOnce(async (_url, init) => new Response(new ReadableStream({
+    start(controller) { upstream = controller; init!.signal!.addEventListener("abort", () => controller.error(new Error("Timeout"))) },
+  })))
+  const pending = POST(request())
+  await vi.advanceTimersByTimeAsync(29000)
+  upstream.enqueue(new TextEncoder().encode(":")) // A partial SSE comment counts as a byte, not an answer token.
+  await vi.advanceTimersByTimeAsync(1001)
+  const signal = vi.mocked(fetch).mock.calls[0][1]!.signal!
+  expect(signal.aborted).toBe(false)
+  upstream.enqueue(new TextEncoder().encode(' ping\n\n' + sse({ choices: [{ delta: { content: "Answer" } }] })))
+  const response = await pending
+  expect(response.status).toBe(200)
+  const body = response.text()
+  await vi.advanceTimersByTimeAsync(14999)
+  expect(signal.aborted).toBe(true)
+  expect(await body).toContain('"error":')
 })

@@ -1,11 +1,15 @@
 // Decode upstream SSE incrementally. Only answer text crosses the server boundary.
-export async function* minimaxTokens(body: ReadableStream<Uint8Array>): AsyncGenerator<string> {
+export async function* minimaxTokens(body: ReadableStream<Uint8Array>, onFirstByte?: () => void): AsyncGenerator<string> {
   const reader = body.getReader()
   const decoder = new TextDecoder()
-  let buffer = "", finished = false
+  let buffer = "", finished = false, receivedByte = false
   try {
     while (true) {
       const { value, done } = await reader.read()
+      if (value?.byteLength && !receivedByte) {
+        receivedByte = true
+        onFirstByte?.()
+      }
       buffer += done ? decoder.decode() : decoder.decode(value, { stream: true })
       if (buffer.length > 131072) throw new Error("Invalid upstream stream")
       let end: number
