@@ -82,7 +82,7 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          {thinking ? <Thinking searching={searching} /> : take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
+          {thinking ? <Thinking searching={searching} sourceCount={m.webSources?.length ?? 0} /> : take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
