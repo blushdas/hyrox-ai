@@ -36,7 +36,7 @@ export async function POST(request: Request): Promise<Response> {
         ...(model === "MiniMax-M3" ? { thinking: { type: "disabled" } } : {}),
         messages: [{ role: "system", content: buildSystemPrompt({ tier: tierForCategory(input.context.category), context: input.context }) }, ...input.messages] }),
     })
-    if (!response.ok || !response.body) throw new Error("Upstream unavailable")
+    if (!response.ok || !response.body) throw new Error(`Upstream unavailable (status ${response.status})`)
     const tokens = minimaxTokens(response.body, () => clearTimeout(firstByteTimer))
     // Fail with 502 while headers are still mutable, including empty/reasoning-only replies.
     const first = await tokens.next()
@@ -60,7 +60,9 @@ export async function POST(request: Request): Promise<Response> {
       async cancel() { abort.abort(); cleanup(); await tokens.return(undefined) },
     })
     return new Response(body, { headers: { "Content-Type": "application/x-ndjson", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
-  } catch {
+  } catch (error) {
+    // Name and message only: never log the key, request body, or upstream response body.
+    console.error("coach-ai upstream failure", error instanceof Error ? `${error.name}: ${error.message}` : "unknown")
     abort.abort(); cleanup()
     return Response.json({ error: UNAVAILABLE }, { status: 502 })
   }
