@@ -12,6 +12,7 @@ import { parseCoachTake } from "@/lib/coach-ai/coach-take"
 import { CoachTakeCard } from "./coach-take-card"
 import { MessageActions } from "./message-actions"
 import { useRevealedText } from "./use-revealed-text"
+import { Thinking } from "./thinking"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
     <div className="border-b py-4">
@@ -55,14 +56,17 @@ export function AssistantMessage({
   onRetry,
   retryDisabled,
   lastAssistant,
+  searching = false,
 }: {
   message: ChatMessage
   onRetry: () => void
   retryDisabled: boolean
   lastAssistant: boolean
+  searching?: boolean
 }) {
   const take = m.status === "complete" ? parseCoachTake(m.content) : null
   const revealed = useRevealedText(m.content, m.status === "streaming")
+  const thinking = m.status === "streaming" && m.content.length === 0
   return (
     <div>
       {m.status === "error" ? (
@@ -78,7 +82,7 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          {take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
+          {thinking ? <Thinking searching={searching} /> : take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
@@ -150,7 +154,7 @@ export function ChatThread({
   return (
     <div ref={root} className="min-w-0 space-y-7 py-6">
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</div>
-      {messages.map((m) => (
+      {messages.map((m, index) => (
         <motion.div key={m.id} data-message-motion
           initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -163,6 +167,7 @@ export function ChatThread({
               message={m}
               onRetry={onRetry}
               lastAssistant={m.id === lastAssistant?.id}
+              searching={messages[index - 1]?.webSearch === true}
               retryDisabled={
                 streaming || (lastUser?.content.length ?? 0) > MAX_MESSAGE_CHARS
               }
