@@ -1,12 +1,15 @@
 "use client"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { motionTransition } from "@/lib/motion"
-import { ArrowUp, Square } from "lucide-react"
+import { ArrowDown, ArrowUp, Square } from "lucide-react"
 import type { ChatMessage, Citation } from "@/lib/coach-ai/types"
 import { MAX_MESSAGE_CHARS, SUGGESTED_PROMPTS } from "@/lib/coach-ai/mock-coach"
 import { MonoLabel } from "@/components/shell/primitives"
+import { StreamingMarkdown, citationAnchor } from "./markdown"
+import { MessageActions } from "./message-actions"
+import { useRevealedText } from "./use-revealed-text"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
     <div className="border-b py-4">
@@ -19,12 +22,15 @@ export function GroundingBar({ week, phase }: { week: number; phase: string }) {
 export function CitationChip({
   citation: c,
   index,
+  anchorId,
 }: {
   citation: Citation
   index: number
+  anchorId?: string
 }) {
   return (
     <Link
+      id={anchorId}
       title={c.excerpt}
       aria-label={`Source ${index}: Week ${c.week}, ${c.label.split(" · ").slice(1).join(" · ")}`}
       href={c.href}
@@ -46,11 +52,14 @@ export function AssistantMessage({
   message: m,
   onRetry,
   retryDisabled,
+  lastAssistant,
 }: {
   message: ChatMessage
   onRetry: () => void
   retryDisabled: boolean
+  lastAssistant: boolean
 }) {
+  const revealed = useRevealedText(m.content, m.status === "streaming")
   return (
     <div>
       {m.status === "error" ? (
@@ -66,25 +75,13 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          <p className="whitespace-pre-wrap break-words leading-[22px]">
-            {m.content.split(/(\[\d+\])/g).map((part, i) =>
-              /\[\d+\]/.test(part) ? (
-                <span key={i} className="text-accent">
-                  {part}
-                </span>
-              ) : (
-                part
-              ),
-            )}
-            {m.status === "streaming" && (
-              <span className="ml-1 inline-block h-3.5 w-0.5 bg-accent motion-safe:animate-pulse" />
-            )}
-          </p>
+          <StreamingMarkdown text={revealed}streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
-              <CitationChip key={c.id} citation={c} index={i + 1} />
+              <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
             ))}
           </div>
+          {m.status === "complete" && <MessageActions content={m.content} regenerate={lastAssistant} disabled={retryDisabled} onRetry={onRetry} />}
         </>
       )}
     </div>
@@ -114,28 +111,39 @@ export function ChatThread({
   onRetry: () => void
 }) {
   const reduced = useReducedMotion()
-  const end = useRef<HTMLDivElement>(null)
   const follow = useRef(true)
+  const [aboveBottom, setAboveBottom] = useState(false)
+  const streaming = messages.some(message => message.status === "streaming")
+  const lastAssistant = [...messages].reverse().find(message => message.role === "assistant")
+  const announcement = lastAssistant?.status === "complete" ? `Coach response: ${lastAssistant.content}` : ""
   useEffect(() => {
     const track = () => {
-      follow.current =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 180
+      const distance = document.documentElement.scrollHeight - window.innerHeight - window.scrollY
+      follow.current = distance <= 100
+      setAboveBottom(distance > 100)
     }
+    track()
     window.addEventListener("scroll", track, { passive: true })
     return () => window.removeEventListener("scroll", track)
   }, [])
   useEffect(() => {
     if (follow.current)
-      end.current?.scrollIntoView({ block: "end", behavior: "instant" })
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
   }, [messages])
+  const root = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!root.current) return
+    const observer = new ResizeObserver(() => {
+      if (follow.current)
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
+    })
+    observer.observe(root.current)
+    return () => observer.disconnect()
+  }, [])
   const lastUser = [...messages].reverse().find((m) => m.role === "user")
   return (
-    <div
-      className="space-y-7 py-6"
-      aria-live="polite"
-      aria-relevant="additions text"
-    >
+    <div ref={root} className="min-w-0 space-y-7 py-6">
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</div>
       {messages.map((m) => (
         <motion.div key={m.id} data-message-motion
           initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
@@ -148,14 +156,20 @@ export function ChatThread({
             <AssistantMessage
               message={m}
               onRetry={onRetry}
+              lastAssistant={m.id === lastAssistant?.id}
               retryDisabled={
-                (lastUser?.content.length ?? 0) > MAX_MESSAGE_CHARS
+                streaming || (lastUser?.content.length ?? 0) > MAX_MESSAGE_CHARS
               }
             />
           )}
         </motion.div>
       ))}
-      <div ref={end} />
+      {streaming && aboveBottom && <button type="button" aria-label="Scroll to latest" className="fixed right-5 bottom-[calc(var(--tab-bar-h)+9rem)] z-40 flex min-h-11 min-w-11 items-center gap-2 rounded-md border border-hairline bg-surface-2 px-3 text-sm lg:bottom-36" onClick={() => {
+        follow.current = true
+        setAboveBottom(false)
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
+      }}><ArrowDown size={16} aria-hidden />Latest</button>}
+
     </div>
   )
 }
