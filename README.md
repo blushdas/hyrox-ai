@@ -29,7 +29,13 @@ npm run deploy
 
 `npm run deploy` runs `opennextjs-cloudflare build` and then `wrangler deploy`. Then smoke test production: switch between tabs, hard-reload `/dashboard`, and run the plan loader.
 
-Coach AI requires `wrangler secret put MINIMAX_API_KEY` before deployment.
+Coach AI requires these Worker secrets before deployment:
+
+```bash
+wrangler secret put MINIMAX_API_KEY
+wrangler secret put COHERE_API_KEY
+wrangler secret put TAVILY_API_KEY
+```
 Optional Worker bindings: `MINIMAX_MODEL` (default `MiniMax-M3`) and
 `MINIMAX_BASE_URL` (default `https://api.minimax.io/v1`). Local development uses
 `.env.local`. Keys stay server-side. Coach AI currently supports same-origin web only.

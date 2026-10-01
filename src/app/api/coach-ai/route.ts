@@ -5,7 +5,9 @@ import { readRequest, MAX_TOKENS } from "@/lib/coach-ai/request"
 import { allowMessage, RATE_LIMIT_MESSAGE } from "@/lib/coach-ai/rate-limit"
 import { minimaxTokens } from "@/lib/coach-ai/stream"
 
-type Bindings = { MINIMAX_API_KEY?: string; MINIMAX_MODEL?: string; MINIMAX_BASE_URL?: string }
+import { webContext, WEB_UNAVAILABLE } from "@/lib/coach-ai/web-search"
+
+type Bindings = { COHERE_API_KEY?: string; TAVILY_API_KEY?: string; MINIMAX_API_KEY?: string; MINIMAX_MODEL?: string; MINIMAX_BASE_URL?: string }
 const UNAVAILABLE = "Coach is unavailable right now. Please try again."
 export async function POST(request: Request): Promise<Response> {
   const session = await auth()
@@ -27,6 +29,7 @@ export async function POST(request: Request): Promise<Response> {
     const read = (key: keyof Bindings) => bindings[key] || process.env[key]
     const key = read("MINIMAX_API_KEY")
     if (!key) throw new Error("Missing provider configuration")
+    const web = await webContext({ question: input.messages.at(-1)!.content, context: input.context, plannerKey: read("COHERE_API_KEY"), searchKey: read("TAVILY_API_KEY"), signal: abort.signal })
     const model = read("MINIMAX_MODEL") || "MiniMax-M3"
     firstByteTimer = setTimeout(() => abort.abort(), 30000)
     const response = await fetch(`${(read("MINIMAX_BASE_URL") || "https://api.minimax.io/v1").replace(/\/$/, "")}/chat/completions`, {
@@ -34,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify({ model, max_tokens: MAX_TOKENS, stream: true, reasoning_split: true,
         ...(model === "MiniMax-M3" ? { thinking: { type: "disabled" } } : {}),
-        messages: [{ role: "system", content: buildSystemPrompt({ tier: tierForCategory(input.context.category), context: input.context }) }, ...input.messages] }),
+        messages: [{ role: "system", content: buildSystemPrompt({ tier: tierForCategory(input.context.category), context: input.context, webBlock: web.block }) }, ...input.messages] }),
     })
     if (!response.ok || !response.body) throw new Error(`Upstream unavailable (status ${response.status})`)
     const tokens = minimaxTokens(response.body, () => clearTimeout(firstByteTimer))
@@ -44,6 +47,10 @@ export async function POST(request: Request): Promise<Response> {
     const encoder = new TextEncoder()
     let initial: string | undefined = first.value
     const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        if (web.sources.length) controller.enqueue(encoder.encode(JSON.stringify({ sources: web.sources }) + "\n"))
+        if (web.unavailable) controller.enqueue(encoder.encode(JSON.stringify({ text: WEB_UNAVAILABLE + "\n\n" }) + "\n"))
+      },
       async pull(controller) {
         try {
           const next = initial !== undefined ? { value: initial, done: false } : await tokens.next()

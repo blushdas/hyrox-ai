@@ -8,6 +8,8 @@ import type { ChatMessage, Citation } from "@/lib/coach-ai/types"
 import { MAX_MESSAGE_CHARS, SUGGESTED_PROMPTS } from "@/lib/coach-ai/mock-coach"
 import { MonoLabel } from "@/components/shell/primitives"
 import { StreamingMarkdown, citationAnchor } from "./markdown"
+import { parseCoachTake } from "@/lib/coach-ai/coach-take"
+import { CoachTakeCard } from "./coach-take-card"
 import { MessageActions } from "./message-actions"
 import { useRevealedText } from "./use-revealed-text"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
@@ -59,6 +61,7 @@ export function AssistantMessage({
   retryDisabled: boolean
   lastAssistant: boolean
 }) {
+  const take = m.status === "complete" ? parseCoachTake(m.content) : null
   const revealed = useRevealedText(m.content, m.status === "streaming")
   return (
     <div>
@@ -75,11 +78,14 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          <StreamingMarkdown text={revealed}streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />
+          {take ? <CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />}
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
             ))}
+            {m.webSources?.map((source, i) => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" aria-label={`Web source ${m.citations.length + i + 1}: ${source.host}`} title={source.title} className="flex min-h-11 max-w-full items-center gap-2 rounded-sm border border-hairline bg-surface-2 px-3 font-mono text-[11px]">
+              <span className="text-accent">{m.citations.length + i + 1}</span><span className="truncate">{source.host}</span><span className="text-text-3">Web</span>
+            </a>)}
           </div>
           {m.status === "complete" && <MessageActions content={m.content} regenerate={lastAssistant} disabled={retryDisabled} onRetry={onRetry} />}
         </>
