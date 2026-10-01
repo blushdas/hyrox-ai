@@ -20,14 +20,18 @@ const items = [
 const RouteMotionContext = createContext({ from: "", to: "" })
 export const useRouteMotion = () => useContext(RouteMotionContext)
 
+const railItems = items.slice(0, -1)
+const profileItem = items[items.length - 1]
+
 function NavLinks({ rail = false }: { rail?: boolean }) {
   const path = usePathname()
+  const list = rail ? railItems : items
   const reduced = useReducedMotion()
   const activeIndex = items.findIndex(({ href }, i) => i === 0
     ? ["/dashboard", "/plan", "/session"].some((p) => path === p || path.startsWith(p + "/"))
     : path === href || path.startsWith(href + "/"))
   return <>
-    {activeIndex >= 0 && <motion.span
+    {activeIndex >= 0 && activeIndex < list.length && <motion.span
       aria-hidden="true"
       data-nav-indicator={rail ? "rail" : "tabs"}
       layoutId={rail ? "rail-indicator" : "tab-indicator"}
@@ -36,7 +40,7 @@ function NavLinks({ rail = false }: { rail?: boolean }) {
       transition={motionTransition(reduced)}
       className={rail ? "absolute left-3 right-3 top-6 h-14 rounded-md bg-accent-soft" : "absolute left-0 top-0 h-0.5 w-1/4 bg-accent"}
     />}
-    {items.map(({ href, label, icon: Icon }, i) => {
+    {list.map(({ href, label, icon: Icon }, i) => {
     const active = i === activeIndex
     return (
       <Link
@@ -61,6 +65,21 @@ export function TabBar() {
     </nav>
   )
 }
+function ProfileLink() {
+  const path = usePathname()
+  const { href, label, icon: Icon } = profileItem
+  const active = path === href || path.startsWith(href + "/")
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`absolute inset-x-3 bottom-6 flex min-h-14 items-center gap-3 rounded-md px-4 ${active ? "bg-accent-soft text-accent" : "text-text-2 hover:bg-surface-2"}`}
+    >
+      <Icon size={20} strokeWidth={1.5} />
+      {label}
+    </Link>
+  )
+}
 export function SideRail() {
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[232px] border-r bg-background lg:block">
@@ -70,6 +89,7 @@ export function SideRail() {
       <nav aria-label="Primary" className="relative px-3 pt-6">
         <NavLinks rail />
       </nav>
+      <ProfileLink />
     </aside>
   )
 }
