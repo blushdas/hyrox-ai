@@ -64,3 +64,5 @@ docs/runit/
 *.p8
 !.env.example
 .open-next/
+/AGENTS.md
+/CLAUDE.md
