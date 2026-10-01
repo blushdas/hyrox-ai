@@ -29,6 +29,14 @@ npm run deploy
 
 `npm run deploy` runs `opennextjs-cloudflare build` and then `wrangler deploy`. Then smoke test production: switch between tabs, hard-reload `/dashboard`, and run the plan loader.
 
+Coach AI requires `wrangler secret put MINIMAX_API_KEY` before deployment.
+Optional Worker bindings: `MINIMAX_MODEL` (default `MiniMax-M3`) and
+`MINIMAX_BASE_URL` (default `https://api.minimax.io/v1`). Local development uses
+`.env.local`. Keys stay server-side. Coach AI currently supports same-origin web only.
+The route sends newline-delimited JSON answer chunks (`text`), then `done`; failures
+after streaming starts send a generic `error` frame. Stop cancels the upstream request.
+The limiter is best-effort per Worker isolate (20 messages per rolling five minutes).
+
 Extra steps only when the change needs them:
 
 - **Database migration:** if the PR added files under `migrations/`, run `npm run db:migrate` (applies to the remote D1 database `finisher-db`). Use `npm run db:migrate:local` for local.

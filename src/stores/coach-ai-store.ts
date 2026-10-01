@@ -2,7 +2,9 @@
 import { create } from "zustand"
 import type { TrainingPlan } from "@/lib/types"
 import type { ChatMessage } from "@/lib/coach-ai/types"
-import { buildCoachReply, chunkForStreaming } from "@/lib/coach-ai/mock-coach"
+import { resolveCitations } from "@/lib/coach-ai/citations"
+import { useAthleteStore } from "@/stores/athlete-store"
+import { RATE_LIMIT_MESSAGE } from "@/lib/coach-ai/rate-limit"
 type Context = {
   plan: TrainingPlan
   currentWeek: number
@@ -17,14 +19,15 @@ type ChatState = {
   stop: () => void
   reset: () => void
 }
-let timer: ReturnType<typeof setTimeout> | undefined
+let controller: AbortController | undefined
 let generation = 0
 export const useCoachAIStore = create<ChatState>((set, get) => ({
   messages: [],
   isStreaming: false,
   stop: () => {
     generation++
-    clearTimeout(timer)
+    controller?.abort()
+    controller = undefined
     set((s) => ({
       isStreaming: false,
       messages: s.messages.map((m) =>
@@ -37,6 +40,7 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
     set({ messages: [] })
   },
   retry: (context) => {
+    if (get().isStreaming) return
     const last = [...get().messages].reverse().find((m) => m.role === "user")
     if (last) {
       set((s) => ({ messages: s.messages.slice(0, -2) }))
@@ -45,17 +49,12 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
   },
   send: (prompt, context) => {
     if (get().isStreaming || !prompt.trim()) return
-    const reply = buildCoachReply(
-      prompt,
-      context.plan,
-      context.currentWeek,
-      context.today,
-      context.sessionId,
-    )
     const id = crypto.randomUUID()
     const createdAt = new Date().toISOString()
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    const stream = reply.status !== "error" && !reduce
+    const abort = new AbortController()
+    controller = abort
+    const token = ++generation
+    const history = get().messages.filter(m => m.status === "complete" && m.content.trim()).slice(-9).map(m => ({ role: m.role, content: m.content }))
     set((s) => ({
       messages: [
         ...s.messages,
@@ -68,40 +67,69 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
           createdAt,
         },
         {
-          ...reply,
           id,
           role: "assistant",
           createdAt,
-          content: stream ? "" : reply.content,
-          citations: stream ? [] : reply.citations,
-          status: stream ? "streaming" : reply.status,
+          content: "",
+          citations: [],
+          status: "streaming",
         },
       ],
-      isStreaming: stream,
+      isStreaming: true,
     }))
-    if (!stream) return
-    const chunks = chunkForStreaming(reply.content, 3)
-    const token = ++generation
-    let index = 0
-    const tick = () => {
+    const profile = useAthleteStore.getState().profile
+    const update = (patch: Partial<ChatMessage>) => {
       if (token !== generation) return
-      const chunk = chunks[index++] ?? ""
-      const done = index >= chunks.length
-      set((s) => ({
-        isStreaming: !done,
-        messages: s.messages.map((m) =>
-          m.id === id
-            ? {
-                ...m,
-                content: m.content + chunk,
-                status: done ? "complete" : "streaming",
-                citations: done ? reply.citations : [],
-              }
-            : m,
-        ),
-      }))
-      if (!done) timer = setTimeout(tick, 40)
+      set(s => ({ messages: s.messages.map(m => m.id === id ? { ...m, ...patch } : m) }))
     }
-    timer = setTimeout(tick, 40)
+    void (async () => {
+      let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
+      let raw = ""
+      try {
+        const response = await fetch("/api/coach-ai", {
+          method: "POST", signal: abort.signal, headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: [...history, { role: "user", content: prompt }], context: {
+            category: profile?.category ?? "beginner", raceDate: profile?.raceDate ?? context.plan.raceDate,
+            daysPerWeek: profile?.daysPerWeek ?? 4, currentWeek: context.currentWeek, sessionId: context.sessionId,
+            sessions: context.plan.weeks.filter(w => w.week === context.currentWeek || w.week === context.currentWeek + 1).flatMap(w => w.sessions).map(({ id, week, title, phase, type }) => ({ id, week, title, phase, type })),
+          } }),
+        })
+        if (!response.ok) throw new Error(response.status === 429 ? RATE_LIMIT_MESSAGE : response.status === 401 ? "Sign in to use Coach AI." : response.status === 400 ? "Invalid request. Keep messages under 2000 characters." : "Coach is unavailable right now. Please try again.")
+        if (!response.body) throw new Error("Coach returned an empty response. Please retry.")
+        reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let pending = "", complete = false
+        while (!complete) {
+          const { value, done } = await reader.read()
+          if (token !== generation) return
+          pending += done ? decoder.decode() : decoder.decode(value, { stream: true })
+          let end: number
+          while ((end = pending.indexOf("\n")) >= 0) {
+            const line = pending.slice(0, end)
+            pending = pending.slice(end + 1)
+            const frame = JSON.parse(line)
+            if (frame.error) throw new Error("Coach is unavailable right now. Please try again.")
+            if (frame.done === true) { complete = true; break }
+            if (typeof frame.text !== "string") throw new Error("Invalid coach response. Please retry.")
+            raw += frame.text
+            update({ ...resolveCitations(raw, context.plan), status: "streaming" })
+          }
+          if (done && !complete) throw new Error("Connection interrupted. Please retry.")
+        }
+        if (!raw.trim()) throw new Error("Coach returned an empty response. Please retry.")
+        update({ ...resolveCitations(raw, context.plan), status: "complete" })
+      } catch (error) {
+        if (token !== generation || abort.signal.aborted) return // Stop/reset intentionally complete the old generation.
+        update({ status: "error", errorMessage: error instanceof Error && !(error instanceof TypeError) && !(error instanceof SyntaxError) ? error.message : "Connection interrupted. Please retry." })
+      } finally {
+        // Cancel unread data after a terminal frame; release even on network errors.
+        if (reader) {
+          try { await reader.cancel() }
+          catch { update({ status: "error", errorMessage: "Connection interrupted. Please retry." }) }
+          reader.releaseLock()
+        }
+        if (token === generation) { controller = undefined; set({ isStreaming: false }) }
+      }
+    })()
   },
 }))
