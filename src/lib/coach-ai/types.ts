@@ -11,6 +11,7 @@ export type Citation = {
 export type WebSource = { title: string; url: string; host: string }
 export type ChatMessage = {
   webSources?: WebSource[]
+  webSearch?: boolean
   id: string
   role: "user" | "assistant"
   content: string

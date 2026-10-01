@@ -3,7 +3,7 @@ import { TIER_KB } from "./tier-kb"
 import { tierForCategory } from "./prompt"
 import type { WebSource } from "./types"
 export const WEB_UNAVAILABLE = "Web results were unavailable, so this answer uses your plan only."
-type Options = { question: string; context: PlanContext; plannerKey?: string; searchKey?: string; signal?: AbortSignal }
+type Options = { webSearch?: boolean; question: string; context: PlanContext; plannerKey?: string; searchKey?: string; signal?: AbortSignal }
 type SearchResult = WebSource & { content: string }
 const signalFor = (signal?: AbortSignal) => signal ? AbortSignal.any([signal, AbortSignal.timeout(8000)]) : AbortSignal.timeout(8000)
 export async function planWebSearch({ question, context, plannerKey, signal }: Options): Promise<{ needsWeb: boolean; query?: string } | null> {
@@ -44,7 +44,7 @@ export async function searchWeb(query: string, key?: string, signal?: AbortSigna
 }
 export async function webContext(options: Options): Promise<{ sources: WebSource[]; block: string; unavailable: boolean }> {
   const empty = { sources: [], block: "", unavailable: false }
-  const plan = await planWebSearch(options)
+  const plan = options.webSearch ? { needsWeb: true, query: options.question } : await planWebSearch(options)
   if (!plan) return { ...empty, unavailable: true }
   if (!plan.needsWeb) return empty
   const results = await searchWeb(plan.query!, options.searchKey, options.signal)

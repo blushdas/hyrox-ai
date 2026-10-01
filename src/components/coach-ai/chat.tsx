@@ -188,10 +188,16 @@ export function Composer({
 }: {
   value: string
   onChange: (s: string) => void
-  onSend: () => void
+  onSend: (webSearch: boolean) => void
   streaming: boolean
   onStop: () => void
 }) {
+  const [webSearch, setWebSearch] = useState(false)
+  const send = () => {
+    if (streaming || !value.trim()) return
+    onSend(webSearch)
+    setWebSearch(false)
+  }
   const input = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
     if (input.current) {
@@ -203,7 +209,7 @@ export function Composer({
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        onSend()
+        send()
       }}
       className="sticky bottom-[calc(var(--tab-bar-h)+env(safe-area-inset-bottom))] z-30 -mx-4 mt-auto border-t bg-surface-1 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6 lg:bottom-0"
     >
@@ -214,6 +220,9 @@ export function Composer({
           {value.length} / {MAX_MESSAGE_CHARS}
         </div>
       )}
+      <button type="button" aria-pressed={webSearch} onClick={() => setWebSearch(!webSearch)} className={`mb-2 min-h-11 rounded-sm border px-3 text-sm ${webSearch ? "border-accent bg-accent text-accent-ink" : "border-hairline bg-surface-2 text-text-2"}`}>
+        Search web
+      </button>
       <div className="flex items-end gap-3">
         <textarea
           ref={input}
@@ -225,7 +234,7 @@ export function Composer({
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault()
-              if (!streaming) onSend()
+              if (!streaming) send()
             }
           }}
           className="min-h-11 min-w-0 flex-1 resize-none rounded-sm bg-surface-2 px-3 py-3 text-[15px] placeholder:text-text-3"

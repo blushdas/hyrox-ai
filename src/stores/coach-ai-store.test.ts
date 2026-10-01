@@ -69,3 +69,13 @@ test("source frame survives streaming and completion", async () => {
  await vi.waitFor(() => expect(state().isStreaming).toBe(false))
  expect(state().messages.at(-1)).toMatchObject({webSources: sources, content: "Answer", status: "complete"})
 })
+test("forced-search flag travels with the user turn and survives Retry",async()=>{
+ vi.mocked(fetch).mockResolvedValueOnce(new Response("failed",{status:502}))
+ state().send("today",context,true)
+ await vi.waitFor(()=>expect(state().isStreaming).toBe(false))
+ expect(JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string).webSearch).toBe(true)
+ vi.mocked(fetch).mockResolvedValueOnce(new Response(new Uint8Array([...frame({text:"Answer"}),...frame({done:true})])))
+ state().retry(context)
+ await vi.waitFor(()=>expect(state().isStreaming).toBe(false))
+ expect(JSON.parse(vi.mocked(fetch).mock.calls[1][1]!.body as string).webSearch).toBe(true)
+})

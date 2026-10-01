@@ -29,7 +29,7 @@ export async function POST(request: Request): Promise<Response> {
     const read = (key: keyof Bindings) => bindings[key] || process.env[key]
     const key = read("MINIMAX_API_KEY")
     if (!key) throw new Error("Missing provider configuration")
-    const web = await webContext({ question: input.messages.at(-1)!.content, context: input.context, plannerKey: read("COHERE_API_KEY"), searchKey: read("TAVILY_API_KEY"), signal: abort.signal })
+    const web = await webContext({ webSearch: input.webSearch, question: input.messages.at(-1)!.content, context: input.context, plannerKey: read("COHERE_API_KEY"), searchKey: read("TAVILY_API_KEY"), signal: abort.signal })
     const model = read("MINIMAX_MODEL") || "MiniMax-M3"
     firstByteTimer = setTimeout(() => abort.abort(), 30000)
     const response = await fetch(`${(read("MINIMAX_BASE_URL") || "https://api.minimax.io/v1").replace(/\/$/, "")}/chat/completions`, {
