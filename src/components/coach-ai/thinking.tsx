@@ -20,21 +20,21 @@ export function Thinking({ searching = false, sourceCount = 0 }: { searching?: b
     <div>
       <div className="flex min-h-11 items-center gap-3">
         <div role="status" aria-live="polite" className="flex min-w-0 items-center gap-3">
-          <span aria-hidden className="flex h-4 items-end gap-[3px]">
+          {/* Reduced motion keeps a gentle opacity-only pulse: a loader that never moves reads as frozen. */}
+          <span aria-hidden className="flex h-4 items-center gap-1.5">
             {[0, 1, 2].map(i => (
               <motion.span
                 key={i}
-                className="block h-4 w-[3px] origin-bottom rounded-full bg-accent"
-                style={reduced ? { scaleY: 0.6 } : undefined}
-                animate={reduced ? undefined : { scaleY: [0.3, 1, 0.3], opacity: [0.45, 1, 0.45] }}
-                transition={reduced ? { duration: 0 } : { duration: 1.4, repeat: Infinity, ease: EASE_OUT_EXPO, delay: i * 0.18 }}
+                className="block size-1.5 rounded-full bg-accent"
+                animate={reduced ? { opacity: [0.3, 1, 0.3] } : { opacity: [0.3, 1, 0.3], scale: [0.7, 1.15, 0.7] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: EASE_OUT_EXPO, delay: i * 0.2 }}
               />
             ))}
           </span>
           <motion.span
             className="font-mono text-[11px] uppercase tracking-wider text-text-2"
-            animate={reduced ? undefined : { opacity: [0.55, 1, 0.55] }}
-            transition={reduced ? { duration: 0 } : { duration: 2.4, repeat: Infinity, ease: EASE_OUT_EXPO }}
+            animate={{ opacity: [0.55, 1, 0.55] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: EASE_OUT_EXPO }}
           >
             {step.label}
           </motion.span>

@@ -16,15 +16,11 @@ test("renders a polite status region with the label", () => {
   expect(html).toContain("min-h-11")
 })
 
-test("reduced motion renders a static bar scale", async () => {
-  vi.resetModules()
-  vi.doMock("framer-motion", async original => ({ ...(await original<typeof import("framer-motion")>()), useReducedMotion: () => true }))
-  const mod = await import("./thinking")
-  const html = renderToStaticMarkup(createElement(mod.Thinking, {}))
-  expect(html).toContain("scaleY(0.6)")
-  expect(html).toContain("Coach is thinking")
+test("loader renders three dots with no bars", () => {
+  const html = renderToStaticMarkup(createElement(Thinking))
+  expect(html.match(/size-1\.5/g)).toHaveLength(3)
+  expect(html).not.toContain("w-[3px]")
 })
-
 
 afterEach(() => {
   vi.doUnmock("react")
@@ -82,9 +78,13 @@ test.each([false, true])("open panel markup and motion props (reduced=%s)", asyn
   expect(panel.initial).toEqual(reduced ? false : { opacity: 0, y: 4 })
   expect(panel.exit).toEqual(reduced ? undefined : { opacity: 0, y: -4 })
   expect(panel.transition).toMatchObject({ duration: reduced ? 0 : 0.16 })
-  if (reduced) {
-    expect(motions.every(item => (item.transition as { duration: number }).duration === 0)).toBe(true)
-    expect(motions.slice(0, -1).every(item => item.animate === undefined)).toBe(true)
+  const dots = motions.filter(item => String(item.className).includes("size-1.5"))
+  expect(dots).toHaveLength(3)
+  for (const dot of dots) {
+    const animate = dot.animate as Record<string, unknown>
+    expect(animate.opacity).toBeDefined()
+    expect("scale" in animate).toBe(!reduced)
+    expect(dot.transition).toMatchObject({ repeat: Infinity })
   }
 })
 
