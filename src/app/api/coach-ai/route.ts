@@ -49,7 +49,7 @@ export async function POST(request: Request): Promise<Response> {
     const body = new ReadableStream<Uint8Array>({
       start(controller) {
         if (web.sources.length) controller.enqueue(encoder.encode(JSON.stringify({ sources: web.sources }) + "\n"))
-        if (web.unavailable) controller.enqueue(encoder.encode(JSON.stringify({ text: WEB_UNAVAILABLE + "\n\n" }) + "\n"))
+        if (web.unavailable && input.webSearch === true) controller.enqueue(encoder.encode(JSON.stringify({ text: WEB_UNAVAILABLE + "\n\n" }) + "\n"))
       },
       async pull(controller) {
         try {
