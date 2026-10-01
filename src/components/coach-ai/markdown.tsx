@@ -1,7 +1,5 @@
 "use client"
 import { Fragment, memo, useMemo } from "react"
-import { motion, useReducedMotion } from "framer-motion"
-import { motionTransition } from "@/lib/motion"
 import { parseInline, parseMarkdown, type Block, type Inline } from "@/lib/coach-ai/markdown"
 import { pendingTail, splitStreaming } from "@/lib/coach-ai/stream-split"
 
@@ -48,13 +46,12 @@ function plain(nodes: Inline[]): string {
   return nodes.map(node => "children" in node ? plain(node.children) : node.type === "citation" ? `[${node.index}]` : node.type === "code" || /^https?:\/\//.test(node.text) ? node.text : node.text.replace(/\*\*|__/g, "")).join("")
 }
 export function StreamingMarkdown({ text, streaming, ...props }: Props & { streaming: boolean }) {
-  const reduced = useReducedMotion()
   const { finalized, tail } = useMemo(() => splitStreaming(text), [text])
   const tailText = plain(parseInline(pendingTail(tail)))
   return <div className="min-w-0 space-y-4">
     {finalized.map((part, i) => <Markdown key={i} text={part} {...props} />)}
     {streaming ? <div className="whitespace-pre-wrap leading-6 [overflow-wrap:anywhere]">
-      <motion.span key={tailText.length} initial={{ opacity: reduced ? 1 : 0.75 }} animate={{ opacity: 1 }} transition={motionTransition(reduced, true)}>{tailText}</motion.span>
+      <span>{tailText}</span>
       <span aria-hidden className="ml-1 inline-block h-3.5 w-0.5 bg-accent motion-safe:animate-pulse" />
     </div> : tail && <Markdown text={tail} {...props} />}
   </div>

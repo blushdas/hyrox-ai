@@ -9,6 +9,7 @@ import { MAX_MESSAGE_CHARS, SUGGESTED_PROMPTS } from "@/lib/coach-ai/mock-coach"
 import { MonoLabel } from "@/components/shell/primitives"
 import { StreamingMarkdown, citationAnchor } from "./markdown"
 import { MessageActions } from "./message-actions"
+import { useRevealedText } from "./use-revealed-text"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
     <div className="border-b py-4">
@@ -58,6 +59,7 @@ export function AssistantMessage({
   retryDisabled: boolean
   lastAssistant: boolean
 }) {
+  const revealed = useRevealedText(m.content, m.status === "streaming")
   return (
     <div>
       {m.status === "error" ? (
@@ -73,7 +75,7 @@ export function AssistantMessage({
         </div>
       ) : (
         <>
-          <StreamingMarkdown text={m.content} streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />
+          <StreamingMarkdown text={revealed}streaming={m.status === "streaming"} citationCount={m.citations.length} messageId={m.id} />
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
@@ -128,9 +130,19 @@ export function ChatThread({
     if (follow.current)
       window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
   }, [messages])
+  const root = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!root.current) return
+    const observer = new ResizeObserver(() => {
+      if (follow.current)
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })
+    })
+    observer.observe(root.current)
+    return () => observer.disconnect()
+  }, [])
   const lastUser = [...messages].reverse().find((m) => m.role === "user")
   return (
-    <div className="min-w-0 space-y-7 py-6">
+    <div ref={root} className="min-w-0 space-y-7 py-6">
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</div>
       {messages.map((m) => (
         <motion.div key={m.id} data-message-motion
