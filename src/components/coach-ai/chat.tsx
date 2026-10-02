@@ -1,5 +1,5 @@
 "use client"
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { motionTransition } from "@/lib/motion"
@@ -13,6 +13,8 @@ import { CoachTakeCard } from "./coach-take-card"
 import { MessageActions } from "./message-actions"
 import { flushRevealedText, useRevealedText } from "./use-revealed-text"
 import { Thinking } from "./thinking"
+
+const SWAP_RELEASE = "coach-ai:swap-release"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
     <div className="border-b py-4">
@@ -74,17 +76,59 @@ export const AssistantMessage = memo(function AssistantMessage({
   }, [m.id, draining, onDrainChange])
   const take = m.status === "complete" && !draining ? parseCoachTake(m.content) : null
   const content = useRef<HTMLDivElement>(null)
-  // Keep the streamed footprint when a compact card replaces it. Bottom-align
-  // the card so its final position stays next to the composer. No height tween.
-  const [footprint, setFootprint] = useState(0)
-  useEffect(() => {
-    if (!content.current) return
+  const natural = useRef<HTMLDivElement>(null)
+  const streamedSize = useRef<{ width: number; height: number } | null>(null)
+  const releaseRef = useRef<(() => void) | null>(null)
+  const releaseSwap = useCallback(() => releaseRef.current?.(), [])
+  const live = m.status === "streaming" || draining
+  const hasTake = Boolean(take)
+  useLayoutEffect(() => {
+    const shell = content.current
+    const body = natural.current
+    if (!shell || !body) { streamedSize.current = null; return }
+    if (live) {
+      // Measure natural live content; history and ordinary completed replies
+      // never receive a height floor. A resize replaces this snapshot.
+      const rect = body.getBoundingClientRect()
+      streamedSize.current = { width: rect.width, height: rect.height }
+      const observer = new ResizeObserver(([entry]) => {
+        streamedSize.current = { width: entry.contentRect.width, height: entry.contentRect.height }
+      })
+      observer.observe(body)
+      return () => observer.disconnect()
+    }
+    const size = streamedSize.current
+    streamedSize.current = null
+    if (!hasTake || !size) return
+    // Reserve only the swap, before the browser can clamp scrollY. The card
+    // stays bottom-aligned until its opacity transition completes.
+    shell.style.minHeight = `${size.height}px`
+    let released = false
+    let timer = 0
+    const release = () => {
+      if (released) return
+      released = true
+      clearTimeout(timer)
+      const before = body.getBoundingClientRect()
+      const visible = before.bottom > 0 && before.top < window.innerHeight
+      shell.style.minHeight = ""
+      const after = body.getBoundingClientRect()
+      if (visible) window.scrollBy({ top: after.top - before.top, behavior: "instant" })
+      // This compensation is layout maintenance, not upward user input.
+      window.dispatchEvent(new Event(SWAP_RELEASE))
+      observer.disconnect()
+      releaseRef.current = null
+    }
     const observer = new ResizeObserver(([entry]) => {
-      setFootprint(height => Math.max(height, Math.ceil(entry.contentRect.height)))
+      if (Math.abs(entry.contentRect.width - size.width) > 1) release()
     })
-    observer.observe(content.current)
-    return () => observer.disconnect()
-  }, [])
+    releaseRef.current = release
+    observer.observe(body)
+    const card = body.getBoundingClientRect()
+    if (reduced || Math.abs(card.width - size.width) > 1 || card.height >= size.height) release()
+    else timer = window.setTimeout(release, Math.ceil(motionTransition(reduced).duration * 1000) + 32)
+    return release
+  }, [live, hasTake, reduced])
   const thinking = m.status === "streaming" && m.content.length === 0
   return (
     <div>
@@ -101,8 +145,10 @@ export const AssistantMessage = memo(function AssistantMessage({
         </div>
       ) : (
         <>
-          <div ref={content} data-response-footprint style={{ minHeight: footprint }} className={take ? "flex flex-col justify-end" : undefined}>
-            {thinking ? <Thinking searching={searching} sourceCount={m.webSources?.length ?? 0} /> : take ? <motion.div initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced)}><CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /></motion.div> : <StreamingMarkdown text={revealed} batches={batches} streaming={m.status === "streaming" || draining} citationCount={m.citations.length} messageId={m.id} />}
+          <div ref={content} data-response-footprint className={take ? "flex flex-col justify-end" : undefined}>
+            <div ref={natural} data-response-content>
+              {thinking ? <Thinking searching={searching} sourceCount={m.webSources?.length ?? 0} /> : take ? <motion.div initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced)} onAnimationComplete={releaseSwap}><CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /></motion.div> : <StreamingMarkdown text={revealed} batches={batches} streaming={m.status === "streaming" || draining} citationCount={m.citations.length} messageId={m.id} />}
+            </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
@@ -208,14 +254,20 @@ export function ChatThread({
       previous = current
       setAboveBottom(!follow.current)
     }
-    const observer = new ResizeObserver(() => {
+    const resize = () => {
       // Read layout once per resize, rather than once per message chunk as well.
       const limit = bottom()
       previous = Math.min(previous, limit)
       target = Math.max(window.scrollY, limit)
       setAboveBottom(!follow.current)
       if (follow.current && !raf) raf = requestAnimationFrame(advance)
-    })
+    }
+    const anchoredSwap = () => {
+      previous = window.scrollY
+      resize()
+    }
+    const observer = new ResizeObserver(resize)
+    window.addEventListener(SWAP_RELEASE, anchoredSwap)
     if (root.current) observer.observe(root.current)
     window.addEventListener("scroll", track, { passive: true })
     window.addEventListener("wheel", wheel, { passive: true })
@@ -224,6 +276,7 @@ export function ChatThread({
     window.addEventListener("touchmove", touchMove, { passive: true })
     return () => {
       observer.disconnect()
+      window.removeEventListener(SWAP_RELEASE, anchoredSwap)
       window.removeEventListener("scroll", track)
       window.removeEventListener("wheel", wheel)
       window.removeEventListener("keydown", key)
