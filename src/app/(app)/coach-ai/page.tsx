@@ -1,5 +1,5 @@
 "use client"
-import { Suspense, useState } from "react"
+import { Suspense, useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { usePlanStore } from "@/stores/plan-store"
 import { useCoachAIStore } from "@/stores/coach-ai-store"
@@ -10,6 +10,7 @@ import {
   SuggestedPrompts,
   Composer,
 } from "@/components/coach-ai/chat"
+import { HistoryDrawer } from "@/components/coach-ai/history-drawer"
 import { getTodayIsoWeekday } from "@/lib/train/selectors"
 function CoachChat({ sessionId }: { sessionId?: string }) {
   const { plan, currentWeek } = usePlanStore()
@@ -37,15 +38,19 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
       <PageHeader
         title="Coach AI"
         action={
-          <button
-            className="min-h-11 text-sm text-text-2"
-            onClick={() => {
-              chat.reset()
-              setValue("")
-            }}
-          >
-            New chat
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <HistoryDrawer />
+            <button
+              type="button"
+              className="min-h-11 text-sm text-text-2"
+              onClick={() => {
+                chat.startNewChat()
+                setValue("")
+              }}
+            >
+              New chat
+            </button>
+          </div>
         }
       />
       <GroundingBar
@@ -65,6 +70,7 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
           <SuggestedPrompts onSend={send} />
         </div>
       )}
+      {chat.saveNotice && <p role="status" className="mb-2 text-xs text-text-2">{chat.saveNotice}</p>}
       <Composer
         value={value}
         onChange={setValue}
@@ -76,6 +82,14 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
   )
 }
 function QueryChat() {
+  const mounted = useRef(false)
+  useEffect(() => {
+    if (mounted.current) return
+    mounted.current = true
+    const chat = useCoachAIStore.getState()
+    void chat.loadThreads()
+    void chat.restoreLastThread()
+  }, [])
   const params = useSearchParams()
   const id = params.get("session") ?? undefined
   return <CoachChat key={id ?? "general"} sessionId={id} />
