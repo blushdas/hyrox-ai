@@ -1,0 +1,17 @@
+HUMAN_SECRET_NEEDED — expected (manifest)
+Working directory: /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness
+Exact attach command (outside network sandbox):
+/opt/homebrew/bin/node -e "require('playwright').chromium.connectOverCDP('http://127.0.0.1:9222',{timeout:5000}).then(b=>{process.stdout.write(JSON.stringify(b.contexts().map(c=>c.pages().map(p=>p.url()))));process.exit(0)}).catch(e=>{process.stderr.write(e.message);process.exit(1)})"
+Exit: 1
+Literal error output (ANSI color sequences preserved in attach.log):
+browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9222
+Call log:
+  - <ws preparing> retrieving websocket url from http://127.0.0.1:9222
+
+Browser attempt: await page.goto('http://localhost:3001/coach-ai')
+Result: http://localhost:3001/sign-in?callbackUrl=%2Fcoach-ai
+Title: Sign in — FINISHER
+Evidence: auth-blocked.png
+Reused the prior requested-worktree dev server at 3001. No credentials typed; no plan loader or real API request run.
+All authenticated POST /api/coach-ai intercepted-stream checks remain blocked.
+Supplementary isolated harness executes the actual edited React components with synthetic props; it does not meet the real-flow requirement.

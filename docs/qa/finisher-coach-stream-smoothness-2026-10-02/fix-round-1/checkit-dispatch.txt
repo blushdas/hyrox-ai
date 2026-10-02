@@ -1,0 +1,12 @@
+Command: /Users/troy/.local/bin/claude -p <prompt> > /private/tmp/coach-fix1-checkit.log 2>&1
+Exit code: 1
+Prompt began:
+/checkit --task-id finisher-coach-stream-smoothness-2026-10-02 --goal /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness/docs/codex-goal-2026-10-02.md --contract /Users/troy/.claude/contracts/finisher-coach-stream-smoothness-20261002-contract.md
+
+Identity supplied: local commit 05a0d7c2e559489fd1bdd93e937d09faa51db258, branch codex/finisher-coach-stream-smoothness, worktree /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness, exact debrief docs/codex-debrief-2026-10-02-140706.md.
+Instructions: verify only the seven approved fixes; re-run build, tsc, tests and targeted ESLint; isolated harness evidence is supplementary; real-flow QA remains HUMAN_SECRET_NEEDED. No push, merge, deploy or source edits. Save exact-identity report and return findings.
+Verification started: .next/BUILD_ID refreshed after dispatch, Claude session f628323e-e300-48b9-988d-396203365a77 reached an independent Agent review. No completed report or passing verdict was returned.
+Terminal output:
+API Error: Can't reach the API server — check your internet or DNS (ENOTFOUND)
+
+Only debrief and dispatch evidence were amended after this failed attempt; application source stayed unchanged. Current final commit is given in handback; it needs a fresh /checkit once the Claude API is reachable.

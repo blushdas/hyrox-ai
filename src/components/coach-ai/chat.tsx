@@ -57,15 +57,21 @@ export const AssistantMessage = memo(function AssistantMessage({
   retryDisabled,
   lastAssistant,
   searching = false,
+  onDrainChange,
 }: {
   message: ChatMessage
   onRetry: () => void
   retryDisabled: boolean
   lastAssistant: boolean
   searching?: boolean
+  onDrainChange?: (id: string, draining: boolean) => void
 }) {
   const reduced = useReducedMotion()
-  const { text: revealed, draining } = useRevealedText(m.content, m.status === "streaming")
+  const { text: revealed, draining } = useRevealedText(m.content, m.status === "streaming", m.status === "error")
+  useEffect(() => {
+    onDrainChange?.(m.id, draining)
+    return () => onDrainChange?.(m.id, false)
+  }, [m.id, draining, onDrainChange])
   const take = m.status === "complete" && !draining ? parseCoachTake(m.content) : null
   const thinking = m.status === "streaming" && m.content.length === 0
   return (
@@ -124,6 +130,17 @@ export function ChatThread({
   const reduced = useReducedMotion()
   const follow = useRef(true)
   const [aboveBottom, setAboveBottom] = useState(false)
+  const [drainingIds, setDrainingIds] = useState<Set<string>>(() => new Set())
+  const onDrainChange = useCallback((id: string, draining: boolean) => {
+    setDrainingIds(previous => {
+      if (previous.has(id) === draining) return previous
+      const next = new Set(previous)
+      if (draining) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }, [])
+  const draining = messages.some(message => message.status !== "error" && drainingIds.has(message.id))
   const streaming = messages.some(message => message.status === "streaming")
   const lastAssistant = [...messages].reverse().find(message => message.role === "assistant")
   const announcement = lastAssistant?.status === "complete" ? `Coach response: ${lastAssistant.content}` : ""
@@ -135,6 +152,9 @@ export function ChatThread({
     let raf = 0
     let target = window.scrollY
     let previous = window.scrollY
+    const bottom = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+    // Mounting a long thread must preserve an athlete's existing scroll position.
+    follow.current = bottom() - previous <= 100
     const advance = () => {
       raf = 0
       if (!follow.current) return
@@ -148,7 +168,10 @@ export function ChatThread({
       previous = window.scrollY
       if (target - previous > 1) raf = requestAnimationFrame(advance)
     }
-    const pause = () => { follow.current = false }
+    const pause = () => {
+      follow.current = false
+      setAboveBottom(true)
+    }
     const wheel = (event: WheelEvent) => { if (event.deltaY < 0) pause() }
     const key = (event: KeyboardEvent) => {
       if (["ArrowUp", "PageUp", "Home"].includes(event.key) &&
@@ -163,15 +186,20 @@ export function ChatThread({
     }
     const track = () => {
       const current = window.scrollY
-      const distance = document.documentElement.scrollHeight - window.innerHeight - current
-      if (current < previous - 1) follow.current = false
-      if (distance <= 2) follow.current = true
+      const limit = bottom()
+      // Height shrink can clamp scrollY. Compare against the clamped prior
+      // position so a shorter Take card is not mistaken for upward user input.
+      if (current < Math.min(previous, limit) - 1) follow.current = false
+      if (limit - current <= 2) follow.current = true
       previous = current
-      setAboveBottom(!follow.current && distance > 100)
+      setAboveBottom(!follow.current)
     }
     const observer = new ResizeObserver(() => {
       // Read layout once per resize, rather than once per message chunk as well.
-      target = Math.max(window.scrollY, document.documentElement.scrollHeight - window.innerHeight)
+      const limit = bottom()
+      previous = Math.min(previous, limit)
+      target = Math.max(window.scrollY, limit)
+      setAboveBottom(!follow.current)
       if (follow.current && !raf) raf = requestAnimationFrame(advance)
     })
     if (root.current) observer.observe(root.current)
@@ -206,6 +234,7 @@ export function ChatThread({
             <AssistantMessage
               message={m}
               onRetry={retry}
+              onDrainChange={onDrainChange}
               lastAssistant={m.id === lastAssistant?.id}
               searching={messages[index - 1]?.webSearch === true}
               retryDisabled={
@@ -215,7 +244,7 @@ export function ChatThread({
           )}
         </motion.div>
       ))}
-      {aboveBottom && <button type="button" aria-label="Scroll to latest" className="fixed right-5 bottom-[calc(var(--tab-bar-h)+9rem)] z-40 flex min-h-11 min-w-11 items-center gap-2 rounded-md border border-hairline bg-surface-2 px-3 text-sm lg:bottom-36" onClick={() => {
+      {(streaming || draining) && aboveBottom && <button type="button" aria-label="Scroll to latest" className="fixed right-5 bottom-[calc(var(--tab-bar-h)+9rem)] z-40 flex min-h-11 min-w-11 items-center gap-2 rounded-md border border-hairline bg-surface-2 px-3 text-sm lg:bottom-36" onClick={() => {
         follow.current = true
         setAboveBottom(false)
         window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })

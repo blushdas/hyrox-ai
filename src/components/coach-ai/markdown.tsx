@@ -21,7 +21,7 @@ function Inlines({ nodes, citationCount, messageId }: { nodes: Inline[] } & Omit
   })
 }
 function RenderBlock({ block, citationCount, messageId, cursor = false }: { block: Block; cursor?: boolean } & Omit<Props, "text">) {
-  const caret = cursor ? <span aria-hidden className="relative inline-block w-0"><span className="absolute bottom-0 left-1 h-3.5 w-0.5 bg-accent motion-safe:animate-pulse" /></span> : null
+  const caret = cursor ? <span aria-hidden data-reveal-caret className="relative inline-block w-0"><span className="absolute bottom-0 left-1 h-3.5 w-0.5 bg-accent motion-safe:animate-pulse" /></span> : null
   const inline = (nodes: Inline[]) => <Inlines nodes={nodes} citationCount={citationCount} messageId={messageId} />
   switch (block.type) {
     case "heading": {
@@ -41,7 +41,12 @@ function RenderBlock({ block, citationCount, messageId, cursor = false }: { bloc
 }
 export const Markdown = memo(function Markdown({ text, citationCount, messageId, cursor = false }: Props & { cursor?: boolean }) {
   const blocks = useMemo(() => parseMarkdown(text), [text])
-  return <div className="min-w-0 max-w-prose space-y-4 text-text-1 leading-6 [overflow-wrap:anywhere]">{blocks.map((block, i) => <RenderBlock key={i} block={block} citationCount={citationCount} messageId={messageId} cursor={cursor && i === blocks.length - 1} />)}</div>
+  const last = blocks[blocks.length - 1]
+  const fallbackCaret = cursor && (!last || last.type === "table" || last.type === "hr")
+  return <div className={`relative min-w-0 max-w-prose space-y-4 text-text-1 leading-6 [overflow-wrap:anywhere] ${cursor && !last ? "min-h-6" : ""}`}>
+    {blocks.map((block, i) => <RenderBlock key={i} block={block} citationCount={citationCount} messageId={messageId} cursor={cursor && i === blocks.length - 1} />)}
+    {fallbackCaret && <span data-reveal-caret aria-hidden className="absolute bottom-1 left-0 h-3.5 w-0.5 bg-accent motion-safe:animate-pulse" />}
+  </div>
 })
 export function StreamingMarkdown({ text, streaming, ...props }: Props & { streaming: boolean }) {
   const { finalized, tail } = useMemo(() => splitStreaming(text), [text])
