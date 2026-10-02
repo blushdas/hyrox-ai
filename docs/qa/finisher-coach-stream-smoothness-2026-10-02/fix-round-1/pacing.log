@@ -1,9 +1,0 @@
-
- RUN  v3.2.7 /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness
-
- ✓ src/lib/coach-ai/reveal.test.ts (11 tests) 85ms
-
- Test Files  1 passed (1)
-      Tests  11 passed (11)
-   Start at  13:58:18
-   Duration  730ms (transform 70ms, setup 0ms, collect 66ms, tests 85ms, environment 0ms, prepare 109ms)

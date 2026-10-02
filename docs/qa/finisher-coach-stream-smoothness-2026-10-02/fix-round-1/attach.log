@@ -1,3 +1,0 @@
-browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9222
-Call log:
-[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:9222[22m
