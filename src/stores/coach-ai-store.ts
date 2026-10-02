@@ -5,6 +5,8 @@ import type { ChatMessage } from "@/lib/coach-ai/types"
 import { resolveCitations } from "@/lib/coach-ai/citations"
 import { useAthleteStore } from "@/stores/athlete-store"
 import { RATE_LIMIT_MESSAGE } from "@/lib/coach-ai/rate-limit"
+import { createThread, getThreadMessages, listThreads, saveThreadMessage, type ThreadSummary, type ThreadResult } from "@/lib/coach-ai/threads-client"
+
 type Context = {
   plan: TrainingPlan
   currentWeek: number
@@ -12,6 +14,14 @@ type Context = {
   sessionId?: string
 }
 type ChatState = {
+  threadId: string | null
+  threads: ThreadSummary[]
+  threadsStatus: "idle" | "loading" | "ready" | "signedOut" | "error"
+  saveNotice: string | null
+  loadThreads: () => Promise<void>
+  openThread: (id: string) => Promise<void>
+  restoreLastThread: () => Promise<void>
+  startNewChat: () => void
   messages: ChatMessage[]
   isStreaming: boolean
   send: (prompt: string, context: Context, webSearch?: boolean) => void
@@ -21,34 +31,110 @@ type ChatState = {
 }
 let controller: AbortController | undefined
 let generation = 0
+const LAST_THREAD = "coach-ai:last-thread"
+const SAVE_NOTICE = "Chat not saved. It will stay here until you leave."
+type Conversation = { id: string | null; queue: Promise<void>; attempted: Set<string>; unavailable: boolean }
+const conversation = (id: string | null = null): Conversation => ({ id, queue: Promise.resolve(), attempted: new Set(), unavailable: false })
+let active = conversation()
+let retryUser: ChatMessage | undefined
+let opening = 0
+let pendingOpen = false
+let listing = 0
+function remember(id: string | null) {
+  try {
+    if (id) localStorage.setItem(LAST_THREAD, id)
+    else localStorage.removeItem(LAST_THREAD)
+  } catch {
+    // Storage is optional; the live conversation stays usable.
+    return false
+  }
+  return true
+}
 export const useCoachAIStore = create<ChatState>((set, get) => ({
+  threadId: null,
+  threads: [],
+  threadsStatus: "idle",
+  saveNotice: null,
   messages: [],
   isStreaming: false,
+  loadThreads: async () => {
+    const request = ++listing
+    set({ threadsStatus: "loading" })
+    const result = await listThreads()
+    if (request !== listing) return
+    if (result.kind === "ok") set({ threads: result.value.sort((a, b) => b.updatedAt - a.updatedAt), threadsStatus: "ready" })
+    else if (result.kind === "unauthorized") set({ threads: [], threadsStatus: "signedOut", saveNotice: null })
+    else set({ threadsStatus: "error", saveNotice: SAVE_NOTICE })
+  },
+  openThread: async (id) => {
+    get().stop()
+    const request = ++opening
+    const current = active = conversation(id)
+    pendingOpen = true
+    set({ threadId: null, messages: [], saveNotice: null })
+    const result = await getThreadMessages(id)
+    if (request !== opening || active !== current) return
+    pendingOpen = false
+    if (result.kind === "ok") {
+      result.value.forEach(m => current.attempted.add(m.id))
+      set({ messages: result.value, threadId: id })
+      remember(id)
+    } else {
+      active = conversation()
+      remember(null)
+      set({ threadId: null, messages: [], ...(result.kind === "unauthorized" ? { threadsStatus: "signedOut", saveNotice: null } : result.kind === "notFound" ? {} : { saveNotice: SAVE_NOTICE }) })
+    }
+  },
+  restoreLastThread: async () => {
+    let id: string | null
+    try { id = localStorage.getItem(LAST_THREAD) }
+    catch {
+      // Private-mode or missing storage opens a fresh chat.
+      return
+    }
+    if (id) await get().openThread(id)
+  },
   stop: () => {
     generation++
     controller?.abort()
     controller = undefined
+    const partial = get().isStreaming ? get().messages.at(-1) : undefined
     set((s) => ({
       isStreaming: false,
       messages: s.messages.map((m) =>
         m.status === "streaming" ? { ...m, status: "complete" } : m,
       ),
     }))
+    if (partial?.role === "assistant" && partial.status !== "error" && partial.content.trim()) persist({ ...partial, status: "complete" }, active)
   },
-  reset: () => {
+  startNewChat: () => {
     get().stop()
-    set({ messages: [] })
+    opening++
+    pendingOpen = false
+    active = conversation()
+    retryUser = undefined
+    remember(null)
+    set({ messages: [], threadId: null, saveNotice: null })
   },
+  reset: () => get().startNewChat(),
   retry: (context) => {
     if (get().isStreaming) return
     const last = [...get().messages].reverse().find((m) => m.role === "user")
     if (last) {
-      set((s) => ({ messages: s.messages.slice(0, -2) }))
+      const userIndex = get().messages.findIndex(m => m.id === last.id)
+      set((s) => ({ messages: s.messages.slice(0, userIndex) }))
+      retryUser = last
       get().send(last.content, context, last.webSearch)
     }
   },
   send: (prompt, context, webSearch = false) => {
     if (get().isStreaming || !prompt.trim()) return
+    // A prompt sent before history loads starts its own chat, never a hidden continuation.
+    if (pendingOpen) get().startNewChat()
+    opening++
+    const current = active
+    const userId = retryUser?.id ?? crypto.randomUUID()
+    retryUser = undefined
     const id = crypto.randomUUID()
     const createdAt = new Date().toISOString()
     const abort = new AbortController()
@@ -59,7 +145,7 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
       messages: [
         ...s.messages,
         {
-          id: crypto.randomUUID(),
+          id: userId,
           role: "user",
           content: prompt,
           webSearch,
@@ -78,6 +164,10 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
       ],
       isStreaming: true,
     }))
+    // Streaming starts synchronously; persistence waits in a separate ordered queue.
+    persist(get().messages.find(m => m.id === userId) ?? {
+      id: userId, role: "user", content: prompt, citations: [], status: "complete", createdAt, webSearch,
+    }, current)
     const profile = useAthleteStore.getState().profile
     const update = (patch: Partial<ChatMessage>) => {
       if (token !== generation) return
@@ -133,8 +223,54 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
           catch { update({ status: "error", errorMessage: "Connection interrupted. Please retry." }) }
           reader.releaseLock()
         }
-        if (token === generation) { controller = undefined; set({ isStreaming: false }) }
+        if (token === generation) {
+          controller = undefined; set({ isStreaming: false })
+          const message = get().messages.find(m => m.id === id)
+          if (message?.status === "complete" && message.content.trim()) persist(message, current)
+        }
       }
     })()
   },
 }))
+
+function report<T>(result: ThreadResult<T>, current: Conversation) {
+  if (result.kind === "unauthorized") {
+    listing++
+    useCoachAIStore.setState({ threads: [], threadsStatus: "signedOut", saveNotice: null })
+    return
+  }
+  if (active !== current) return
+  if (result.kind !== "ok" && useCoachAIStore.getState().threadsStatus !== "signedOut") useCoachAIStore.setState({ saveNotice: SAVE_NOTICE })
+}
+function persist(message: ChatMessage, current: Conversation) {
+  // Retry retains the local user id; server-generated ids never replace it.
+  if (current.attempted.has(message.id)) return
+  current.attempted.add(message.id)
+  const previous = current.queue
+  current.queue = (async () => {
+    await previous
+    if (current.unavailable) return
+    if (!current.id) {
+      const result = await createThread(message.content.trim().slice(0, 60))
+      report(result, current)
+      if (result.kind !== "ok") { current.unavailable = true; return }
+      current.id = result.value.id
+      if (active === current) {
+        const state = useCoachAIStore.getState()
+        useCoachAIStore.setState({ threadId: current.id, threads: [result.value, ...state.threads.filter(t => t.id !== current.id)].sort((a, b) => b.updatedAt - a.updatedAt) })
+        remember(current.id)
+      }
+    }
+    const { role, content, status, citations, webSources, webSearch, errorMessage } = message
+    const result = await saveThreadMessage(current.id, { role, content, status, citations, webSources, webSearch, errorMessage })
+    report(result, current)
+    if (result.kind === "unauthorized") current.unavailable = true
+    if (result.kind === "ok" && active === current) {
+      remember(current.id)
+      useCoachAIStore.setState(s => ({ threadId: current.id, threads: s.threads.map(t => t.id === current.id ? { ...t, updatedAt: Math.max(t.updatedAt, Date.parse(result.value.createdAt)) } : t).sort((a, b) => b.updatedAt - a.updatedAt) }))
+    }
+  })().catch(() => {
+    // Unexpected persistence errors remain visible without affecting the stream.
+    report({ kind: "failed" }, current)
+  })
+}
