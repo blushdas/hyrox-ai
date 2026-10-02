@@ -66,3 +66,8 @@ docs/runit/
 .open-next/
 /AGENTS.md
 /CLAUDE.md
+docs/codex-*.md
+docs/qa/
+docs/runit/
+/AGENTS.md
+/CLAUDE.md
