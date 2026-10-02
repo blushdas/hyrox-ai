@@ -11,7 +11,7 @@ import { StreamingMarkdown, citationAnchor } from "./markdown"
 import { parseCoachTake } from "@/lib/coach-ai/coach-take"
 import { CoachTakeCard } from "./coach-take-card"
 import { MessageActions } from "./message-actions"
-import { useRevealedText } from "./use-revealed-text"
+import { flushRevealedText, useRevealedText } from "./use-revealed-text"
 import { Thinking } from "./thinking"
 export function GroundingBar({ week, phase }: { week: number; phase: string }) {
   return (
@@ -67,12 +67,24 @@ export const AssistantMessage = memo(function AssistantMessage({
   onDrainChange?: (id: string, draining: boolean) => void
 }) {
   const reduced = useReducedMotion()
-  const { text: revealed, draining } = useRevealedText(m.content, m.status === "streaming", m.status === "error")
+  const { text: revealed, batches, draining } = useRevealedText(m.content, m.status === "streaming", m.status === "error")
   useEffect(() => {
     onDrainChange?.(m.id, draining)
     return () => onDrainChange?.(m.id, false)
   }, [m.id, draining, onDrainChange])
   const take = m.status === "complete" && !draining ? parseCoachTake(m.content) : null
+  const content = useRef<HTMLDivElement>(null)
+  // Keep the streamed footprint when a compact card replaces it. Bottom-align
+  // the card so its final position stays next to the composer. No height tween.
+  const [footprint, setFootprint] = useState(0)
+  useEffect(() => {
+    if (!content.current) return
+    const observer = new ResizeObserver(([entry]) => {
+      setFootprint(height => Math.max(height, Math.ceil(entry.contentRect.height)))
+    })
+    observer.observe(content.current)
+    return () => observer.disconnect()
+  }, [])
   const thinking = m.status === "streaming" && m.content.length === 0
   return (
     <div>
@@ -89,7 +101,9 @@ export const AssistantMessage = memo(function AssistantMessage({
         </div>
       ) : (
         <>
-          {thinking ? <Thinking searching={searching} sourceCount={m.webSources?.length ?? 0} /> : take ? <motion.div initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced)}><CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /></motion.div> : <StreamingMarkdown text={revealed} streaming={m.status === "streaming" || draining} citationCount={m.citations.length} messageId={m.id} />}
+          <div ref={content} data-response-footprint style={{ minHeight: footprint }} className={take ? "flex flex-col justify-end" : undefined}>
+            {thinking ? <Thinking searching={searching} sourceCount={m.webSources?.length ?? 0} /> : take ? <motion.div initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced)}><CoachTakeCard take={take} messageId={m.id} citationCount={m.citations.length} /></motion.div> : <StreamingMarkdown text={revealed} batches={batches} streaming={m.status === "streaming" || draining} citationCount={m.citations.length} messageId={m.id} />}
+          </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {m.citations.map((c, i) => (
               <CitationChip key={c.id} citation={c} index={i + 1} anchorId={citationAnchor(m.id, i + 1)} />
@@ -316,7 +330,10 @@ export function Composer({
         {streaming ? (
           <button
             type="button"
-            onClick={onStop}
+            onClick={() => {
+              flushRevealedText()
+              onStop()
+            }}
             aria-label="Stop response"
             className="flex size-11 items-center justify-center rounded-md border"
           >

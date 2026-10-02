@@ -1,0 +1,3808 @@
+{
+  "mode": "Foreground Chrome; isolated actual render components with actual production app CSS. Supplemental; not signed-in real route.",
+  "tests": {
+    "R1": {
+      "pass": true,
+      "total": 3840,
+      "drainMs": 907.5999999940395,
+      "frames": [
+        {
+          "time": -5.600000005960453,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 37.099999994039536,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 44.599999994039536,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 52.89999999403955,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 61.19999999403953,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 69.49999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 78.79999999403952,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 87.09999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 94.99999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 102.89999999403955,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 112.09999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 119.49999999403951,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        },
+        {
+          "time": 128.69999999403956,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "true"
+        },
+        {
+          "time": 137.09999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "true"
+        },
+        {
+          "time": 144.59999999403954,
+          "shown": 0,
+          "batches": 0,
+          "spans": 0,
+          "draining": "true"
+        },
+        {
+          "time": 153.79999999403952,
+          "shown": 39,
+          "batches": 1,
+          "spans": 1,
+          "draining": "true"
+        },
+        {
+          "time": 161.59999999403954,
+          "shown": 39,
+          "batches": 1,
+          "spans": 1,
+          "draining": "true"
+        },
+        {
+          "time": 170.39999999403955,
+          "shown": 64,
+          "batches": 2,
+          "spans": 2,
+          "draining": "true"
+        },
+        {
+          "time": 178.69999999403956,
+          "shown": 64,
+          "batches": 2,
+          "spans": 2,
+          "draining": "true"
+        },
+        {
+          "time": 186.9999999940395,
+          "shown": 87,
+          "batches": 3,
+          "spans": 3,
+          "draining": "true"
+        },
+        {
+          "time": 194.89999999403955,
+          "shown": 87,
+          "batches": 3,
+          "spans": 3,
+          "draining": "true"
+        },
+        {
+          "time": 203.29999999403952,
+          "shown": 107,
+          "batches": 4,
+          "spans": 4,
+          "draining": "true"
+        },
+        {
+          "time": 211.9999999940395,
+          "shown": 107,
+          "batches": 4,
+          "spans": 4,
+          "draining": "true"
+        },
+        {
+          "time": 219.59999999403954,
+          "shown": 126,
+          "batches": 5,
+          "spans": 5,
+          "draining": "true"
+        },
+        {
+          "time": 227.89999999403955,
+          "shown": 126,
+          "batches": 5,
+          "spans": 5,
+          "draining": "true"
+        },
+        {
+          "time": 236.19999999403956,
+          "shown": 126,
+          "batches": 5,
+          "spans": 5,
+          "draining": "true"
+        },
+        {
+          "time": 244.4999999940395,
+          "shown": 151,
+          "batches": 6,
+          "spans": 6,
+          "draining": "true"
+        },
+        {
+          "time": 253.09999999403954,
+          "shown": 151,
+          "batches": 6,
+          "spans": 6,
+          "draining": "true"
+        },
+        {
+          "time": 261.09999999403954,
+          "shown": 195,
+          "batches": 7,
+          "spans": 7,
+          "draining": "true"
+        },
+        {
+          "time": 269.4999999940395,
+          "shown": 195,
+          "batches": 7,
+          "spans": 7,
+          "draining": "true"
+        },
+        {
+          "time": 278.59999999403954,
+          "shown": 234,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 286.19999999403956,
+          "shown": 234,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 295.4999999940395,
+          "shown": 270,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 302.89999999403955,
+          "shown": 270,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 311.39999999403955,
+          "shown": 303,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 319.7999999940395,
+          "shown": 303,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 327.89999999403955,
+          "shown": 333,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 336.4999999940395,
+          "shown": 333,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 345.4999999940395,
+          "shown": 360,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 353.69999999403956,
+          "shown": 360,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 361.4999999940395,
+          "shown": 386,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 369.7999999940396,
+          "shown": 386,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 378.7999999940396,
+          "shown": 435,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 387.09999999403954,
+          "shown": 435,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 395.3999999940395,
+          "shown": 483,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 403.2999999940396,
+          "shown": 483,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 412.09999999403954,
+          "shown": 524,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 419.4999999940395,
+          "shown": 524,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 428.4999999940395,
+          "shown": 561,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 437.09999999403954,
+          "shown": 561,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 445.3999999940395,
+          "shown": 598,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 453.69999999403956,
+          "shown": 598,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 461.19999999403956,
+          "shown": 630,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 470.19999999403956,
+          "shown": 630,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 478.2999999940396,
+          "shown": 659,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 487.09999999403954,
+          "shown": 659,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 495.3999999940395,
+          "shown": 714,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 503.2999999940396,
+          "shown": 714,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 511.4999999940395,
+          "shown": 762,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 520.1999999940396,
+          "shown": 762,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 528.6999999940396,
+          "shown": 808,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 536.1999999940396,
+          "shown": 808,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 545.4999999940395,
+          "shown": 848,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 553.6999999940396,
+          "shown": 848,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 562.0999999940395,
+          "shown": 888,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 569.5999999940395,
+          "shown": 888,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 578.7999999940396,
+          "shown": 888,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 586.9999999940395,
+          "shown": 940,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 592.3999999940395,
+          "shown": 940,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 602.6999999940396,
+          "shown": 940,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 610.7999999940396,
+          "shown": 983,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 620.1999999940396,
+          "shown": 983,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 628.5999999940395,
+          "shown": 1040,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 636.9999999940395,
+          "shown": 1040,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 644.9999999940395,
+          "shown": 1089,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 653.1999999940396,
+          "shown": 1089,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 662.1999999940396,
+          "shown": 1133,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 669.8999999940395,
+          "shown": 1133,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 678.7999999940396,
+          "shown": 1174,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 687.0999999940395,
+          "shown": 1174,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 695.3999999940395,
+          "shown": 1213,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 703.7999999940396,
+          "shown": 1213,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 711.1999999940396,
+          "shown": 1247,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 720.3999999940395,
+          "shown": 1247,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 728.6999999940396,
+          "shown": 1278,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 736.9999999940395,
+          "shown": 1278,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 744.6999999940396,
+          "shown": 1334,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 753.7999999940396,
+          "shown": 1334,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 761.6999999940396,
+          "shown": 1386,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 770.4999999940395,
+          "shown": 1386,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 778.6999999940396,
+          "shown": 1433,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 787.0999999940395,
+          "shown": 1433,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 795.3999999940395,
+          "shown": 1476,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 802.8999999940395,
+          "shown": 1476,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 812.1999999940396,
+          "shown": 1476,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 820.3999999940395,
+          "shown": 1535,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 828.6999999940396,
+          "shown": 1535,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 837.0999999940395,
+          "shown": 1569,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 844.8999999940395,
+          "shown": 1569,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 853.6999999940396,
+          "shown": 1599,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 861.3999999940395,
+          "shown": 1599,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 870.4999999940396,
+          "shown": 1655,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 878.6999999940394,
+          "shown": 1655,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 886.0999999940395,
+          "shown": 1708,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 894.4999999940396,
+          "shown": 1708,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 903.2999999940396,
+          "shown": 1708,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 911.1999999940394,
+          "shown": 1777,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 919.4999999940396,
+          "shown": 1777,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 928.7999999940396,
+          "shown": 1817,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 936.9999999940396,
+          "shown": 1817,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 945.3999999940395,
+          "shown": 1856,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 953.6999999940394,
+          "shown": 1856,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 961.8999999940395,
+          "shown": 1890,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 970.3999999940395,
+          "shown": 1890,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 977.9999999940396,
+          "shown": 1949,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 987.0999999940395,
+          "shown": 1949,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 994.4999999940396,
+          "shown": 2003,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1003.3999999940395,
+          "shown": 2003,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1011.2999999940396,
+          "shown": 2051,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1019.7999999940396,
+          "shown": 2051,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1028.2999999940396,
+          "shown": 2095,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1037.0999999940395,
+          "shown": 2095,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1045.3999999940395,
+          "shown": 2137,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1053.6999999940394,
+          "shown": 2137,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1061.6999999940394,
+          "shown": 2174,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1069.9999999940396,
+          "shown": 2174,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1078.7999999940396,
+          "shown": 2207,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1087.0999999940395,
+          "shown": 2207,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1095.2999999940396,
+          "shown": 2239,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1103.6999999940394,
+          "shown": 2239,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1111.9999999940396,
+          "shown": 2295,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1120.3999999940395,
+          "shown": 2295,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1128.6999999940394,
+          "shown": 2346,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1136.9999999940396,
+          "shown": 2346,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1144.6999999940394,
+          "shown": 2393,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1153.7999999940396,
+          "shown": 2393,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1161.9999999940396,
+          "shown": 2436,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1170.1999999940394,
+          "shown": 2436,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1178.7999999940396,
+          "shown": 2474,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1186.9999999940396,
+          "shown": 2474,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1194.6999999940394,
+          "shown": 2510,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1203.3999999940395,
+          "shown": 2510,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1211.7999999940396,
+          "shown": 2542,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1219.6999999940394,
+          "shown": 2542,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1228.3999999940395,
+          "shown": 2598,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1237.0999999940395,
+          "shown": 2598,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1245.3999999940395,
+          "shown": 2653,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1253.6999999940394,
+          "shown": 2653,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1262.0999999940395,
+          "shown": 2701,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1270.3999999940395,
+          "shown": 2701,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1278.6999999940394,
+          "shown": 2745,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1286.2999999940396,
+          "shown": 2745,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1295.4999999940396,
+          "shown": 2745,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1303.0999999940395,
+          "shown": 2805,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1311.4999999940396,
+          "shown": 2805,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1319.7999999940396,
+          "shown": 2838,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1328.7999999940396,
+          "shown": 2838,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1336.9999999940396,
+          "shown": 2871,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1345.2999999940396,
+          "shown": 2871,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1352.7999999940396,
+          "shown": 2927,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1362.1999999940394,
+          "shown": 2927,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1370.3999999940395,
+          "shown": 2980,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1378.4999999940396,
+          "shown": 2980,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1387.0999999940395,
+          "shown": 3026,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1394.5999999940395,
+          "shown": 3026,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1403.7999999940396,
+          "shown": 3068,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1411.9999999940396,
+          "shown": 3068,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1420.2999999940396,
+          "shown": 3109,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1427.9999999940396,
+          "shown": 3109,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1436.2999999940396,
+          "shown": 3144,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1445.4999999940396,
+          "shown": 3144,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1453.6999999940394,
+          "shown": 3179,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1461.6999999940394,
+          "shown": 3179,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1470.3999999940395,
+          "shown": 3235,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1478.0999999940395,
+          "shown": 3235,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1487.0999999940395,
+          "shown": 3287,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1495.3999999940395,
+          "shown": 3287,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1503.6999999940394,
+          "shown": 3337,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1511.9999999940396,
+          "shown": 3337,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1520.3999999940395,
+          "shown": 3381,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1528.4999999940396,
+          "shown": 3381,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1537.0999999940395,
+          "shown": 3421,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1545.1999999940394,
+          "shown": 3421,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1553.6999999940394,
+          "shown": 3458,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1561.2999999940396,
+          "shown": 3458,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1570.2999999940396,
+          "shown": 3491,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1578.2999999940396,
+          "shown": 3491,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1586.3999999940395,
+          "shown": 3522,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1595.3999999940395,
+          "shown": 3522,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1603.6999999940394,
+          "shown": 3551,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1612.0999999940395,
+          "shown": 3551,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1619.6999999940394,
+          "shown": 3577,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1627.8999999940395,
+          "shown": 3577,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1637.0999999940395,
+          "shown": 3577,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1645.3999999940395,
+          "shown": 3612,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1652.9999999940396,
+          "shown": 3612,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1662.0999999940395,
+          "shown": 3612,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1670.3999999940395,
+          "shown": 3642,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1678.6999999940394,
+          "shown": 3642,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1686.9999999940396,
+          "shown": 3660,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1694.8999999940395,
+          "shown": 3660,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1703.7999999940396,
+          "shown": 3676,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1711.2999999940396,
+          "shown": 3676,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1720.4999999940396,
+          "shown": 3691,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1728.7999999940396,
+          "shown": 3691,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1736.3999999940395,
+          "shown": 3705,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1745.4999999940396,
+          "shown": 3705,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1753.6999999940394,
+          "shown": 3717,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1761.9999999940396,
+          "shown": 3717,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1770.3999999940395,
+          "shown": 3728,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1778.6999999940394,
+          "shown": 3728,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1786.9999999940396,
+          "shown": 3738,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1795.3999999940395,
+          "shown": 3738,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 1803.6999999940394,
+          "shown": 3747,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1812.0999999940395,
+          "shown": 3747,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1819.7999999940396,
+          "shown": 3756,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1828.7999999940396,
+          "shown": 3756,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1837.0999999940395,
+          "shown": 3764,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1844.7999999940396,
+          "shown": 3764,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1853.7999999940396,
+          "shown": 3771,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1862.0999999940395,
+          "shown": 3771,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1869.4999999940396,
+          "shown": 3778,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1878.5999999940395,
+          "shown": 3778,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1887.0999999940395,
+          "shown": 3784,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1895.3999999940397,
+          "shown": 3784,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1903.6999999940394,
+          "shown": 3789,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1911.9999999940396,
+          "shown": 3789,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1920.1999999940394,
+          "shown": 3794,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1928.6999999940394,
+          "shown": 3794,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1936.9999999940396,
+          "shown": 3799,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1945.3999999940397,
+          "shown": 3799,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1953.0999999940395,
+          "shown": 3803,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1961.4999999940396,
+          "shown": 3803,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1970.4999999940396,
+          "shown": 3807,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1978.6999999940394,
+          "shown": 3807,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1987.0999999940395,
+          "shown": 3810,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 1995.3999999940397,
+          "shown": 3810,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2003.6999999940394,
+          "shown": 3813,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2011.9999999940396,
+          "shown": 3813,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2019.5999999940395,
+          "shown": 3816,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2027.8999999940397,
+          "shown": 3816,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2037.0999999940395,
+          "shown": 3816,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2045.0999999940395,
+          "shown": 3820,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2053.7999999940394,
+          "shown": 3820,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2062.0999999940395,
+          "shown": 3822,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2070.2999999940394,
+          "shown": 3822,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2078.6999999940394,
+          "shown": 3824,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2086.9999999940396,
+          "shown": 3824,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2095.3999999940397,
+          "shown": 3826,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2103.6999999940394,
+          "shown": 3826,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2111.9999999940396,
+          "shown": 3828,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2119.9999999940396,
+          "shown": 3828,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2128.7999999940394,
+          "shown": 3830,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2136.9999999940396,
+          "shown": 3830,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2145.2999999940394,
+          "shown": 3832,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2153.2999999940394,
+          "shown": 3832,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2162.0999999940395,
+          "shown": 3834,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2170.3999999940397,
+          "shown": 3834,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2178.6999999940394,
+          "shown": 3836,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2187.0999999940395,
+          "shown": 3836,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2195.3999999940397,
+          "shown": 3838,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2203.6999999940394,
+          "shown": 3838,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2211.9999999940396,
+          "shown": 3840,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2220.3999999940397,
+          "shown": 3840,
+          "batches": 9,
+          "spans": 9,
+          "draining": "true"
+        },
+        {
+          "time": 2228.6999999940394,
+          "shown": 3840,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2236.5999999940395,
+          "shown": 3840,
+          "batches": 8,
+          "spans": 8,
+          "draining": "true"
+        },
+        {
+          "time": 2245.3999999940397,
+          "shown": 3840,
+          "batches": 7,
+          "spans": 7,
+          "draining": "true"
+        },
+        {
+          "time": 2253.6999999940394,
+          "shown": 3840,
+          "batches": 7,
+          "spans": 7,
+          "draining": "true"
+        },
+        {
+          "time": 2262.0999999940395,
+          "shown": 3840,
+          "batches": 6,
+          "spans": 6,
+          "draining": "true"
+        },
+        {
+          "time": 2269.7999999940394,
+          "shown": 3840,
+          "batches": 6,
+          "spans": 6,
+          "draining": "true"
+        },
+        {
+          "time": 2278.7999999940394,
+          "shown": 3840,
+          "batches": 5,
+          "spans": 5,
+          "draining": "true"
+        },
+        {
+          "time": 2286.9999999940396,
+          "shown": 3840,
+          "batches": 5,
+          "spans": 5,
+          "draining": "true"
+        },
+        {
+          "time": 2295.3999999940397,
+          "shown": 3840,
+          "batches": 4,
+          "spans": 4,
+          "draining": "true"
+        },
+        {
+          "time": 2303.6999999940394,
+          "shown": 3840,
+          "batches": 4,
+          "spans": 4,
+          "draining": "true"
+        },
+        {
+          "time": 2311.6999999940394,
+          "shown": 3840,
+          "batches": 3,
+          "spans": 3,
+          "draining": "true"
+        },
+        {
+          "time": 2320.4999999940396,
+          "shown": 3840,
+          "batches": 3,
+          "spans": 3,
+          "draining": "true"
+        },
+        {
+          "time": 2328.2999999940394,
+          "shown": 3840,
+          "batches": 2,
+          "spans": 2,
+          "draining": "true"
+        },
+        {
+          "time": 2337.0999999940395,
+          "shown": 3840,
+          "batches": 2,
+          "spans": 2,
+          "draining": "true"
+        },
+        {
+          "time": 2345.3999999940397,
+          "shown": 3840,
+          "batches": 1,
+          "spans": 1,
+          "draining": "true"
+        },
+        {
+          "time": 2353.6999999940394,
+          "shown": 3840,
+          "batches": 1,
+          "spans": 1,
+          "draining": "true"
+        },
+        {
+          "time": 2362.0999999940395,
+          "shown": 3840,
+          "batches": 0,
+          "spans": 0,
+          "draining": "false"
+        }
+      ],
+      "maxBatches": 9,
+      "maxSpans": 9
+    },
+    "R1-huge-finish": {
+      "pass": true,
+      "ms": 1360.699999988079,
+      "shown": 1000000
+    },
+    "R2": {
+      "pass": true,
+      "measurements": [
+        {
+          "width": 1280,
+          "type": "## Training heading",
+          "before": {
+            "top": 24,
+            "height": 24,
+            "width": 542.2421875,
+            "text": "Training heading",
+            "lineCount": 1
+          },
+          "after": {
+            "top": 24,
+            "height": 24,
+            "width": 542.2421875,
+            "text": "Training heading",
+            "lineCount": 1
+          }
+        },
+        {
+          "width": 1280,
+          "type": "This is a **bold** p",
+          "before": {
+            "top": 24,
+            "height": 96,
+            "width": 542.2421875,
+            "text": "This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines.",
+            "lineCount": 4
+          },
+          "after": {
+            "top": 24,
+            "height": 96,
+            "width": 542.2421875,
+            "text": "This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines.",
+            "lineCount": 4
+          }
+        },
+        {
+          "width": 1280,
+          "type": "- First item\n- Secon",
+          "before": {
+            "top": 24,
+            "height": 80,
+            "width": 542.2421875,
+            "text": "First item\nSecond item\nThird item",
+            "lineCount": 3
+          },
+          "after": {
+            "top": 24,
+            "height": 80,
+            "width": 542.2421875,
+            "text": "First item\nSecond item\nThird item",
+            "lineCount": 3
+          }
+        },
+        {
+          "width": 390,
+          "type": "## Training heading",
+          "before": {
+            "top": 24,
+            "height": 24,
+            "width": 350,
+            "text": "Training heading",
+            "lineCount": 1
+          },
+          "after": {
+            "top": 24,
+            "height": 24,
+            "width": 350,
+            "text": "Training heading",
+            "lineCount": 1
+          }
+        },
+        {
+          "width": 390,
+          "type": "This is a **bold** p",
+          "before": {
+            "top": 24,
+            "height": 144,
+            "width": 350,
+            "text": "This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines.",
+            "lineCount": 6
+          },
+          "after": {
+            "top": 24,
+            "height": 144,
+            "width": 350,
+            "text": "This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines. This is a bold paragraph with one link and enough repeated training text to wrap to multiple lines.",
+            "lineCount": 6
+          }
+        },
+        {
+          "width": 390,
+          "type": "- First item\n- Secon",
+          "before": {
+            "top": 24,
+            "height": 80,
+            "width": 350,
+            "text": "First item\nSecond item\nThird item",
+            "lineCount": 3
+          },
+          "after": {
+            "top": 24,
+            "height": 80,
+            "width": 350,
+            "text": "First item\nSecond item\nThird item",
+            "lineCount": 3
+          }
+        }
+      ],
+      "blankTailCaret": true,
+      "partialCitationWithheld": true,
+      "completeCitation": true,
+      "codeAndTable": true
+    },
+    "R2-fade-stability": {
+      "pass": true,
+      "starts": 131,
+      "oldReanimations": 0,
+      "maxSpans": 9,
+      "remainingSpans": 0,
+      "shown": 4500,
+      "total": 4500
+    },
+    "R3-R4-take": {
+      "pass": true,
+      "before": {
+        "y": 260.5,
+        "height": 1192,
+        "footprint": 1080
+      },
+      "positions": [
+        {
+          "ms": 3.1000000000000227,
+          "y": 448,
+          "height": 1368,
+          "caret": true,
+          "footprint": 1200,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 12.200000000000045,
+          "y": 490,
+          "height": 1368,
+          "caret": true,
+          "footprint": 1200,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 19.700000000000045,
+          "y": 517.5,
+          "height": 1416,
+          "caret": true,
+          "footprint": 1248,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 29,
+          "y": 552,
+          "height": 1416,
+          "caret": true,
+          "footprint": 1248,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 37.200000000000045,
+          "y": 574.5,
+          "height": 1464,
+          "caret": true,
+          "footprint": 1296,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 45.5,
+          "y": 606,
+          "height": 1464,
+          "caret": true,
+          "footprint": 1296,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 53.799999999999955,
+          "y": 626.5,
+          "height": 1488,
+          "caret": true,
+          "footprint": 1320,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 62.200000000000045,
+          "y": 648,
+          "height": 1488,
+          "caret": true,
+          "footprint": 1320,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 70.5,
+          "y": 662,
+          "height": 1536,
+          "caret": true,
+          "footprint": 1368,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 78.89999999999998,
+          "y": 688,
+          "height": 1536,
+          "caret": true,
+          "footprint": 1368,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 87.20000000000005,
+          "y": 705,
+          "height": 1560,
+          "caret": true,
+          "footprint": 1392,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 95.60000000000002,
+          "y": 724.5,
+          "height": 1560,
+          "caret": true,
+          "footprint": 1392,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 103.89999999999998,
+          "y": 737,
+          "height": 1584,
+          "caret": true,
+          "footprint": 1416,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 112.10000000000002,
+          "y": 753.5,
+          "height": 1584,
+          "caret": true,
+          "footprint": 1416,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 120.5,
+          "y": 764,
+          "height": 1608,
+          "caret": true,
+          "footprint": 1440,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 128.79999999999995,
+          "y": 779.5,
+          "height": 1608,
+          "caret": true,
+          "footprint": 1440,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 137.10000000000002,
+          "y": 789.5,
+          "height": 1632,
+          "caret": true,
+          "footprint": 1464,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 145.5,
+          "y": 804.5,
+          "height": 1632,
+          "caret": true,
+          "footprint": 1464,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 153.79999999999995,
+          "y": 814,
+          "height": 1656,
+          "caret": true,
+          "footprint": 1488,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 161.70000000000005,
+          "y": 828.5,
+          "height": 1656,
+          "caret": true,
+          "footprint": 1488,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 170.5,
+          "y": 838,
+          "height": 1680,
+          "caret": true,
+          "footprint": 1512,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 178.79999999999995,
+          "y": 852.5,
+          "height": 1680,
+          "caret": true,
+          "footprint": 1512,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 187.20000000000005,
+          "y": 862,
+          "height": 1680,
+          "caret": true,
+          "footprint": 1512,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 195.5,
+          "y": 868.5,
+          "height": 1680,
+          "caret": true,
+          "footprint": 1512,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 203.89999999999998,
+          "y": 872.5,
+          "height": 1704,
+          "caret": true,
+          "footprint": 1536,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 211.89999999999998,
+          "y": 883.5,
+          "height": 1704,
+          "caret": true,
+          "footprint": 1536,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 219.79999999999995,
+          "y": 890.5,
+          "height": 1728,
+          "caret": true,
+          "footprint": 1560,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 228.89999999999998,
+          "y": 903.5,
+          "height": 1728,
+          "caret": true,
+          "footprint": 1560,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 237.20000000000005,
+          "y": 912,
+          "height": 1728,
+          "caret": true,
+          "footprint": 1560,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 245.5,
+          "y": 917.5,
+          "height": 1728,
+          "caret": true,
+          "footprint": 1560,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 253,
+          "y": 921,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 262.20000000000005,
+          "y": 932,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 269.79999999999995,
+          "y": 939,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 278.4,
+          "y": 943.5,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 287.20000000000005,
+          "y": 946.5,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 295.5,
+          "y": 948.5,
+          "height": 1752,
+          "caret": true,
+          "footprint": 1584,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 303.9,
+          "y": 949.5,
+          "height": 1776,
+          "caret": true,
+          "footprint": 1608,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 312.20000000000005,
+          "y": 959,
+          "height": 1776,
+          "caret": true,
+          "footprint": 1608,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 320.5,
+          "y": 965,
+          "height": 1776,
+          "caret": true,
+          "footprint": 1608,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 328.9,
+          "y": 969,
+          "height": 1776,
+          "caret": true,
+          "footprint": 1608,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 337.20000000000005,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 345.5,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 353.9,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 361.79999999999995,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 369.9,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 378.9,
+          "y": 1016,
+          "height": 1816,
+          "caret": true,
+          "footprint": 1648,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 387.20000000000005,
+          "y": 1016,
+          "height": 1856,
+          "caret": true,
+          "footprint": 1688,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 395.5,
+          "y": 1016,
+          "height": 1856,
+          "caret": true,
+          "footprint": 1688,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 403.79999999999995,
+          "y": 1030,
+          "height": 1856,
+          "caret": true,
+          "footprint": 1688,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 411.9,
+          "y": 1039,
+          "height": 1856,
+          "caret": true,
+          "footprint": 1688,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 420.6,
+          "y": 1045,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 428.9000000000001,
+          "y": 1049,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 437.20000000000005,
+          "y": 1065.5,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 445.5,
+          "y": 1076,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 453.79999999999995,
+          "y": 1083,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 462.20000000000005,
+          "y": 1087.5,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 470.5,
+          "y": 1090.5,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 478.79999999999995,
+          "y": 1092.5,
+          "height": 1896,
+          "caret": true,
+          "footprint": 1728,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 487.0999999999999,
+          "y": 1093.5,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 495.5999999999999,
+          "y": 1094.5,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 503.9000000000001,
+          "y": 1105,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 512.2,
+          "y": 1111.5,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 520.5,
+          "y": 1116,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 528.8,
+          "y": 1119,
+          "height": 1924,
+          "caret": true,
+          "footprint": 1756,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 537.2,
+          "y": 1121,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 545.5,
+          "y": 1122,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 553.9000000000001,
+          "y": 1131,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 561.9000000000001,
+          "y": 1137,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 570.5,
+          "y": 1141,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 578.0999999999999,
+          "y": 1143.5,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 587.3,
+          "y": 1145,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 595.5,
+          "y": 1146,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 603.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 612.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 620.5999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 628.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 637.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 645.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 653.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 662.0999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 669.7,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 678.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 686.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 695.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 703.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 712.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 720.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 728.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 737.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 745.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 753.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 762.0999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 770,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 778.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 787.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 795.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 803.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 812.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 820.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 828.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 837.0999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 845.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 853.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 862.0999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": true,
+          "footprint": 1780,
+          "card": false,
+          "opacity": null
+        },
+        {
+          "ms": 870.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 878.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 887.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 895.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 903.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 912.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 920.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 928.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 937.0999999999999,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 945.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 953.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 962.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 970.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 978.9000000000001,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 987.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 995.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1003,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1012.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1020.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1028.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1037.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1045.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1053.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1061.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1070.6,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1078.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1087.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1095.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1103.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1112.1,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1120.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1128.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1137.1,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1145.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1153.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1162.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1170.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1178.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1187.1,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1195.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1203.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1212.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1220.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1228.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1237.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1245.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1253.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1262.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1270.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1277.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1287.3,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1294.7,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1303.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1312.1,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1320.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1328.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1337.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1345.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1353.8,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1362.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1370.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1378.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1387.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1395.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1403.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1412.2,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1420.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1428.4,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1436.5,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1445.7,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1453.8000000000002,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1461.6,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1470.1999999999998,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1478.9,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1487.1999999999998,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        },
+        {
+          "ms": 1495.1,
+          "y": 1147,
+          "height": 1948,
+          "caret": false,
+          "footprint": 1780,
+          "card": true,
+          "opacity": "1"
+        }
+      ],
+      "atCard": 870.5,
+      "after": {
+        "y": 1147,
+        "height": 1948,
+        "footprint": 1780
+      },
+      "text": "Coach's take\n\nYes\n\nKeep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent. Keep the run consistent.\n\nPros and cons\n2\n\nRecovery [1]\n\nLess mileage\n\nNext move\n\nKeep the scheduled run.",
+      "cardHeight": 865
+    },
+    "R4-follow": {
+      "pass": true,
+      "mountY": 0,
+      "startY": 3440,
+      "paused": 3400,
+      "resumed": 6497,
+      "idleLatest": false
+    },
+    "R5": {
+      "pass": true,
+      "mutations": 0,
+      "observations": [],
+      "stableNodes": true
+    },
+    "R6-Stop": {
+      "pass": true,
+      "beforeLength": 830,
+      "receivedLength": 2500,
+      "afterLength": 2499,
+      "fixture": "Visible Composer sends POST /api/coach-ai; browser fetch intercept supplies bursty NDJSON; Stop aborts and completes synthetic reply."
+    },
+    "R6-error": {
+      "pass": true,
+      "before": "1019",
+      "after": "1019",
+      "alert": true,
+      "retry": true
+    },
+    "R6-controls": {
+      "pass": true,
+      "thinking": true,
+      "details": true,
+      "citation": true,
+      "copy": true,
+      "regenerate": true,
+      "announcement": "Coach response: A completed answer [1]."
+    },
+    "R6-reduced": {
+      "pass": true,
+      "immediate": true,
+      "fadeSpans": 0
+    }
+  },
+  "errors": [],
+  "network": [],
+  "auth": {
+    "url": "http://localhost:3001/sign-in?callbackUrl=%2Fcoach-ai",
+    "title": "Sign in — FINISHER"
+  },
+  "foreground": {
+    "visibility": "visible",
+    "focus": true,
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+  },
+  "css": {
+    "display": "flex",
+    "stylesheets": 1
+  },
+  "finishedAt": "2026-10-02T08:53:10.469Z"
+}

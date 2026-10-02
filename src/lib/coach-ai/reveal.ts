@@ -1,48 +1,43 @@
 export const REVEAL_FRAME_MS = 16
-export const REVEAL_MAX_CHARS_PER_FRAME = 8
-const BASE_RATE = 100
-export const REVEAL_DRAIN_MS = 1200
+export const REVEAL_CATCHUP_FRAMES = 12
+export const REVEAL_MAX_CHARS_PER_FRAME = 400
+export const REVEAL_FADE_MS = 140
+export const REVEAL_FINISH_MAX_MS = 1350
 
-export type RevealState = {
-  shown: number
-  rate: number
-  carry: number
-  received: number
-  arrivalRate: number
-  sinceArrival: number
-  drainRate: number | null
+export const revealFrames = (elapsedMs: number) => Math.min(4, Math.max(1, elapsedMs / REVEAL_FRAME_MS))
+
+// The reference's time-based, backlog-proportional step. No arrival estimator.
+export function nextRevealLength(shown: number, total: number, frames: number) {
+  const pending = total - shown
+  if (pending <= 0) return total
+  const bounded = Math.min(4, Math.max(1, frames))
+  const step = Math.min(REVEAL_MAX_CHARS_PER_FRAME,
+    Math.max(Math.ceil(bounded), Math.ceil(pending * bounded / REVEAL_CATCHUP_FRAMES)))
+  return Math.min(total, shown + step)
 }
-export const initialRevealState = (shown = 0): RevealState => ({
-  shown, rate: BASE_RATE, carry: 0, received: shown,
-  arrivalRate: BASE_RATE, sinceArrival: 0.5, drainRate: null,
-})
 
-// A fixed eight-character ceiling cannot drain arbitrary reply lengths in 1.5s.
-// Bound each update to a small fraction of the reply (plus the eight-char floor).
-export const revealFrameCap = (total: number) => Math.max(REVEAL_MAX_CHARS_PER_FRAME, Math.ceil(total / 30))
+export type RevealBatch = { id: number; start: number; end: number; born: number }
+export function advanceRevealBatches(batches: RevealBatch[], shown: number, next: number, id: number, now: number) {
+  const young = batches.filter(batch => now - batch.born < REVEAL_FADE_MS)
+  if (next > shown) young.push({ id, start: shown, end: next, born: now })
+  return { batches: young, nextId: next > shown ? id + 1 : id }
+}
 
-export const revealFrames = (elapsedMs: number) => Math.min(4, Math.max(0, elapsedMs / REVEAL_FRAME_MS))
-
-// Arrival estimates change only when a chunk arrives; the reveal rate then
-// approaches that estimate gradually instead of sprinting on each burst.
-export function nextRevealState(state: RevealState, total: number, frames: number, streaming = true): RevealState {
-  const seconds = revealFrames(frames * REVEAL_FRAME_MS) * REVEAL_FRAME_MS / 1000
-  const pending = Math.max(0, total - state.shown)
-  const sinceArrival = state.sinceArrival + seconds
-  const arrived = Math.max(0, total - state.received)
-  const arrivalRate = arrived
-    ? (state.received === 0 ? arrived / Math.max(0.25, sinceArrival) :
-      state.arrivalRate + (arrived / Math.max(0.1, sinceArrival) - state.arrivalRate) * 0.5)
-    : state.arrivalRate
-  const drainRate = streaming ? null : state.drainRate ?? Math.max(state.rate, pending * 1000 / REVEAL_DRAIN_MS)
-  const desired = drainRate ?? Math.max(BASE_RATE, arrivalRate) *
-    (1 + Math.min(0.25, pending / Math.max(1, arrivalRate * 2)))
-  const rate = state.rate + (desired - state.rate) * (1 - Math.exp(-seconds / (streaming ? 0.25 : 0.08)))
-  const available = state.carry + rate * seconds
-  const step = Math.min(pending, revealFrameCap(total), Math.floor(available))
-  return {
-    shown: Math.min(total, state.shown + step), rate,
-    carry: step === pending ? 0 : available - Math.floor(available),
-    received: total, arrivalRate, sinceArrival: arrived ? 0 : sinceArrival, drainRate,
+export type FadePiece = { key: string; text: string; born: number | null }
+export function splitFadeText(text: string, start: number, batches: RevealBatch[]): FadePiece[] {
+  const pieces: FadePiece[] = []
+  const end = start + text.length
+  let cursor = start
+  for (const batch of batches) {
+    const from = Math.max(cursor, batch.start)
+    const to = Math.min(end, batch.end)
+    if (to <= from) continue
+    if (from > cursor) pieces.push({ key: `settled-${cursor}`, text: text.slice(cursor - start, from - start), born: null })
+    pieces.push({ key: `batch-${batch.id}`, text: text.slice(from - start, to - start), born: batch.born })
+    cursor = to
   }
+  if (cursor < end) pieces.push({ key: `settled-${cursor}`, text: text.slice(cursor - start), born: null })
+  return pieces
 }
+
+export const withholdLiveCitation = (text: string) => text.replace(/\[\d*$/, "")

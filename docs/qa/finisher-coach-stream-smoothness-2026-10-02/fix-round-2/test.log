@@ -1,0 +1,86 @@
+
+> finisher@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness
+
+ ✓ src/lib/people/filter-coaches.test.ts (6 tests) 18ms
+ ✓ src/lib/coach-ai/markdown.test.ts (39 tests) 25ms
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+ ✓ src/components/coach-ai/markdown.test.ts (7 tests) 41ms
+ ✓ src/lib/auth/native-auth.test.ts (9 tests) 27ms
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error: Upstream unavailable (status 401)
+
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error: sensitive detail
+
+stderr | src/app/api/coach-ai/route.test.ts > fetch with no headers aborts at 30 seconds
+coach-ai upstream failure Error: Timeout
+
+stderr | src/app/api/coach-ai/route.test.ts > headers alone do not satisfy the 30-second first-byte deadline
+coach-ai upstream failure Error: Timeout
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-json still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-timeout still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-json still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-timeout still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > forced web timeout fails soft
+coach-ai web search unavailable
+
+ ✓ src/app/api/coach-ai/route.test.ts (42 tests) 79ms
+ ✓ src/lib/coach-ai/reveal.test.ts (21 tests) 233ms
+ ✓ src/lib/coach-ai/stream.test.ts (5 tests) 34ms
+ ✓ src/lib/coach-ai/prompt.test.ts (14 tests) 5ms
+ ✓ src/lib/auth/protected-routes.test.ts (25 tests) 4ms
+ ✓ src/lib/auth/apple-client-secret.test.ts (1 test) 16ms
+ ✓ src/lib/train/selectors.test.ts (9 tests) 14ms
+ ✓ src/proxy.test.ts (14 tests) 19ms
+ ✓ src/stores/coach-ai-store.test.ts (10 tests) 695ms
+ ✓ src/components/coach-ai/thinking.test.ts (7 tests) 502ms
+   ✓ assistant passes received sources and removes Thinking on the first text  451ms
+ ✓ src/lib/coach-ai/copy-text.test.ts (5 tests) 4ms
+ ✓ src/lib/coach-ai/stream-split.test.ts (14 tests) 7ms
+ ✓ src/app/sign-in/sign-in-buttons.test.ts (4 tests) 10ms
+ ✓ src/lib/coach-ai/coach-take.test.ts (17 tests) 10ms
+ ✓ src/lib/coach-ai/citations.test.ts (2 tests) 5ms
+ ✓ src/lib/coach-ai/request.test.ts (3 tests) 3ms
+ ✓ src/lib/coach-ai/rate-limit.test.ts (2 tests) 3ms
+ ✓ src/lib/coach-ai/thinking-steps.test.ts (4 tests) 5ms
+ ✓ src/lib/motion.test.ts (5 tests) 10ms
+ ✓ src/lib/coach-ai/mock-coach.test.ts (1 test) 4ms
+ ✓ src/components/coach-ai/composer.test.ts (4 tests) 24ms
+stderr | src/lib/coach-ai/web-search.test.ts > real abort signal enforces eight-second planner deadline
+coach-ai web planner unavailable
+
+ ✓ src/lib/coach-ai/web-search.test.ts (10 tests) 8018ms
+   ✓ real abort signal enforces eight-second planner deadline  8003ms
+
+ Test Files  26 passed (26)
+      Tests  280 passed (280)
+   Start at  16:39:43
+   Duration  9.00s (transform 1.68s, setup 0ms, collect 5.08s, tests 9.81s, environment 8ms, prepare 4.81s)
+

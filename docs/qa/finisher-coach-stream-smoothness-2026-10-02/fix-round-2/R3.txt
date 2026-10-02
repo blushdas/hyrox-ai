@@ -1,0 +1,10 @@
+R3: HUMAN_SECRET_NEEDED for the authenticated route. Foreground isolated component measurements are supplemental, not a real signed-in Coach flow.
+Workdir: /Users/troy/.claude/worktrees/finisher-coach-stream-smoothness
+Command: /opt/homebrew/bin/node -e "require('playwright').chromium.connectOverCDP('http://127.0.0.1:9222',{timeout:5000}).then(b=>{process.stdout.write(JSON.stringify(b.contexts().map(c=>c.pages().map(p=>p.url()))));process.exit(0)}).catch(e=>{process.stderr.write(e.message);process.exit(1)})" > /private/tmp/coach-fix2-attach.log 2>&1
+Exit: 1
+Literal output:
+browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9222
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:9222[22m
+
+Real route in fresh foreground Chrome: http://localhost:3001/coach-ai redirected to http://localhost:3001/sign-in?callbackUrl=%2Fcoach-ai. auth-attempt.png shows Google sign-in. Troy offered to open debug Chrome; subsequent attempts still returned ECONNREFUSED. No credentials entered, no plan loader used.
