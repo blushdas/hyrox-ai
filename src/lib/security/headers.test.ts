@@ -9,6 +9,7 @@ it("applies required security policy on every route without replacing stream con
  expect(headers["Referrer-Policy"]).toBe("strict-origin-when-cross-origin");
  expect(headers["Permissions-Policy"]).toBe("camera=(), microphone=(), geolocation=(), payment=(), usb=()");
  const csp=headers["Content-Security-Policy"];
+ expect(csp).toContain("base-uri 'self'");
  expect(csp).toContain("frame-ancestors 'none'");expect(csp).toContain("object-src 'none'");
  expect(csp.split(";").find(s=>s.trim().startsWith("script-src"))).toBe(" script-src 'self' 'unsafe-inline'");
  expect(csp).not.toMatch(/unsafe-eval|\*/);expect(headers).not.toHaveProperty("Content-Type");

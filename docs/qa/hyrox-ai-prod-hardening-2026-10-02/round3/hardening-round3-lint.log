@@ -1,0 +1,3 @@
+$ node node_modules/eslint/bin/eslint.js src/lib/security/headers.test.ts src/app/sign-in/sign-in-buttons.test.ts
+
+EXIT 0

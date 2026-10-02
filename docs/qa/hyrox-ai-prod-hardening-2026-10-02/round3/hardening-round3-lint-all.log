@@ -1,0 +1,82 @@
+Changed TS/TSX targets versus main: 62
+next.config.ts
+src/app/(app)/profile/page.test.ts
+src/app/(app)/profile/page.tsx
+src/app/api/coach-ai/route.test.ts
+src/app/api/coach-ai/route.ts
+src/app/api/me/account/route.test.ts
+src/app/api/me/account/route.ts
+src/app/api/me/guards.test.ts
+src/app/api/me/guards.ts
+src/app/api/me/plan/route.test.ts
+src/app/api/me/plan/route.ts
+src/app/api/me/plan/sessions/[id]/route.test.ts
+src/app/api/me/plan/sessions/[id]/route.ts
+src/app/api/me/profile/route.test.ts
+src/app/api/me/profile/route.ts
+src/app/api/me/threads/[id]/messages/route.test.ts
+src/app/api/me/threads/[id]/messages/route.ts
+src/app/api/me/threads/route.test.ts
+src/app/api/me/threads/route.ts
+src/app/api/native-auth/exchange/route.test.ts
+src/app/api/native-auth/exchange/route.ts
+src/app/auth/native-complete/route.test.ts
+src/app/auth/native-complete/route.ts
+src/app/sign-in/sign-in-buttons.test.ts
+src/app/sign-in/sign-in-buttons.tsx
+src/auth.ts
+src/components/coach-ai/chat.tsx
+src/components/coach-ai/markdown.tsx
+src/components/coach-ai/use-revealed-text.ts
+src/components/ui/alert-dialog.tsx
+src/lib/api/quota.ts
+src/lib/api/request-guard.test.ts
+src/lib/api/request-guard.ts
+src/lib/api/session-user.test.ts
+src/lib/api/session-user.ts
+src/lib/api/test-d1.ts
+src/lib/api/validate.ts
+src/lib/auth/adapter.test.ts
+src/lib/auth/adapter.ts
+src/lib/auth/native-auth.test.ts
+src/lib/auth/native-auth.ts
+src/lib/auth/native-session-client.test.ts
+src/lib/auth/native-session-client.ts
+src/lib/auth/pkce.test.ts
+src/lib/auth/pkce.ts
+src/lib/coach-ai/rate-limit.test.ts
+src/lib/coach-ai/rate-limit.ts
+src/lib/coach-ai/reveal.test.ts
+src/lib/coach-ai/reveal.ts
+src/lib/db/account.test.ts
+src/lib/db/account.ts
+src/lib/db/auth-migration.test.ts
+src/lib/db/coach.ts
+src/lib/db/plan.ts
+src/lib/db/quota.test.ts
+src/lib/db/rate-limit.test.ts
+src/lib/db/rate-limit.ts
+src/lib/db/scoping.test.ts
+src/lib/security/headers.test.ts
+src/lib/security/headers.ts
+src/proxy.test.ts
+src/proxy.ts
+
+/Users/troy/.claude/worktrees/hyrox-ai-prod-hardening/src/components/coach-ai/use-revealed-text.ts
+  10:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/Users/troy/.claude/worktrees/hyrox-ai-prod-hardening/src/components/coach-ai/use-revealed-text.ts:10:3
+   8 |   const [shown, setShown] = useState(0)
+   9 |   const targetRef = useRef(target)
+> 10 |   targetRef.current = target
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  11 |   const active = streaming && !reduced
+  12 |   useEffect(() => {
+  13 |     if (!active) return  react-hooks/refs
+
+✖ 1 problem (1 error, 0 warnings)
+
+
+EXIT 1
