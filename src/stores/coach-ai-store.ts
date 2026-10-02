@@ -38,6 +38,7 @@ const conversation = (id: string | null = null): Conversation => ({ id, queue: P
 let active = conversation()
 let retryUser: ChatMessage | undefined
 let opening = 0
+let pendingOpen = false
 let listing = 0
 function remember(id: string | null) {
   try {
@@ -69,9 +70,11 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
     get().stop()
     const request = ++opening
     const current = active = conversation(id)
+    pendingOpen = true
     set({ threadId: null, messages: [], saveNotice: null })
     const result = await getThreadMessages(id)
     if (request !== opening || active !== current) return
+    pendingOpen = false
     if (result.kind === "ok") {
       result.value.forEach(m => current.attempted.add(m.id))
       set({ messages: result.value, threadId: id })
@@ -107,6 +110,7 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
   startNewChat: () => {
     get().stop()
     opening++
+    pendingOpen = false
     active = conversation()
     retryUser = undefined
     remember(null)
@@ -117,13 +121,16 @@ export const useCoachAIStore = create<ChatState>((set, get) => ({
     if (get().isStreaming) return
     const last = [...get().messages].reverse().find((m) => m.role === "user")
     if (last) {
-      set((s) => ({ messages: s.messages.slice(0, -2) }))
+      const userIndex = get().messages.findIndex(m => m.id === last.id)
+      set((s) => ({ messages: s.messages.slice(0, userIndex) }))
       retryUser = last
       get().send(last.content, context, last.webSearch)
     }
   },
   send: (prompt, context, webSearch = false) => {
     if (get().isStreaming || !prompt.trim()) return
+    // A prompt sent before history loads starts its own chat, never a hidden continuation.
+    if (pendingOpen) get().startNewChat()
     opening++
     const current = active
     const userId = retryUser?.id ?? crypto.randomUUID()

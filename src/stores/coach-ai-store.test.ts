@@ -264,3 +264,41 @@ test.each([500, 401, "network"])("open %s falls back to a usable chat", async fa
   state().send("still works", context)
   await vi.waitFor(() => expect(state().messages.at(-1)?.status).toBe("complete"))
 })
+
+
+test.each([false, true])("reopened trailing user retry preserves earlier replies (failed reply: %s)", async failed => {
+  await persistence()
+  const earlier = [stored, { ...stored, id: "earlier-answer", role: "assistant" as const, content: "Earlier reply" }]
+  const unanswered = { ...stored, id: "unanswered", content: "Last prompt", webSearch: true }
+  const messages = [...earlier, unanswered, ...(failed ? [{ ...stored, id: "failed", role: "assistant" as const, content: "", status: "error" as const }] : [])]
+  vi.mocked(fetch).mockResolvedValueOnce(Response.json({ messages }))
+  await state().openThread("thread")
+  state().retry(context)
+  await vi.waitFor(() => expect(state().isStreaming).toBe(false))
+  expect(state().messages.slice(0, 2)).toEqual(earlier)
+  expect(state().messages).toHaveLength(4)
+  expect(state().messages[2]).toMatchObject({ id: unanswered.id, content: "Last prompt", webSearch: true })
+  expect(state().messages[3]).toMatchObject({ role: "assistant", content: "Answer", status: "complete" })
+  await vi.waitFor(() => expect(posts()).toHaveLength(1))
+  expect(posts()[0].role).toBe("assistant")
+  const coach = vi.mocked(fetch).mock.calls.find(([url]) => url === "/api/coach-ai")!
+  expect(JSON.parse(coach[1]!.body as string).messages).toEqual([...earlier.map(({ role, content }) => ({ role, content })), { role: "user", content: unanswered.content }])
+})
+
+test.each(["open", "restore"])("send during pending %s starts its own visible thread", async action => {
+  await persistence()
+  let resolve!: (response: Response) => void
+  vi.mocked(fetch).mockReturnValueOnce(new Promise(r => { resolve = r }))
+  vi.mocked(localStorage.getItem).mockReturnValue("opening")
+  const pending = action === "restore" ? state().restoreLastThread() : state().openThread("opening")
+  state().send("New prompt", context)
+  await vi.waitFor(() => { expect(state().isStreaming).toBe(false); expect(posts()).toHaveLength(2) })
+  expect(state().threadId).toBe("thread")
+  expect(state().messages.map(m => m.content)).toEqual(["New prompt", "Answer"])
+  expect(vi.mocked(fetch).mock.calls.some(([url, init]) => url === "/api/me/threads" && init?.method === "POST")).toBe(true)
+  expect(vi.mocked(fetch).mock.calls.some(([url, init]) => url === "/api/me/threads/opening/messages" && init?.method === "POST")).toBe(false)
+  resolve(Response.json({ messages: [stored] })); await pending
+  expect(state().threadId).toBe("thread")
+  expect(state().messages.map(m => m.content)).toEqual(["New prompt", "Answer"])
+  expect(localStorage.setItem).toHaveBeenLastCalledWith("coach-ai:last-thread", "thread")
+})
