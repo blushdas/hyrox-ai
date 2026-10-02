@@ -1,0 +1,23 @@
+TypeScript: 3 errors in 3 files
+═══════════════════════════════════════
+Top codes: TS2322 (2x), TS2345 (1x)
+
+src/app/api/me/account/route.test.ts (1 errors)
+  L20: TS2322 Type '{ Origin: string; "Content-Type"?: undefined; } | { "Content-Type": string; Origin?: undefined; }' is not assig...
+    Type '{ Origin: string; "Content-Type"?: undefined; }' is not assignable to type 'HeadersInit | undefined'.
+    Type '{ Origin: string; "Content-Type"?: undefined; }' is not assignable to type 'Record<string, string>'.
+    Property '"Content-Type"' is incompatible with index signature.
+    Type 'undefined' is not assignable to type 'string'.
+
+src/app/api/coach-ai/route.test.ts (1 errors)
+  L193: TS2322 Type '{ Origin: string; "Content-Type"?: undefined; } | { "Content-Type": string; Origin?: undefined; }' is not assig...
+    Type '{ Origin: string; "Content-Type"?: undefined; }' is not assignable to type 'HeadersInit | undefined'.
+    Type '{ Origin: string; "Content-Type"?: undefined; }' is not assignable to type 'Record<string, string>'.
+    Property '"Content-Type"' is incompatible with index signature.
+    Type 'undefined' is not assignable to type 'string'.
+
+src/lib/auth/adapter.test.ts (1 errors)
+  L11: TS2345 Argument of type '{ userId: string; type: "oauth"; provider: string; providerAccountId: string; access_token: string;...
+    Types of property 'token_type' are incompatible.
+    Type 'string' is not assignable to type 'Lowercase<string>'.
+[full output: ~/Library/Application Support/rtk/tee/1790928321_tsc.log]

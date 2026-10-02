@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { minimizeOAuthTokens } from "@/lib/auth/adapter";
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
 import { D1Adapter } from "@auth/d1-adapter";
@@ -32,7 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
   const appleSecret = AUTH_APPLE_SECRET || (AUTH_APPLE_ID && APPLE_TEAM_ID && APPLE_KEY_ID && APPLE_PRIVATE_KEY
     ? await buildAppleClientSecret({ clientId: AUTH_APPLE_ID, teamId: APPLE_TEAM_ID, keyId: APPLE_KEY_ID, privateKey: APPLE_PRIVATE_KEY }) : undefined);
   return {
-    adapter: D1Adapter(env.DB),
+    adapter: minimizeOAuthTokens(D1Adapter(env.DB)),
     secret,
     providers: [
       Google({ clientId: read("AUTH_GOOGLE_ID"), clientSecret: read("AUTH_GOOGLE_SECRET") }),

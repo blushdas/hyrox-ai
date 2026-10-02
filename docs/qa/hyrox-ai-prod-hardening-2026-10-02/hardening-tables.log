@@ -1,0 +1,5 @@
+npm error Missing script: "wrangler"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/troy/.npm/_logs/2026-10-02T08_05_15_516Z-debug-0.log

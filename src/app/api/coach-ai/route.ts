@@ -1,8 +1,10 @@
-import { auth } from "@/auth"
+import { getSessionUserId } from "@/lib/api/session-user"
+import { guardMutation } from "@/lib/api/request-guard"
+import { hitRateLimit } from "@/lib/db/rate-limit"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { buildSystemPrompt, tierForCategory } from "@/lib/coach-ai/prompt"
 import { readRequest, MAX_TOKENS } from "@/lib/coach-ai/request"
-import { allowMessage, RATE_LIMIT_MESSAGE } from "@/lib/coach-ai/rate-limit"
+import { COACH_LIMIT, COACH_WINDOW_MS } from "@/lib/coach-ai/rate-limit"
 import { minimaxTokens } from "@/lib/coach-ai/stream"
 
 import { webContext, WEB_UNAVAILABLE } from "@/lib/coach-ai/web-search"
@@ -10,12 +12,16 @@ import { webContext, WEB_UNAVAILABLE } from "@/lib/coach-ai/web-search"
 type Bindings = { COHERE_API_KEY?: string; TAVILY_API_KEY?: string; MINIMAX_API_KEY?: string; MINIMAX_MODEL?: string; MINIMAX_BASE_URL?: string }
 const UNAVAILABLE = "Coach is unavailable right now. Please try again."
 export async function POST(request: Request): Promise<Response> {
-  const session = await auth()
-  if (!session?.user?.id) return Response.json({ error: "Sign in to use Coach AI." }, { status: 401 })
+  const rejected = guardMutation(request); if (rejected) return rejected
+  const userId = await getSessionUserId()
+  if (!userId) return Response.json({ error: "Sign in to use Coach AI." }, { status: 401 })
   let input
   try { input = await readRequest(request) }
   catch { return Response.json({ error: "Invalid request. Keep messages under 2000 characters." }, { status: 400 }) }
-  if (!allowMessage(session.user.id)) return Response.json({ error: RATE_LIMIT_MESSAGE }, { status: 429, headers: { "Retry-After": String(allowMessage.retryAfter(session.user.id)) } })
+  try {
+    const hit = await hitRateLimit(userId, "coach", COACH_LIMIT, COACH_WINDOW_MS)
+    if (!hit.allowed) return Response.json({ error: "Too many requests" }, { status: 429, headers: { "Retry-After": String(hit.retryAfterSec) } })
+  } catch { console.error("Coach limiter unavailable"); return Response.json({ error: "Service unavailable" }, { status: 503 }) }
   const abort = new AbortController()
   const disconnect = () => abort.abort()
   request.signal.addEventListener("abort", disconnect, { once: true })
@@ -69,7 +75,7 @@ export async function POST(request: Request): Promise<Response> {
     return new Response(body, { headers: { "Content-Type": "application/x-ndjson", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
   } catch (error) {
     // Name and message only: never log the key, request body, or upstream response body.
-    console.error("coach-ai upstream failure", error instanceof Error ? `${error.name}: ${error.message}` : "unknown")
+    console.error("coach-ai upstream failure", error instanceof Error ? error.name : "unknown")
     abort.abort(); cleanup()
     return Response.json({ error: UNAVAILABLE }, { status: 502 })
   }

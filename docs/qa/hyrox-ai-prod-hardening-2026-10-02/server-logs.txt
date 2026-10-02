@@ -1,0 +1,8 @@
+src/app/api/me/guards.ts:12:  } catch (error) { console.error(error instanceof Error ? error.message : "Rate limit unavailable"); }
+src/app/api/native-auth/exchange/route.ts:24:    console.error("Native exchange rejected", error instanceof Error ? error.name : "UnknownError");
+src/app/api/native-auth/session/route.ts:25:    console.error("Native session rejected", error instanceof Error ? error.name : "UnknownError");
+src/app/api/coach-ai/route.ts:24:  } catch { console.error("Coach limiter unavailable"); return Response.json({ error: "Service unavailable" }, { status: 503 }) }
+src/app/api/coach-ai/route.ts:78:    console.error("coach-ai upstream failure", error instanceof Error ? error.name : "unknown")
+src/lib/api/validate.ts:87:  console.error("Persistence request failed", error instanceof Error ? error.name : "UnknownError");
+src/lib/coach-ai/web-search.ts:26:  } catch { console.error("coach-ai web planner unavailable"); return null } // No provider data or keys in logs.
+src/lib/coach-ai/web-search.ts:43:  } catch { console.error("coach-ai web search unavailable"); return null } // Fail soft without upstream details.

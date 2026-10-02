@@ -9,7 +9,7 @@ type Sqlite = { exec(sql: string): void; close(): void; prepare(sql: string): { 
 const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new (path: string) => Sqlite };
 export function createTestDb() {
  const sqlite = new DatabaseSync(":memory:"); sqlite.exec("PRAGMA foreign_keys = ON");
- for (const migration of ["0001_auth.sql", "0002_native_auth_codes.sql", "0003_core_schema.sql"]) sqlite.exec(readFileSync(resolve("migrations", migration), "utf8"));
+ for (const migration of ["0001_auth.sql", "0002_native_auth_codes.sql", "0003_core_schema.sql", "0004_auth_hardening.sql", "0005_rate_limits.sql"]) sqlite.exec(readFileSync(resolve("migrations", migration), "utf8"));
  class Prepared implements Statement {
   constructor(readonly sql: string, readonly values: Value[] = []) {}
   bind(...values: Value[]): Statement { return new Prepared(this.sql, values); }

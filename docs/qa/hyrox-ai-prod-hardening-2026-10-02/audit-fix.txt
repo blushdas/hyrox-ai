@@ -1,0 +1,7 @@
+Command: npm audit fix
+Exit: 1 (remaining development-only moderate advisories)
+added 3 packages, changed 50 packages, and audited 971 packages in 5m
+5 moderate severity vulnerabilities
+Remaining: @vitest/mocker/vitest (requires --force major bump), uuid/xcode/@capacitor/cli
+No --force run. Subsequent production audit: found 0 vulnerabilities, exit 0.
+Major version bumps: no major bumps

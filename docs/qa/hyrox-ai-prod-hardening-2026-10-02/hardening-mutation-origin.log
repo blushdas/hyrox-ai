@@ -1,0 +1,49 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ❯ src/lib/api/request-guard.test.ts (8 tests | 4 failed) 18ms
+   × rejects foreign origin https://evil.example before media type 11ms
+     → expected 415 to be 403 // Object.is equality
+   × rejects foreign origin null before media type 1ms
+     → expected 415 to be 403 // Object.is equality
+   × rejects foreign origin http://localhost:3001 before media type 1ms
+     → expected 415 to be 403 // Object.is equality
+   × rejects foreign origin https://localhost:3000 before media type 1ms
+     → expected 415 to be 403 // Object.is equality
+   ✓ rejects media type text/plain 2ms
+   ✓ rejects media type application/x-www-form-urlencoded 0ms
+   ✓ rejects media type multipart/form-data 0ms
+   ✓ allows bodyless delete, JSON parameters, missing origin and reads 1ms
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  16:09:44
+   Duration  376ms (transform 32ms, setup 0ms, collect 26ms, tests 18ms, environment 0ms, prepare 81ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/api/request-guard.test.ts > rejects foreign origin https://evil.example before media type
+ FAIL  src/lib/api/request-guard.test.ts > rejects foreign origin null before media type
+ FAIL  src/lib/api/request-guard.test.ts > rejects foreign origin http://localhost:3001 before media type
+ FAIL  src/lib/api/request-guard.test.ts > rejects foreign origin https://localhost:3000 before media type
+AssertionError: expected 415 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 415
+
+ ❯ src/lib/api/request-guard.test.ts:5:27
+      3| it.each(["https://evil.example","null","http://localhost:3001","https:…
+      4|  const response=guardMutation(new Request("http://localhost:3000/api/m…
+      5|  expect(response?.status).toBe(403);expect(await response?.json()).toE…
+       |                           ^
+      6| });
+      7| it.each(["text/plain","application/x-www-form-urlencoded","multipart/f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+EXIT 1

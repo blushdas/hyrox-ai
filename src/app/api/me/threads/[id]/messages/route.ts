@@ -1,3 +1,4 @@
+import { guardedMutation } from "@/app/api/me/guards";
 import { authenticated, readBody, invalid, missing, validateMessage } from "@/lib/api/validate";
 import { appendMessage, listMessages } from "@/lib/db/coach";
 type Context = { params: Promise<{ id: string }> };
@@ -8,7 +9,7 @@ export async function GET(_request: Request, context: Context) {
  });
 }
 export async function POST(request: Request, context: Context) {
- return authenticated(async userId => {
+ return guardedMutation(request, async userId => {
   const body = await readBody(request); if (!body.ok) return invalid(body.error);
   const message = validateMessage(body.value.message); if (!message.ok) return invalid(message.error);
   const { id } = await context.params; const saved = await appendMessage(userId, id, message.value);

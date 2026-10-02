@@ -8,7 +8,9 @@ import { App } from "@capacitor/app";
 import { Button } from "@/components/ui/button";
 import { getAuthOrigin, safeCallbackUrl } from "@/lib/auth/auth-origin";
 
-import { exchangeNativeCode, storeNativeToken } from "@/lib/auth/native-session-client";
+import { exchangeNativeCode, storeNativeToken, storeNativeVerifier, takeNativeVerifier } from "@/lib/auth/native-session-client";
+
+import { generateVerifier, challengeFromVerifier } from "@/lib/auth/pkce";
 
 export function SignInButtons() {
   const router = useRouter();
@@ -27,7 +29,9 @@ export function SignInButtons() {
           if (link.protocol !== "finisher:" || link.host !== "auth" || link.pathname || !code) {
             throw new Error("Invalid native auth link");
           }
-          const token = await exchangeNativeCode(getAuthOrigin(), code);
+          const verifier = await takeNativeVerifier();
+          if (!verifier) throw new Error("Native verifier missing");
+          const token = await exchangeNativeCode(getAuthOrigin(), code, verifier);
           await storeNativeToken(token);
           router.replace("/dashboard");
         } catch (error) {
@@ -39,7 +43,7 @@ export function SignInButtons() {
     return () => {
       void (async () => {
         try { const handle = await listener; await handle.remove(); }
-        catch (error) { console.error("Native auth listener cleanup failed", error); }
+        catch (error) { console.error("Native auth listener cleanup failed", error instanceof Error ? error.name : "UnknownError"); }
       })();
     };
   }, [router]);
@@ -51,13 +55,16 @@ export function SignInButtons() {
         if (!origin || new URL(origin).protocol !== "https:") throw new Error("Hosted HTTPS auth origin is required");
         // Capacitor sends external top-level navigation to the system browser.
         // Auth.js v5 rejects GET /api/auth/signin/provider. The hosted page performs its CSRF-protected POST.
-        window.location.href = origin + "/sign-in?callbackUrl=%2Fauth%2Fnative-complete";
+        const verifier = generateVerifier();
+        await storeNativeVerifier(verifier);
+        const challenge = await challengeFromVerifier(verifier);
+        window.location.href = origin + "/sign-in?callbackUrl=" + encodeURIComponent("/auth/native-complete?cc=" + challenge);
         setPending(false);
         return;
       }
       await signIn(provider, { callbackUrl: safeCallbackUrl(params.get("callbackUrl")) });
     } catch (error) {
-      console.error("Sign-in could not start", error);
+      console.error("Sign-in could not start", error instanceof Error ? error.name : "UnknownError");
       setFailed(true); setPending(false);
     }
   }

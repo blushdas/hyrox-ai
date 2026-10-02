@@ -1,0 +1,368 @@
+[
+  {
+    "results": [
+      {
+        "id": "alice",
+        "name": null,
+        "email": "alice@example.invalid",
+        "emailVerified": null,
+        "image": null
+      },
+      {
+        "id": "bob",
+        "name": null,
+        "email": "bob@example.invalid",
+        "emailVerified": null,
+        "image": null
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "userId": "alice",
+        "type": "oauth",
+        "provider": "google",
+        "providerAccountId": "alice",
+        "refresh_token": "refresh",
+        "access_token": "access",
+        "expires_at": 123,
+        "token_type": "bearer",
+        "scope": "openid",
+        "id_token": "id",
+        "session_state": "state",
+        "oauth_token_secret": "oauthsecret",
+        "oauth_token": "oauth"
+      },
+      {
+        "id": "bob",
+        "userId": "bob",
+        "type": "oauth",
+        "provider": "google",
+        "providerAccountId": "bob",
+        "refresh_token": "refresh",
+        "access_token": "access",
+        "expires_at": 123,
+        "token_type": "bearer",
+        "scope": "openid",
+        "id_token": "id",
+        "session_state": "state",
+        "oauth_token_secret": "oauthsecret",
+        "oauth_token": "oauth"
+      },
+      {
+        "id": "orphan",
+        "userId": "orphan",
+        "type": "oauth",
+        "provider": "google",
+        "providerAccountId": "orphan",
+        "refresh_token": "refresh",
+        "access_token": "access",
+        "expires_at": 123,
+        "token_type": "bearer",
+        "scope": "openid",
+        "id_token": "id",
+        "session_state": "state",
+        "oauth_token_secret": "oauthsecret",
+        "oauth_token": "oauth"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "sessionToken": "alice",
+        "userId": "alice",
+        "expires": "2030-01-01"
+      },
+      {
+        "id": "bob",
+        "sessionToken": "bob",
+        "userId": "bob",
+        "expires": "2030-01-01"
+      },
+      {
+        "id": "orphan",
+        "sessionToken": "orphan",
+        "userId": "orphan",
+        "expires": "2030-01-01"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "codeHash": "alicelive",
+        "userId": "alice",
+        "expiresAt": 999999,
+        "usedAt": null
+      },
+      {
+        "codeHash": "aliceused",
+        "userId": "alice",
+        "expiresAt": 999999,
+        "usedAt": 2
+      },
+      {
+        "codeHash": "aliceexpired",
+        "userId": "alice",
+        "expiresAt": 1,
+        "usedAt": null
+      },
+      {
+        "codeHash": "boblive",
+        "userId": "bob",
+        "expiresAt": 999999,
+        "usedAt": null
+      },
+      {
+        "codeHash": "bobused",
+        "userId": "bob",
+        "expiresAt": 999999,
+        "usedAt": 2
+      },
+      {
+        "codeHash": "bobexpired",
+        "userId": "bob",
+        "expiresAt": 1,
+        "usedAt": null
+      },
+      {
+        "codeHash": "orphanlive",
+        "userId": "orphan",
+        "expiresAt": 999999,
+        "usedAt": null
+      },
+      {
+        "codeHash": "orphanused",
+        "userId": "orphan",
+        "expiresAt": 999999,
+        "usedAt": 2
+      },
+      {
+        "codeHash": "orphanexpired",
+        "userId": "orphan",
+        "expiresAt": 1,
+        "usedAt": null
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "identifier": "alice@example.invalid",
+        "token": "alice",
+        "expires": "2030-01-01"
+      },
+      {
+        "identifier": "bob@example.invalid",
+        "token": "bob",
+        "expires": "2030-01-01"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "user_id": "alice",
+        "race_date": "2027-01-01",
+        "location": "Manila",
+        "category": "open",
+        "fitness_level": "beginner_mid",
+        "five_k_sec": 330,
+        "ten_k_sec": null,
+        "hyrox_sec": 3730,
+        "age": 30,
+        "gender": "male",
+        "weight_kg": 81.6,
+        "weight_unit": "lbs",
+        "days_per_week": 4,
+        "session_length_min": 60,
+        "onboarding_completed_at": null,
+        "created_at": 1,
+        "updated_at": 1
+      },
+      {
+        "user_id": "bob",
+        "race_date": "2027-01-01",
+        "location": "Manila",
+        "category": "open",
+        "fitness_level": "beginner_mid",
+        "five_k_sec": 330,
+        "ten_k_sec": null,
+        "hyrox_sec": 3730,
+        "age": 30,
+        "gender": "male",
+        "weight_kg": 81.6,
+        "weight_unit": "lbs",
+        "days_per_week": 4,
+        "session_length_min": 60,
+        "onboarding_completed_at": null,
+        "created_at": 1,
+        "updated_at": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "user_id": "alice",
+        "status": "active",
+        "source": "template",
+        "template_id": null,
+        "total_weeks": 1,
+        "race_date": "2027-01-01",
+        "start_date": null,
+        "created_at": 1
+      },
+      {
+        "id": "bob",
+        "user_id": "bob",
+        "status": "active",
+        "source": "template",
+        "template_id": null,
+        "total_weeks": 1,
+        "race_date": "2027-01-01",
+        "start_date": null,
+        "created_at": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "plan_id": "alice",
+        "user_id": "alice",
+        "session_key": "s",
+        "week": 1,
+        "day": 1,
+        "type": "engine_builder",
+        "phase": "foundation",
+        "title": "Easy",
+        "duration": "60",
+        "warmup": "{}",
+        "main_set": "{}",
+        "cooldown": "{}",
+        "coach_note": "Note",
+        "status": "pending",
+        "completed_at": null,
+        "phase_week": 1,
+        "total_phase_weeks": 4
+      },
+      {
+        "id": "bob",
+        "plan_id": "bob",
+        "user_id": "bob",
+        "session_key": "s",
+        "week": 1,
+        "day": 1,
+        "type": "engine_builder",
+        "phase": "foundation",
+        "title": "Easy",
+        "duration": "60",
+        "warmup": "{}",
+        "main_set": "{}",
+        "cooldown": "{}",
+        "coach_note": "Note",
+        "status": "pending",
+        "completed_at": null,
+        "phase_week": 1,
+        "total_phase_weeks": 4
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "user_id": "alice",
+        "title": "T",
+        "created_at": 1,
+        "updated_at": 1,
+        "archived_at": null
+      },
+      {
+        "id": "bob",
+        "user_id": "bob",
+        "title": "T",
+        "created_at": 1,
+        "updated_at": 1,
+        "archived_at": null
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "alice",
+        "thread_id": "alice",
+        "user_id": "alice",
+        "role": "user",
+        "content": "Hi",
+        "status": "complete",
+        "error_message": null,
+        "web_search": 0,
+        "citations": "[]",
+        "web_sources": null,
+        "created_at": 1
+      },
+      {
+        "id": "bob",
+        "thread_id": "bob",
+        "user_id": "bob",
+        "role": "user",
+        "content": "Hi",
+        "status": "complete",
+        "error_message": null,
+        "web_search": 0,
+        "citations": "[]",
+        "web_sources": null,
+        "created_at": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]

@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest"
 const mocks = vi.hoisted(() => ({ auth: vi.fn(), env: vi.fn(), allow: Object.assign(vi.fn(), { retryAfter: vi.fn() }) }))
-vi.mock("@/auth", () => ({ auth: mocks.auth }))
+vi.mock("@/lib/api/session-user", () => ({ getSessionUserId: async () => (await mocks.auth())?.user?.id ?? null }))
+vi.mock("@/lib/db/rate-limit", () => ({ hitRateLimit: async () => ({ allowed: await mocks.allow(), retryAfterSec: mocks.allow.retryAfter() }) }))
 vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: mocks.env }))
 vi.mock("@/lib/coach-ai/rate-limit", async importOriginal => ({ ...await importOriginal<typeof import("@/lib/coach-ai/rate-limit")>(), allowMessage: mocks.allow }))
 import { POST } from "./route"
 const input = { messages: [{ role: "user", content: "Why this week?" }], context: { category: "open", raceDate: "2026-12-20", daysPerWeek: 4, currentWeek: 4, sessions: [] } }
-const request = (body: unknown = input) => new Request("http://localhost/api/coach-ai", { method: "POST", body: JSON.stringify(body) })
+const request = (body: unknown = input) => new Request("http://localhost/api/coach-ai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
 const sse = (data: unknown) => `data: ${JSON.stringify(data)}\n\n`
 const answer = () => new Response(sse({ choices: [{ delta: { reasoning_content: "private reasoning", content: "Answer" }, finish_reason: null }] }) + sse({ choices: [{ delta: {}, finish_reason: "stop" }] }) + "data: [DONE]\n\n")
 beforeEach(() => { mocks.auth.mockResolvedValue({ user: { id: "u1" } }); mocks.env.mockResolvedValue({ env: { MINIMAX_API_KEY: "test-only-secret" } }); mocks.allow.mockReturnValue(true); mocks.allow.retryAfter.mockReturnValue(42); vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => answer())) })
@@ -48,15 +49,15 @@ test.each([
   expect((await POST(request(value))).status).toBe(400); expect(fetch).not.toHaveBeenCalled()
 })
 test("malformed JSON and excessive older user turns also reject", async () => {
-  expect((await POST(new Request("http://localhost/api/coach-ai", { method: "POST", body: "{" }))).status).toBe(400)
+  expect((await POST(new Request("http://localhost/api/coach-ai", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{" }))).status).toBe(400)
   expect((await POST(request({ ...input, messages: [{ role: "user", content: "x".repeat(2001) }, ...Array.from({ length: 10 }, () => input.messages[0])] }))).status).toBe(400)
 })
 test("rate limit exposes exact UI message", async () => {
   mocks.allow.mockReturnValue(false)
   const response = await POST(request()); expect(response.status).toBe(429)
   expect(response.headers.get("Retry-After")).toBe("42")
-  expect(mocks.allow.retryAfter).toHaveBeenCalledWith("u1")
-  expect(await response.json()).toEqual({ error: "Too many messages. Wait a minute and try again." }); expect(fetch).not.toHaveBeenCalled()
+  expect(mocks.allow.retryAfter).toHaveBeenCalled()
+  expect(await response.json()).toEqual({ error: "Too many requests" }); expect(fetch).not.toHaveBeenCalled()
 })
 test("upstream error bodies and network details never reach client", async () => {
   vi.mocked(fetch).mockResolvedValueOnce(new Response("test-only-secret provider details", { status: 401 }))
@@ -71,7 +72,7 @@ test("truncated upstream streams produce explicit failure frame", async () => {
 })
 test("cancel and request disconnect abort the provider", async () => {
   const abort = new AbortController()
-  const req = new Request("http://localhost/api/coach-ai", { method: "POST", body: JSON.stringify(input), signal: abort.signal })
+  const req = new Request("http://localhost/api/coach-ai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input), signal: abort.signal })
   const response = await POST(req)
   const signal = vi.mocked(fetch).mock.calls[0][1]!.signal!
   abort.abort(); expect(signal.aborted).toBe(true)
@@ -183,3 +184,11 @@ test.each(["missing-key","http","timeout"])("forced web %s fails soft",async fai
  expect(body).toContain('"text":"Answer"'); expect(body).not.toContain('"error"')
  expect(vi.mocked(fetch).mock.calls.some(call=>String(call[0]).includes("cohere"))).toBe(false)
 })
+
+test("limiter failure fails closed before the model",async()=>{
+ mocks.allow.mockRejectedValueOnce(new Error("storage down"));const log=vi.spyOn(console,"error").mockImplementation(()=>undefined);
+ const response=await POST(request());expect(response.status).toBe(503);expect(await response.json()).toEqual({error:"Service unavailable"});expect(fetch).not.toHaveBeenCalled();expect(log).toHaveBeenCalledExactlyOnceWith("Coach limiter unavailable");
+});
+test.each([{Origin:"https://evil.example"},{"Content-Type":"text/plain"}] as Record<string,string>[])("mutation guard runs before auth and model %s",async headers=>{
+ const response=await POST(new Request("http://localhost/api/coach-ai",{method:"POST",headers}));expect(response.status).toBe("Origin" in headers?403:415);expect(mocks.auth).not.toHaveBeenCalled();expect(fetch).not.toHaveBeenCalled();
+});

@@ -1,3 +1,4 @@
+import { MAX_PLANS, requireInserted } from "@/lib/api/quota";
 import { getDb } from "@/lib/api/db-client";
 import type { PlanMeta } from "@/lib/api/validate";
 import type { TrainingPlan, Session, SessionStatus, WeekPlan } from "@/lib/types";
@@ -10,14 +11,15 @@ type SessionRow = {
 export async function createPlan(userId: string, plan: TrainingPlan, meta: PlanMeta = { source: "template" }): Promise<TrainingPlan> {
  const db = await getDb(); const id = crypto.randomUUID(); const now = Date.now();
  const statements = [
-  db.prepare("UPDATE training_plans SET status = 'archived' WHERE user_id = ? AND status = 'active'").bind(userId),
-  db.prepare("INSERT INTO training_plans (id, user_id, status, source, template_id, total_weeks, race_date, start_date, created_at) VALUES (?, ?, 'active', ?, ?, ?, ?, NULL, ?)").bind(id, userId, meta.source, meta.templateId ?? null, plan.totalWeeks, plan.raceDate, now),
+  db.prepare("UPDATE training_plans SET status = 'archived' WHERE user_id = ? AND status = 'active' AND (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ?").bind(userId, userId, MAX_PLANS),
+  db.prepare("INSERT INTO training_plans (id, user_id, status, source, template_id, total_weeks, race_date, start_date, created_at) SELECT ?, ?, 'active', ?, ?, ?, ?, NULL, ? WHERE (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ?").bind(id, userId, meta.source, meta.templateId ?? null, plan.totalWeeks, plan.raceDate, now, userId, MAX_PLANS),
  ];
  for (const week of plan.weeks) for (const s of week.sessions) {
   statements.push(db.prepare(`INSERT INTO plan_sessions (id, plan_id, user_id, session_key, week, day, type, phase, title, duration, warmup, main_set, cooldown, coach_note, status, completed_at, phase_week, total_phase_weeks)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), id, userId, s.id, s.week, s.day, s.type, s.phase, s.title, s.duration, JSON.stringify(s.warmup), JSON.stringify(s.mainSet), JSON.stringify(s.cooldown), s.coachNote, s.status, s.status === "completed" ? now : null, week.phaseWeek, week.totalPhaseWeeks));
+   SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM training_plans WHERE id = ? AND user_id = ?)`).bind(crypto.randomUUID(), id, userId, s.id, s.week, s.day, s.type, s.phase, s.title, s.duration, JSON.stringify(s.warmup), JSON.stringify(s.mainSet), JSON.stringify(s.cooldown), s.coachNote, s.status, s.status === "completed" ? now : null, week.phaseWeek, week.totalPhaseWeeks, id, userId));
  }
- await db.batch(statements);
+ const results = await db.batch(statements);
+ requireInserted(results, 1);
  return { ...plan, id };
 }
 export async function getActivePlan(userId: string): Promise<TrainingPlan | null> {

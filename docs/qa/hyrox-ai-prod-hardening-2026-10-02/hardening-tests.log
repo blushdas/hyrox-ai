@@ -1,0 +1,180 @@
+
+> finisher@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+(node:42700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42702) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42701) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/coach-ai/markdown.test.ts (39 tests) 18ms
+(node:42696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error: Upstream unavailable (status 401)
+
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error: sensitive detail
+
+stderr | src/app/api/coach-ai/route.test.ts > fetch with no headers aborts at 30 seconds
+coach-ai upstream failure Error: Timeout
+
+ ✓ src/lib/api/validate.test.ts (21 tests) 31ms
+stderr | src/app/api/coach-ai/route.test.ts > headers alone do not satisfy the 30-second first-byte deadline
+coach-ai upstream failure Error: Timeout
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-json still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-timeout still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-json still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-timeout still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > forced web timeout fails soft
+coach-ai web search unavailable
+
+ ✓ src/app/api/me/plan/sessions/[id]/route.test.ts (5 tests) 45ms
+ ✓ src/app/api/coach-ai/route.test.ts (42 tests) 65ms
+ ✓ src/app/api/me/threads/[id]/messages/route.test.ts (5 tests) 58ms
+ ✓ src/lib/auth/native-auth.test.ts (15 tests) 127ms
+(node:43136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/api/me/profile/route.test.ts (5 tests) 38ms
+(node:43139) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43142) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43140) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/db/coach.test.ts (3 tests) 20ms
+ ✓ src/lib/db/plan.test.ts (3 tests) 31ms
+(node:43143) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/api/me/plan/route.test.ts (5 tests) 31ms
+ ✓ src/proxy.test.ts (15 tests) 23ms
+ ✓ src/app/api/me/threads/route.test.ts (5 tests) 28ms
+ ✓ src/lib/coach-ai/prompt.test.ts (14 tests) 5ms
+ ✓ src/lib/motion.test.ts (5 tests) 7ms
+ ✓ src/stores/coach-ai-store.test.ts (10 tests) 647ms
+(node:43202) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/db/profile.test.ts (3 tests) 14ms
+ ✓ src/lib/coach-ai/coach-take.test.ts (17 tests) 12ms
+ ✓ src/components/coach-ai/thinking.test.ts (7 tests) 417ms
+   ✓ assistant passes received sources and removes Thinking on the first text  345ms
+(node:43267) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/people/filter-coaches.test.ts (6 tests) 10ms
+(node:43298) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/sign-in/sign-in-buttons.test.ts (4 tests) 10ms
+ ✓ src/lib/db/rate-limit.test.ts (3 tests) 45ms
+ ✓ src/lib/db/quota.test.ts (3 tests) 262ms
+ ✓ src/lib/api/request-guard.test.ts (8 tests) 16ms
+ ✓ src/lib/coach-ai/stream-split.test.ts (14 tests) 8ms
+ ✓ src/lib/train/selectors.test.ts (9 tests) 5ms
+ ✓ src/lib/coach-ai/stream.test.ts (5 tests) 17ms
+ ✓ src/components/coach-ai/composer.test.ts (4 tests) 15ms
+ ✓ src/lib/coach-ai/citations.test.ts (2 tests) 4ms
+ ✓ src/lib/api/convert.test.ts (16 tests) 4ms
+ ✓ src/lib/security/headers.test.ts (1 test) 1ms
+ ✓ src/components/coach-ai/markdown.test.ts (7 tests) 7ms
+ ✓ src/lib/auth/protected-routes.test.ts (25 tests) 8ms
+ ✓ src/lib/coach-ai/reveal.test.ts (5 tests) 4ms
+ ✓ src/lib/auth/apple-client-secret.test.ts (1 test) 10ms
+ ✓ src/lib/auth/pkce.test.ts (2 tests) 8ms
+ ✓ src/lib/coach-ai/copy-text.test.ts (5 tests) 24ms
+ ✓ src/lib/coach-ai/thinking-steps.test.ts (4 tests) 3ms
+ ❯ src/lib/api/session-user.test.ts (1 test | 1 failed) 2ms
+   × reads identity only from the session 2ms
+     → 
+
+ERROR: `getCloudflareContext` has been called without having called `initOpenNextCloudflareForDev` from the Next.js config file.
+You should update your Next.js config file as shown below:
+
+   ```
+   // next.config.mjs
+
+   import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+   initOpenNextCloudflareForDev();
+
+   const nextConfig = { ... };
+   export default nextConfig;
+   ```
+
+
+ ✓ src/lib/coach-ai/rate-limit.test.ts (1 test) 1ms
+ ✓ src/lib/coach-ai/request.test.ts (3 tests) 3ms
+ ✓ src/lib/db/scoping.test.ts (1 test) 2ms
+ ✓ src/lib/coach-ai/mock-coach.test.ts (1 test) 9ms
+stderr | src/lib/coach-ai/web-search.test.ts > real abort signal enforces eight-second planner deadline
+coach-ai web planner unavailable
+
+ ✓ src/lib/coach-ai/web-search.test.ts (10 tests) 8094ms
+   ✓ real abort signal enforces eight-second planner deadline  8005ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/api/session-user.test.ts > reads identity only from the session
+Error: 
+
+ERROR: `getCloudflareContext` has been called without having called `initOpenNextCloudflareForDev` from the Next.js config file.
+You should update your Next.js config file as shown below:
+
+   ```
+   // next.config.mjs
+
+   import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+   initOpenNextCloudflareForDev();
+
+   const nextConfig = { ... };
+   export default nextConfig;
+   ```
+
+
+ ❯ getCloudflareContextAsync node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js:67:11
+ ❯ getCloudflareContext node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js:10:28
+ ❯ getDb src/lib/api/db-client.ts:10:24
+      8| export type Db = { prepare(sql: string): Statement; batch(statements: …
+      9| export async function getDb(): Promise<Db> {
+     10|  const { env } = await getCloudflareContext({ async: true });
+       |                        ^
+     11|  const db = (env as typeof env & { DB?: Db }).DB;
+     12|  if (!db) throw new Error("Cloudflare D1 binding DB is required for pe…
+ ❯ Module.getSessionUserId src/lib/api/session-user.ts:6:19
+ ❯ src/lib/api/session-user.test.ts:9:73
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 42 passed (43)
+      Tests  1 failed | 359 passed (360)
+   Start at  16:02:56
+   Duration  11.97s (transform 2.00s, setup 0ms, collect 4.47s, tests 10.19s, environment 4ms, prepare 33.27s)
+

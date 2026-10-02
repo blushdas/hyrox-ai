@@ -1,0 +1,10 @@
+SELECT * FROM users ORDER BY rowid;
+SELECT * FROM accounts ORDER BY rowid;
+SELECT * FROM sessions ORDER BY rowid;
+SELECT * FROM native_auth_codes ORDER BY rowid;
+SELECT * FROM verification_tokens ORDER BY rowid;
+SELECT * FROM athlete_profiles ORDER BY rowid;
+SELECT * FROM training_plans ORDER BY rowid;
+SELECT * FROM plan_sessions ORDER BY rowid;
+SELECT * FROM coach_threads ORDER BY rowid;
+SELECT * FROM coach_messages ORDER BY rowid;

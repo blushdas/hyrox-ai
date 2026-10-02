@@ -84,7 +84,7 @@ export async function authenticated(action: (userId: string) => Promise<Response
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
   return await action(userId);
  } catch (error) {
-  console.error("Persistence request failed", error);
+  console.error("Persistence request failed", error instanceof Error ? error.name : "UnknownError");
   return Response.json({ error: "Internal server error" }, { status: 500 });
  }
 }
