@@ -1,13 +1,13 @@
 import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import { expect,it } from "vitest";
-import { createTestDb,profile,plan } from "./test-d1";
-import { getDb } from "./db-client";
+import { createTestDb,profile,plan } from "@/lib/api/test-d1";
+import { getDb } from "@/lib/api/db-client";
 import { vi } from "vitest";
 import { upsertProfile } from "@/lib/db/profile";
 import { createPlan } from "@/lib/db/plan";
 import { createThread,appendMessage } from "@/lib/db/coach";
-vi.mock("./db-client",()=>({getDb:vi.fn()}));
+vi.mock("@/lib/api/db-client",()=>({getDb:vi.fn()}));
 it("migration preserves all valid rows, strips six secrets, removes orphans, and cascades every user table",async()=>{
  const fixture=createTestDb();vi.mocked(getDb).mockResolvedValue(fixture.db);
  try {

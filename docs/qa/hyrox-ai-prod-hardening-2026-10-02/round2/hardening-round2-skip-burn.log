@@ -1,0 +1,68 @@
+MUTATION: failed PKCE exchange leaves usedAt unchanged; correct exchanges still burn.
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ✓ src/app/api/native-auth/exchange/route.test.ts (3 tests) 11ms
+ ❯ src/lib/auth/native-auth.test.ts (15 tests | 6 failed) 30ms
+   ✓ stores hashes, enforces 60s TTL and burns replayed codes atomically 8ms
+   × wrong or missing verifier null burns the code 5ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   × wrong or missing verifier undefined burns the code 2ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   × wrong or missing verifier wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww burns the code 2ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   × wrong or missing verifier v burns the code 1ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   × wrong or missing verifier {} burns the code 1ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   × wrong or missing verifier 1 burns the code 1ms
+     → expected { usedAt: null } to deeply equal { usedAt: 2000 }
+   ✓ rejects code at/after expiry 61000 1ms
+   ✓ rejects code at/after expiry 62000 1ms
+   ✓ purges at most 100 used/expired rows on each mint and retains live codes 1ms
+   ✓ rejects invalid challenge before minting 1ms
+   ✓ native bearer tokens > carries user claims and expires in 30 days 2ms
+   ✓ native bearer tokens > rejects web tokens and prevents native tokens being used as web cookies 1ms
+   ✓ native bearer tokens > rejects expired and tampered tokens 1ms
+   ✓ CORS matches only the exact native origin 1ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 12 passed (18)
+   Start at  17:11:00
+   Duration  2.28s (transform 77ms, setup 0ms, collect 165ms, tests 41ms, environment 0ms, prepare 102ms)
+
+(node:85230) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85229) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier null burns the code
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier undefined burns the code
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww burns the code
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier v burns the code
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier {} burns the code
+ FAIL  src/lib/auth/native-auth.test.ts > wrong or missing verifier 1 burns the code
+AssertionError: expected { usedAt: null } to deeply equal { usedAt: 2000 }
+
+- Expected
++ Received
+
+  {
+-   "usedAt": 2000,
++   "usedAt": null,
+  }
+
+ ❯ src/lib/auth/native-auth.test.ts:24:77
+     22|   const code = await mintNativeAuthCode(test.db, "alice", 1000, await …
+     23|   expect(await consumeNativeAuthCode(test.db, code, bad, 2000)).toBeNu…
+     24|   expect(test.sqlite.prepare("SELECT usedAt FROM native_auth_codes").g…
+       |                                                                             ^
+     25|   expect(await consumeNativeAuthCode(test.db, code, verifier, 2001)).t…
+     26|  } finally { test.close(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+EXIT 1
