@@ -1,0 +1,153 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+(node:78399) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ src/lib/auth/native-auth.test.ts (17 tests | 1 failed | 16 skipped) 10ms
+   ↓ stores hashes, enforces 60s TTL and burns replayed codes atomically
+   ↓ rejects a well-formed unknown code
+   × rejects malformed input before touching D1 10ms
+     → expected "prepare" to not be called at all, but actually been called 8 times
+
+Received: 
+
+  1st prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  2nd prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  3rd prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  4th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  5th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  6th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  7th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  8th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+
+Number of calls: 8
+
+   ↓ wrong or missing verifier null burns the code
+   ↓ wrong or missing verifier undefined burns the code
+   ↓ wrong or missing verifier wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww burns the code
+   ↓ wrong or missing verifier v burns the code
+   ↓ wrong or missing verifier {} burns the code
+   ↓ wrong or missing verifier 1 burns the code
+   ↓ rejects code at/after expiry 61000
+   ↓ rejects code at/after expiry 62000
+   ↓ purges at most 100 used/expired rows on each mint and retains live codes
+   ↓ rejects invalid challenge before minting
+   ↓ native bearer tokens > carries user claims and expires in 30 days
+   ↓ native bearer tokens > rejects web tokens and prevents native tokens being used as web cookies
+   ↓ native bearer tokens > rejects expired and tampered tokens
+   ↓ CORS matches only the exact native origin
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/auth/native-auth.test.ts > rejects malformed input before touching D1
+AssertionError: expected "prepare" to not be called at all, but actually been called 8 times
+
+Received: 
+
+  1st prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  2nd prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  3rd prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  4th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  5th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  6th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  7th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+  8th prepare call:
+
+    Array [
+      "UPDATE native_auth_codes SET usedAt = ? WHERE codeHash = ? AND usedAt IS NULL AND expiresAt > ? RETURNING userId, codeChallenge",
+    ]
+
+
+Number of calls: 8
+
+ ❯ src/lib/auth/native-auth.test.ts:38:23
+     36|    expect(await consumeNativeAuthCode(test.db, code, verifier, 2000)).…
+     37|   }
+     38|   expect(prepare).not.toHaveBeenCalled();
+       |                       ^
+     39|  } finally { prepare.mockRestore(); test.close(); }
+     40| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 skipped (17)
+   Start at  18:11:25
+   Duration  323ms (transform 42ms, setup 0ms, collect 64ms, tests 10ms, environment 0ms, prepare 56ms)
+

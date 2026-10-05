@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { encode, decode } from "next-auth/jwt";
 import { createTestDb } from "@/lib/api/test-d1";
 import { challengeFromVerifier } from "./pkce";
@@ -9,12 +9,34 @@ it("stores hashes, enforces 60s TTL and burns replayed codes atomically", async 
  try {
   const code = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
   const row = test.sqlite.prepare("SELECT * FROM native_auth_codes").get();
+  expect(code).toMatch(/^[A-Za-z0-9_-]{43}$/);
+  expect(row).toMatchObject({ codeHash: expect.stringMatching(/^[a-f0-9]{64}$/) });
   expect(JSON.stringify(row)).not.toContain(code);
   expect(row).toMatchObject({ expiresAt: 61000, usedAt: null });
-  const attempts = await Promise.all([consumeNativeAuthCode(test.db, code, verifier, 60000), consumeNativeAuthCode(test.db, code, verifier, 60000)]);
+  const attempts = await Promise.all([consumeNativeAuthCode(test.db, code, verifier, 60999), consumeNativeAuthCode(test.db, code, verifier, 60999)]);
   expect(attempts.filter(Boolean)).toEqual(["alice"]);
   expect(await consumeNativeAuthCode(test.db, code, verifier, 60001)).toBeNull();
  } finally { test.close(); }
+});
+it("rejects a well-formed unknown code", async () => {
+ const test = createTestDb();
+ try {
+  const existing = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
+  // Pick a valid code guaranteed to differ from the real stored code.
+  const unknown = (existing[0] === "x" ? "y" : "x") + existing.slice(1);
+  expect(await consumeNativeAuthCode(test.db, unknown, verifier, 2000)).toBeNull();
+  expect(test.sqlite.prepare("SELECT usedAt FROM native_auth_codes").get()).toEqual({ usedAt: null });
+ } finally { test.close(); }
+});
+it("rejects malformed input before touching D1", async () => {
+ const test = createTestDb();
+ const prepare = vi.spyOn(test.db, "prepare");
+ try {
+  for (const code of [null, undefined, 1, {}, "", "a".repeat(42), "a".repeat(44), "!".repeat(43)]) {
+   expect(await consumeNativeAuthCode(test.db, code, verifier, 2000)).toBeNull();
+  }
+  expect(prepare).not.toHaveBeenCalled();
+ } finally { prepare.mockRestore(); test.close(); }
 });
 it.each([null, undefined, "w".repeat(43), "v", {}, 1])("wrong or missing verifier %s burns the code", async bad => {
  const test = createTestDb();

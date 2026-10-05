@@ -23,3 +23,21 @@ it("cleanup is bounded and excludes recent windows",async()=>{
  await hitRateLimit("alice","coach",20,300000,172800000);
  expect(test.sqlite.prepare("SELECT COUNT(*) AS n FROM rate_limits").get()).toEqual({n:21});
 });
+
+it("twenty Coach hits per fixed five minutes, separated by user, window expires", async () => {
+ for (let i = 0; i < 20; i++) {
+  expect((await hitRateLimit("alice", "coach", 20, 300000, 1000 + i)).allowed).toBe(true);
+ }
+ expect((await hitRateLimit("alice", "coach", 20, 300000, 1020)).allowed).toBe(false);
+ expect((await hitRateLimit("bob", "coach", 20, 300000, 1020)).allowed).toBe(true);
+ expect((await hitRateLimit("alice", "coach", 20, 300000, 299999)).allowed).toBe(false);
+ expect((await hitRateLimit("alice", "coach", 20, 300000, 300000)).allowed).toBe(true);
+});
+it("retry delay rounds up to the fixed boundary without extending the window", async () => {
+ expect(await hitRateLimit("alice", "retry", 2, 5000, 1000)).toEqual({ allowed: true, retryAfterSec: 4 });
+ expect(await hitRateLimit("alice", "retry", 2, 5000, 2500)).toEqual({ allowed: true, retryAfterSec: 3 });
+ expect(await hitRateLimit("alice", "retry", 2, 5000, 3001)).toEqual({ allowed: false, retryAfterSec: 2 });
+ expect((await hitRateLimit("bob", "retry", 2, 5000, 3001)).allowed).toBe(true);
+ expect(await hitRateLimit("alice", "retry", 2, 5000, 4999)).toEqual({ allowed: false, retryAfterSec: 1 });
+ expect(await hitRateLimit("alice", "retry", 2, 5000, 5000)).toEqual({ allowed: true, retryAfterSec: 5 });
+});
