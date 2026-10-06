@@ -7,6 +7,8 @@ import type { TrainingPlan, SessionStatus } from "@/lib/types"
 type PlanState = {
   plan: TrainingPlan | null
   currentWeek: number
+  ownerUserId: string | null
+  setOwner: (id: string | null) => void
   setPlan: (plan: TrainingPlan) => void
   clearPlan: () => void
   updateSessionStatus: (sessionId: string, status: SessionStatus) => void
@@ -18,8 +20,10 @@ export const usePlanStore = create<PlanState>()(
     (set) => ({
       plan: null,
       currentWeek: 1,
+      ownerUserId: null,
+      setOwner: (id) => set({ ownerUserId: id }),
       setPlan: (plan) => set({ plan }),
-      clearPlan: () => set({ plan: null, currentWeek: 1 }),
+      clearPlan: () => set({ plan: null, currentWeek: 1, ownerUserId: null }),
       updateSessionStatus: (sessionId, status) =>
         set((state) => {
           if (!state.plan) return state

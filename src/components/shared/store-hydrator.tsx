@@ -1,13 +1,12 @@
 "use client"
 
 import { useEffect } from "react"
-import { useAthleteStore } from "@/stores/athlete-store"
-import { usePlanStore } from "@/stores/plan-store"
+import { Capacitor } from "@capacitor/core"
+import { hydrateFromAccount } from "@/lib/account/sync"
 
 export function StoreHydrator() {
   useEffect(() => {
-    useAthleteStore.persist.rehydrate()
-    usePlanStore.persist.rehydrate()
+    void hydrateFromAccount({ native: Capacitor.isNativePlatform() })
   }, [])
 
   return null

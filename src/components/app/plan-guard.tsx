@@ -4,6 +4,7 @@ import { useAthleteStore } from "@/stores/athlete-store"
 import { Skeleton } from "@/components/shell/primitives"
 import { useRouter } from "next/navigation"
 import { usePlanStore } from "@/stores/plan-store"
+import { isSyncSettled, shouldRedirectToOnboarding } from "@/lib/account/sync"
 
 const hasHydrated = () => usePlanStore.persist.hasHydrated() && useAthleteStore.persist.hasHydrated()
 const subscribeHydration = (notify: () => void) => {
@@ -16,15 +17,16 @@ const subscribeHydration = (notify: () => void) => {
 export function PlanGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const plan = usePlanStore(s => s.plan)
+  const syncStatus = useAthleteStore(s => s.syncStatus)
   const hydrated = useSyncExternalStore(subscribeHydration, hasHydrated, () => false)
 
   useEffect(() => {
-    if (hydrated && !plan) {
+    if (shouldRedirectToOnboarding(hydrated, syncStatus, plan)) {
       router.replace("/onboarding")
     }
-  }, [hydrated, plan, router])
+  }, [hydrated, syncStatus, plan, router])
 
-  if (!hydrated || !plan) return <Skeleton />
+  if (!hydrated || !isSyncSettled(syncStatus) || !plan) return <Skeleton />
 
   return <>{children}</>
 }
