@@ -14,6 +14,8 @@ import { getRaceCountdownDays } from "@/lib/train/selectors"
 import { useAthleteStore } from "@/stores/athlete-store"
 import { usePlanStore } from "@/stores/plan-store"
 import { usePlanGenerator } from "@/hooks/use-plan-generator"
+import { checkProfile, QUOTA_MESSAGE, SAVE_FAILED_MESSAGE } from "@/lib/account/profile-input"
+import { saveProfileAndPlan } from "@/lib/account/sync"
 
 import { DeleteAccountDialog } from "@/components/ui/alert-dialog"
 import { useCoachAIStore } from "@/stores/coach-ai-store"
@@ -61,9 +63,18 @@ export default function ProfilePage() {
       return
     }
     const updated = { ...profile, raceDate: newRaceDate }
+    const check = checkProfile(updated)
+    if (!check.ok) {
+      toast.error(check.errors[0].message)
+      return
+    }
     setProfile(updated)
     clearPlan()
-    generatePlan(updated)
+    const plan = generatePlan(updated)
+    void saveProfileAndPlan(updated, plan, {}).then((result) => {
+      if (result === "failed") toast.error(SAVE_FAILED_MESSAGE)
+      else if (result === "quota") toast(QUOTA_MESSAGE)
+    })
     setEditingRaceDate(false)
     toast.success("Plan regenerated!", {
       description: "Your new plan is ready.",

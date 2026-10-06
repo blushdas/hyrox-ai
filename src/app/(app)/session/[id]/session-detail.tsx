@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button"
 import { sessionTypeMeta } from "@/lib/theme"
 import { parseDurationMinutes } from "@/lib/train/selectors"
 import { usePlanStore } from "@/stores/plan-store"
+import { saveSessionStatus } from "@/lib/account/sync"
+import { SAVE_FAILED_MESSAGE } from "@/lib/account/profile-input"
+import type { SessionStatus } from "@/lib/types"
 import {
   PageHeader,
   Section,
@@ -51,8 +54,15 @@ export default function SessionDetailPage({
     )
   const meta = sessionTypeMeta[session.type]
 
+  function persistStatus(status: SessionStatus) {
+    updateSessionStatus(id, status)
+    void saveSessionStatus(id, status).then((ok) => {
+      if (!ok) toast.error(SAVE_FAILED_MESSAGE)
+    })
+  }
+
   function handleComplete() {
-    updateSessionStatus(id, "completed")
+    persistStatus("completed")
     toast.success("Session complete!", {
       description: "Logged. Keep stacking those sessions.",
     })
@@ -60,7 +70,7 @@ export default function SessionDetailPage({
   }
 
   function handleSkip() {
-    updateSessionStatus(id, "skipped")
+    persistStatus("skipped")
     toast("Session skipped", {
       description: "That's fine. Back at it next time.",
     })
@@ -132,7 +142,7 @@ export default function SessionDetailPage({
           <Button
             className="w-full"
             variant="ghost"
-            onClick={() => updateSessionStatus(id, "pending")}
+            onClick={() => persistStatus("pending")}
           >
             Mark as pending
           </Button>

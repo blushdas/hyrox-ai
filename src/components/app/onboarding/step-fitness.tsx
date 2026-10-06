@@ -6,9 +6,10 @@ import type { AthleteProfile } from "@/lib/types"
 type Props = {
   data: Partial<AthleteProfile>
   onChange: (updates: Partial<AthleteProfile>) => void
+  errors?: Partial<Record<"location" | "fiveKTime" | "tenKTime" | "hyroxTime" | "age" | "weight", string>>
 }
 
-export function StepFitness({ data, onChange }: Props) {
+export function StepFitness({ data, onChange, errors }: Props) {
   return (
     <div className="space-y-6">
       <div>
@@ -36,6 +37,7 @@ export function StepFitness({ data, onChange }: Props) {
             onChange={(e) => onChange({ fiveKTime: e.target.value })}
             className="bg-surface-2 border-border text-foreground placeholder:text-muted-foreground"
           />
+          {errors?.fiveKTime && <p className="mt-1 text-[13px] text-danger">{errors.fiveKTime}</p>}
         </div>
 
         <div>
@@ -53,6 +55,7 @@ export function StepFitness({ data, onChange }: Props) {
             onChange={(e) => onChange({ tenKTime: e.target.value })}
             className="bg-surface-2 border-border text-foreground placeholder:text-muted-foreground"
           />
+          {errors?.tenKTime && <p className="mt-1 text-[13px] text-danger">{errors.tenKTime}</p>}
         </div>
 
         <div>
@@ -73,6 +76,7 @@ export function StepFitness({ data, onChange }: Props) {
             onChange={(e) => onChange({ hyroxTime: e.target.value })}
             className="bg-surface-2 border-border text-foreground placeholder:text-muted-foreground"
           />
+          {errors?.hyroxTime && <p className="mt-1 text-[13px] text-danger">{errors.hyroxTime}</p>}
         </div>
       </div>
 
