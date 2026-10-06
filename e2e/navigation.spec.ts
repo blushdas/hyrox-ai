@@ -13,6 +13,6 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 
 
 test("sign-in remains directly accessible", async ({ page }) => {
   await page.goto("/sign-in")
-  await expect(page.getByRole("button", { name: "Continue with Apple" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "Continue with Apple" })).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Continue with Google" })).toBeVisible()
 })
