@@ -7,14 +7,12 @@ import { usePathname } from "next/navigation"
 import {
   CalendarDays,
   MessageSquareText,
-  Users,
   CircleUser,
 } from "lucide-react"
 import { Logo } from "@/components/shared/logo"
 const items = [
   { href: "/dashboard", label: "Train", icon: CalendarDays },
   { href: "/coach-ai", label: "Coach AI", icon: MessageSquareText },
-  { href: "/people", label: "People", icon: Users },
   { href: "/profile", label: "Profile", icon: CircleUser },
 ]
 const RouteMotionContext = createContext({ from: "", to: "" })
@@ -38,7 +36,7 @@ function NavLinks({ rail = false }: { rail?: boolean }) {
       initial={false}
       animate={rail ? { y: `${activeIndex * 100}%` } : { x: `${activeIndex * 100}%` }}
       transition={motionTransition(reduced)}
-      className={rail ? "absolute left-3 right-3 top-6 h-14 rounded-md bg-accent-soft" : "absolute left-0 top-0 h-0.5 w-1/4 bg-accent"}
+      className={rail ? "absolute left-3 right-3 top-6 h-14 rounded-md bg-accent-soft" : "absolute left-0 top-0 h-0.5 w-1/3 bg-accent"}
     />}
     {list.map(({ href, label, icon: Icon }, i) => {
     const active = i === activeIndex
@@ -59,7 +57,7 @@ export function TabBar() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed bottom-0 inset-x-0 z-40 grid grid-cols-4 border-t bg-background pb-[env(safe-area-inset-bottom)] lg:hidden"
+      className="fixed bottom-0 inset-x-0 z-40 grid grid-cols-3 border-t bg-background pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
       <NavLinks />
     </nav>

@@ -123,7 +123,7 @@ export function ErrorState({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "plan" | "coach-ai" | "people" | "profile" }) {
+export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "plan" | "coach-ai" | "profile" }) {
   return (
     <div aria-label={`Loading ${variant}`} role="status" className="space-y-5 py-6 motion-safe:animate-pulse">
       <div aria-hidden="true" className="space-y-5">
@@ -142,7 +142,6 @@ export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "p
           <div className="mt-32 h-14 rounded-md border bg-surface-2" />
         </> : Array.from({ length: variant === "plan" ? 6 : 4 }, (_, i) => (
           <div key={i} className={`flex items-center gap-4 border-b py-4 ${variant === "plan" ? "h-24" : "h-20"}`}>
-            {variant === "people" && <div className="size-10 shrink-0 rounded-full bg-surface-2" />}
             <div className="flex-1 space-y-3"><div className="h-3 w-1/3 bg-surface-2" /><div className={`h-2 bg-surface-1 ${variant === "plan" ? "w-4/5" : "w-2/3"}`} /></div>
             <div className="h-3 w-10 bg-surface-2" />
           </div>
@@ -208,5 +207,13 @@ export function Sheet({
       </div>
       {children}
     </dialog>
+  )
+}
+
+export function Avatar({ initials, large = false }: { initials: string; large?: boolean }) {
+  return (
+    <span className={`flex shrink-0 items-center justify-center rounded-full bg-surface-2 font-mono text-sm ${large ? "size-14" : "size-10"}`}>
+      {initials}
+    </span>
   )
 }

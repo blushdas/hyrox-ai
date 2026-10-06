@@ -47,7 +47,7 @@ export function SignInButtons() {
       })();
     };
   }, [router]);
-  async function login(provider: "apple" | "google") {
+  async function login() {
     setPending(true);
     try {
       if (Capacitor.isNativePlatform()) {
@@ -62,15 +62,14 @@ export function SignInButtons() {
         setPending(false);
         return;
       }
-      await signIn(provider, { callbackUrl: safeCallbackUrl(params.get("callbackUrl")) });
+      await signIn("google", { callbackUrl: safeCallbackUrl(params.get("callbackUrl")) });
     } catch (error) {
       console.error("Sign-in could not start", error instanceof Error ? error.name : "UnknownError");
       setFailed(true); setPending(false);
     }
   }
   return <div className="space-y-4">
-    <Button className="w-full h-12" variant="outline" disabled={pending} onClick={() => login("apple")}>Continue with Apple</Button>
-    <Button className="w-full h-12" disabled={pending} onClick={() => login("google")}>Continue with Google</Button>
+    <Button className="w-full h-12" disabled={pending} onClick={() => login()}>Continue with Google</Button>
     {(params.has("error") || failed) && <p role="alert" className="text-sm text-red-400">Sign-in was cancelled or failed. Please try again.</p>}
   </div>;
 }
