@@ -40,3 +40,9 @@ describe("signed-in sign-in proxy", () => {
     expect(response.headers.get("location")).toBe("http://localhost:3000/sign-in?callbackUrl=%2Fdashboard");
   });
 });
+
+it("allows valid PKCE callback but rejects extra parameters, fragments and invalid challenges",async()=>{
+ const good="/auth/native-complete?cc="+"c".repeat(43);
+ expect((await proxy(signInRequest(good))).headers.get("x-middleware-next")).toBe("1");
+ for(const bad of [good+"&next=evil",good+"#fragment",good+"&cc="+"c".repeat(43),"/auth/native-complete?cc=bad","/auth/native-complete?cc="+"c".repeat(44)]) expect((await proxy(signInRequest(bad))).headers.get("location")).toBe("http://localhost:3000/dashboard");
+});

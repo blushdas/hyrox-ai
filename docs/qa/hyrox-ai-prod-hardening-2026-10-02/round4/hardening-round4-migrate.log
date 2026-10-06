@@ -1,0 +1,15 @@
+$ npm run db:migrate:local
+
+> finisher@0.1.0 db:migrate:local
+> wrangler d1 migrations apply finisher-db --local
+
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+EXIT 0

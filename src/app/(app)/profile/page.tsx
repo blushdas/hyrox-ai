@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { Capacitor } from "@capacitor/core"
@@ -16,8 +16,29 @@ import { useAthleteStore } from "@/stores/athlete-store"
 import { usePlanStore } from "@/stores/plan-store"
 import { usePlanGenerator } from "@/hooks/use-plan-generator"
 
+import { DeleteAccountDialog } from "@/components/ui/alert-dialog"
+import { useCoachAIStore } from "@/stores/coach-ai-store"
+
 export default function ProfilePage() {
   const router = useRouter()
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const deletionPending = useRef(false)
+  async function handleDeleteAccount() {
+    if (deletionPending.current) return
+    deletionPending.current = true
+    setDeleting(true)
+    try {
+      const response = await fetch("/api/me/account", { method: "DELETE" })
+      if (response.status !== 204) throw new Error("Account deletion failed")
+      useAthleteStore.getState().clearProfile()
+      usePlanStore.getState().clearPlan()
+      useCoachAIStore.getState().reset()
+      await signOut({ callbackUrl: "/sign-in" })
+    } catch {
+      toast.error("Account deletion failed. Please try again.")
+    } finally { deletionPending.current = false; setDeleting(false) }
+  }
   const { profile, setProfile } = useAthleteStore()
   const { clearPlan } = usePlanStore()
   const { generatePlan } = usePlanGenerator()
@@ -180,7 +201,7 @@ export default function ProfilePage() {
                 await clearNativeToken()
                 router.replace("/sign-in")
               } catch (error) {
-                console.error("Native sign-out failed", error)
+                console.error("Native sign-out failed", error instanceof Error ? error.name : "UnknownError")
                 toast.error("Sign out failed. Please try again.")
               }
               return
@@ -190,6 +211,11 @@ export default function ProfilePage() {
         >
           Sign out
         </Button>
+        {/* Native account deletion requires phase 2 Bearer auth for /api/me/*. */}
+        {!Capacitor.isNativePlatform() && <>
+          <Button variant="ghost" className="w-full justify-start rounded-none border-b text-danger" onClick={() => setDeleteOpen(true)}>Delete account</Button>
+          <DeleteAccountDialog open={deleteOpen} busy={deleting} onOpenChange={setDeleteOpen} onConfirm={handleDeleteAccount} />
+        </>}
       </Section>
     </>
   )

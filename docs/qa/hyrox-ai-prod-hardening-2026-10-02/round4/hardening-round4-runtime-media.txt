@@ -1,0 +1,15 @@
+$ ['/usr/bin/curl', '-sS', '--max-time', '20', '-i', '-X', 'POST', '-H', 'Content-Type: text/plain', '--data', 'test', 'http://localhost:3020/api/me/plan']
+HTTP/1.1 415 Unsupported Media Type
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com https://appleid.apple.com
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-type: application/json
+Date: Sun, 04 Oct 2026 10:14:03 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"Unsupported media type"}

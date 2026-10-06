@@ -1,0 +1,26 @@
+▲ Next.js 16.3.6 (Turbopack)
+- Local:         http://localhost:3020
+- Network:       http://192.168.0.137:3020
+- Environments: .env.local
+✓ Ready in 290ms
+✓ Running next.config.ts took 386ms
+
+✓ Generated AGENTS.md and CLAUDE.md for AI agents. Set `agentRules: false` in next.config to disable.
+ GET /dashboard 200 in 2.3s (next.js: 2.2s, proxy.ts: 5ms, application-code: 120ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode 
+[browser] You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled (src/components/shell/app-shell.tsx:29:35)
+ GET /onboarding 200 in 275ms (next.js: 254ms, proxy.ts: 6ms, application-code: 14ms)
+ GET /sign-in 200 in 324ms (next.js: 289ms, proxy.ts: 8ms, application-code: 27ms)
+ GET /api/me/profile 401 in 214ms (next.js: 182ms, application-code: 32ms)
+ DELETE /api/me/account 403 in 54ms (next.js: 52ms, application-code: 3ms)
+ POST /api/me/plan 415 in 50ms (next.js: 48ms, application-code: 1.8ms)
+ GET /profile 200 in 853ms (next.js: 754ms, proxy.ts: 43ms, application-code: 55ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode 
+[browser] You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled (src/components/shell/app-shell.tsx:29:35)
+ GET /onboarding 200 in 18ms (next.js: 3ms, proxy.ts: 3ms, application-code: 12ms)
+ GET /onboarding 200 in 107ms (next.js: 10ms, proxy.ts: 30ms, application-code: 67ms)
+ GET /onboarding 200 in 12ms (next.js: 1.2ms, proxy.ts: 2ms, application-code: 8ms)
+ GET /onboarding 200 in 15ms (next.js: 1.7ms, proxy.ts: 3ms, application-code: 10ms)
+ GET /onboarding 200 in 20ms (next.js: 1.4ms, proxy.ts: 4ms, application-code: 14ms)

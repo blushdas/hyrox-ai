@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ❯ src/app/sign-in/sign-in-buttons.test.ts (7 tests | 1 failed) 116ms
+   ✓ shows failure without exchanging invalid deep link https://evil.example/auth?code=X 5ms
+   ✓ shows failure without exchanging invalid deep link not a URL 1ms
+   ✓ shows failure without exchanging invalid deep link finisher://wrong?code=X 1ms
+   ✓ shows failure without exchanging invalid deep link finisher://auth 0ms
+   ✓ deep link exchanges only with stored verifier null 51ms
+   ✓ deep link exchanges only with stored verifier vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv 52ms
+   × native sign-in start redirects with the S256 challenge of the stored verifier 6ms
+     → expected null to be 'q_6T4mps_xRiw_2OWOZ3AHZCAGcxHHr7d88wr…' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/sign-in/sign-in-buttons.test.ts > native sign-in start redirects with the S256 challenge of the stored verifier
+AssertionError: expected null to be 'q_6T4mps_xRiw_2OWOZ3AHZCAGcxHHr7d88wr…' // Object.is equality
+
+- Expected: 
+"q_6T4mps_xRiw_2OWOZ3AHZCAGcxHHr7d88wrXX4fjk"
+
++ Received: 
+null
+
+ ❯ src/app/sign-in/sign-in-buttons.test.ts:81:43
+     79|   const callback = new URL(redirect.searchParams.get("callbackUrl")!, …
+     80|   expect(callback.pathname).toBe("/auth/native-complete");
+     81|   expect(callback.searchParams.get("cc")).toBe(await challengeFromVeri…
+       |                                           ^
+     82| });
+     83| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  18:28:06
+   Duration  582ms (transform 77ms, setup 0ms, collect 104ms, tests 116ms, environment 0ms, prepare 112ms)
+

@@ -1,0 +1,63 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ❯ src/lib/db/rate-limit.test.ts (3 tests | 2 failed) 20ms
+   × two independently loaded limiter instances share D1 state and user/bucket isolation 15ms
+     → expected { allowed: true, retryAfterSec: 59 } to deeply equal { allowed: false, retryAfterSec: 59 }
+   × concurrent upserts admit exactly the limit 3ms
+     → expected [ { allowed: true, …(1) }, …(24) ] to have a length of 20 but got 25
+   ✓ cleanup is bounded and excludes recent windows 1ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  16:09:43
+   Duration  364ms (transform 35ms, setup 0ms, collect 25ms, tests 20ms, environment 0ms, prepare 69ms)
+
+(node:2150) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/db/rate-limit.test.ts > two independently loaded limiter instances share D1 state and user/bucket isolation
+AssertionError: expected { allowed: true, retryAfterSec: 59 } to deeply equal { allowed: false, retryAfterSec: 59 }
+
+- Expected
++ Received
+
+  {
+-   "allowed": false,
++   "allowed": true,
+    "retryAfterSec": 59,
+  }
+
+ ❯ src/lib/db/rate-limit.test.ts:12:57
+     10|  const first=hitRateLimit; vi.resetModules(); const second=(await impo…
+     11|  for(let i=0;i<60;i++) expect((await (i%2?first:second)("alice","me-wr…
+     12|  expect(await second("alice","me-write",60,60000,1000)).toEqual({allow…
+       |                                                         ^
+     13|  expect((await first("bob","me-write",60,60000,1000)).allowed).toBe(tr…
+     14|  expect((await first("alice","coach",20,300000,1000)).allowed).toBe(tr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/db/rate-limit.test.ts > concurrent upserts admit exactly the limit
+AssertionError: expected [ { allowed: true, …(1) }, …(24) ] to have a length of 20 but got 25
+
+- Expected
++ Received
+
+- 20
++ 25
+
+ ❯ src/lib/db/rate-limit.test.ts:19:36
+     17| it("concurrent upserts admit exactly the limit",async()=>{
+     18|  const hits=await Promise.all(Array.from({length:25},()=>hitRateLimit(…
+     19|  expect(hits.filter(h=>h.allowed)).toHaveLength(20); expect(hits.at(-1…
+       |                                    ^
+     20| });
+     21| it("cleanup is bounded and excludes recent windows",async()=>{
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+EXIT 1

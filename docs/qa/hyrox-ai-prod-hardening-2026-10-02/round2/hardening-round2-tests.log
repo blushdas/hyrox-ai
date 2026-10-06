@@ -1,0 +1,155 @@
+
+> finisher@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+(node:88705) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:88708) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:88706) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/coach-ai/markdown.test.ts (39 tests) 24ms
+(node:88702) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > planner failures are soft
+coach-ai web planner unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+stderr | src/lib/coach-ai/web-search.test.ts > search failures are soft
+coach-ai web search unavailable
+
+ ✓ src/lib/db/auth-migration.test.ts (1 test) 27ms
+ ✓ src/lib/api/validate.test.ts (21 tests) 39ms
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error
+
+stderr | src/app/api/coach-ai/route.test.ts > upstream error bodies and network details never reach client
+coach-ai upstream failure Error
+
+stderr | src/app/api/coach-ai/route.test.ts > fetch with no headers aborts at 30 seconds
+coach-ai upstream failure Error
+
+stderr | src/app/api/coach-ai/route.test.ts > headers alone do not satisfy the 30-second first-byte deadline
+coach-ai upstream failure Error
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-json still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web planner-timeout still streams plan answer without a note unless toggled
+coach-ai web planner unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-json still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > web search-timeout still streams plan answer without a note unless toggled
+coach-ai web search unavailable
+
+stderr | src/app/api/coach-ai/route.test.ts > forced web timeout fails soft
+coach-ai web search unavailable
+
+ ✓ src/app/api/coach-ai/route.test.ts (45 tests) 60ms
+ ✓ src/lib/auth/native-auth.test.ts (15 tests) 116ms
+(node:88736) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/api/me/threads/[id]/messages/route.test.ts (5 tests) 70ms
+ ✓ src/app/api/me/guards.test.ts (7 tests) 158ms
+(node:88738) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:88742) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/coach-ai/threads-client.test.ts (10 tests) 14ms
+ ✓ src/app/api/me/plan/sessions/[id]/route.test.ts (5 tests) 37ms
+(node:88752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:88819) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/api/me/account/route.test.ts (6 tests) 28ms
+ ✓ src/app/api/me/profile/route.test.ts (5 tests) 33ms
+(node:88905) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:88916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/components/coach-ai/thinking.test.ts (7 tests) 410ms
+ ✓ src/lib/db/coach.test.ts (3 tests) 10ms
+ ✓ src/app/(app)/profile/page.test.ts (3 tests) 37ms
+ ✓ src/app/sign-in/sign-in-buttons.test.ts (6 tests) 106ms
+ ✓ src/proxy.test.ts (15 tests) 10ms
+ ✓ src/app/api/me/plan/route.test.ts (5 tests) 91ms
+(node:89009) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89038) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/db/plan.test.ts (3 tests) 25ms
+ ✓ src/lib/coach-ai/prompt.test.ts (14 tests) 3ms
+ ✓ src/app/api/me/threads/route.test.ts (5 tests) 31ms
+ ✓ src/lib/motion.test.ts (5 tests) 2ms
+(node:89093) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/coach-ai/coach-take.test.ts (17 tests) 8ms
+ ✓ src/lib/db/profile.test.ts (3 tests) 16ms
+ ✓ src/lib/people/filter-coaches.test.ts (6 tests) 11ms
+(node:89135) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/db/account.test.ts (1 test) 9ms
+ ✓ src/lib/auth/native-session-client.test.ts (3 tests) 9ms
+ ✓ src/lib/db/quota.test.ts (3 tests) 83ms
+(node:89176) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/db/rate-limit.test.ts (3 tests) 15ms
+ ✓ src/components/coach-ai/composer.test.ts (4 tests) 13ms
+ ✓ src/lib/train/selectors.test.ts (9 tests) 6ms
+(node:89260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/coach-ai/stream-split.test.ts (14 tests) 5ms
+ ✓ src/lib/auth/adapter.test.ts (1 test) 6ms
+ ✓ src/components/coach-ai/history-drawer.test.ts (7 tests) 16ms
+(node:89261) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/api/request-guard.test.ts (8 tests) 5ms
+(node:89264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/app/auth/native-complete/route.test.ts (5 tests) 45ms
+ ✓ src/lib/coach-ai/stream.test.ts (5 tests) 12ms
+ ✓ src/lib/coach-ai/citations.test.ts (2 tests) 3ms
+ ✓ src/app/api/native-auth/exchange/route.test.ts (3 tests) 23ms
+ ✓ src/lib/security/headers.test.ts (1 test) 2ms
+ ✓ src/lib/api/convert.test.ts (16 tests) 8ms
+ ✓ src/components/coach-ai/markdown.test.ts (7 tests) 16ms
+ ✓ src/lib/auth/protected-routes.test.ts (25 tests) 4ms
+ ✓ src/lib/coach-ai/reveal.test.ts (5 tests) 3ms
+ ✓ src/lib/coach-ai/copy-text.test.ts (5 tests) 8ms
+ ✓ src/lib/auth/pkce.test.ts (2 tests) 4ms
+ ✓ src/lib/auth/apple-client-secret.test.ts (1 test) 22ms
+ ✓ src/lib/coach-ai/thinking-steps.test.ts (4 tests) 3ms
+(node:89424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/lib/api/session-user.test.ts (1 test) 2ms
+ ✓ src/stores/coach-ai-store.test.ts (32 tests) 2078ms
+ ✓ src/lib/db/scoping.test.ts (1 test) 1ms
+ ✓ src/lib/coach-ai/rate-limit.test.ts (1 test) 2ms
+ ✓ src/lib/coach-ai/request.test.ts (3 tests) 1ms
+ ✓ src/lib/coach-ai/mock-coach.test.ts (1 test) 3ms
+stderr | src/lib/coach-ai/web-search.test.ts > real abort signal enforces eight-second planner deadline
+coach-ai web planner unavailable
+
+ ✓ src/lib/coach-ai/web-search.test.ts (10 tests) 8028ms
+   ✓ real abort signal enforces eight-second planner deadline  8002ms
+
+ Test Files  54 passed (54)
+      Tests  434 passed (434)
+   Start at  17:11:33
+   Duration  8.73s (transform 2.01s, setup 0ms, collect 6.15s, tests 11.80s, environment 7ms, prepare 3.88s)
+

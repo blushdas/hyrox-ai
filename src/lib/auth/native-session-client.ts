@@ -29,10 +29,10 @@ export async function clearNativeToken() {
   requireNative();
   await SecureStorage.remove(tokenKey, false);
 }
-export async function exchangeNativeCode(origin: string, code: string) {
+export async function exchangeNativeCode(origin: string, code: string, verifier: string) {
   const response = await fetch(endpoint(origin, "/api/native-auth/exchange"), {
     method: "POST", credentials: "omit", cache: "no-store",
-    headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }),
+    headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, code_verifier: verifier }),
   });
   if (!response.ok) throw new Error("Native code exchange failed");
   const result = await response.json();
@@ -50,4 +50,17 @@ export async function fetchNativeSession(origin: string) {
   const session = await response.json();
   if (!session?.user?.id) throw new Error("Hosted session response invalid");
   return session;
+}
+
+const verifierKey = "finisher-native-pkce";
+export async function storeNativeVerifier(verifier: string) {
+ requireNative();
+ await SecureStorage.set(verifierKey, verifier, false, false, KeychainAccess.whenUnlockedThisDeviceOnly);
+}
+export async function takeNativeVerifier() {
+ requireNative();
+ const verifier = await SecureStorage.get(verifierKey, false, false);
+ await SecureStorage.remove(verifierKey, false);
+ if (verifier !== null && typeof verifier !== "string") throw new Error("Invalid native verifier storage");
+ return verifier;
 }

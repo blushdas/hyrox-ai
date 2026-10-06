@@ -1,0 +1,1506 @@
+[
+  {
+    "name": "plan-covered question never searches Tavily",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "one planner and one search for gaps",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "missing plannerKey fails soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "missing searchKey fails soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "missing search key does not affect plan-only decision",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "planner failures are soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "search failures are soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "unsafe URLs and empty results fail soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "search text remains in data block",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "real abort signal enforces eight-second planner deadline",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/web-search.test.ts"
+  },
+  {
+    "name": "incremental answer and split citations render before completion; concurrent send guarded",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "Stop aborts and completes; a late old generation cannot mutate the next chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "Reset aborts in-flight request and clears state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "429 renders exact human error; Retry reuses last user turn",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "truncated becomes explicit error",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "network becomes explicit error",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "error-frame becomes explicit error",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "malformed becomes explicit error",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "source frame survives streaming and completion",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "forced-search flag travels with the user turn and survives Retry",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "save complete: two message POSTs, one thread, title trimmed to 60; no empty thread on New chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "retry guard: error saves one user; retry completion still one user POST",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "Stop partial persists once as complete; empty Stop never saves assistant",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "create save failure leaves reply complete, 401 quiet",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "message save failure leaves reply complete, 401 quiet",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "network save failure leaves reply complete, 401 quiet",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "401 save failure leaves reply complete, 401 quiet",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "restore with no id, saved id, stale 404 and throwing storage",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "open thread deep-equal citations and sources; continue without creating a new thread",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "stale-stream guard: opening a thread prevents old chunks from landing",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "load 500 does not block next send",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "load 401 does not block next send",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "pending create cannot replace a newly opened thread; saves remain on original thread",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "Stop during terminal reader cleanup still saves the completed assistant once",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "overlapping opens and New chat discard late history responses",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "open 500 falls back to a usable chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "open 401 falls back to a usable chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "open network falls back to a usable chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "reopened trailing user retry preserves earlier replies (failed reply: false)",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "reopened trailing user retry preserves earlier replies (failed reply: true)",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "send during pending open starts its own visible thread",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "send during pending restore starts its own visible thread",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/stores/coach-ai-store.test.ts"
+  },
+  {
+    "name": "label switches to web search wording",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "renders a polite status region with the label",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "loader renders three dots with no bars",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "details are closed by default with an accessible toggle",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "open panel markup and motion props (reduced=false)",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "open panel markup and motion props (reduced=true)",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "assistant passes received sources and removes Thinking on the first text",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/thinking.test.ts"
+  },
+  {
+    "name": "round trips week metadata and archives the prior plan atomically",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/plan.test.ts"
+  },
+  {
+    "name": "rolls back archive, plan and earlier sessions on a bad later session",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/plan.test.ts"
+  },
+  {
+    "name": "isolates users and updates only active session keys, clearing completed stamps",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/plan.test.ts"
+  },
+  {
+    "name": "native one-time codes > stores only SHA-256 hashes, with exactly 60 seconds of life",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native one-time codes > rejects at the exact expiry boundary and afterwards",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native one-time codes > rejects replay, including two concurrent consumers",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native one-time codes > rejects a well-formed unknown code",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native one-time codes > rejects malformed input before touching D1",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native bearer tokens > carries user claims and expires in 30 days",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native bearer tokens > rejects web tokens and prevents native tokens being used as web cookies",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "native bearer tokens > rejects expired and tampered tokens",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "CORS matches only the exact native origin",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/native-auth.test.ts"
+  },
+  {
+    "name": "shows failure without exchanging invalid deep link https://evil.example/auth?code=X",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/sign-in/sign-in-buttons.test.ts"
+  },
+  {
+    "name": "shows failure without exchanging invalid deep link not a URL",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/sign-in/sign-in-buttons.test.ts"
+  },
+  {
+    "name": "shows failure without exchanging invalid deep link finisher://wrong?code=X",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/sign-in/sign-in-buttons.test.ts"
+  },
+  {
+    "name": "shows failure without exchanging invalid deep link finisher://auth",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/sign-in/sign-in-buttons.test.ts"
+  },
+  {
+    "name": "rendered reply links > opens http://example.com/guide safely in a new tab",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > opens https://example.com/guide safely in a new tab",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > keeps javascript:alert(1) inert",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > keeps data:text/html,unsafe inert",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > keeps vbscript:unsafe inert",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > keeps //example.com inert",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "rendered reply links > keeps citation anchors in the current chat",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > allows exactly the native completion callback through",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback null",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback /dashboard",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback //evil.example",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback https://evil.example",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback /auth/native-complete/",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback /auth/native-complete?next=evil",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback /auth/native-complete#fragment",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback https://localhost:3000/auth/native-complete",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback /auth/native-complete-extra",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > keeps dashboard redirect for callback %2Fauth%2Fnative-complete",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > still allows a signed-out user to see sign-in",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "signed-in sign-in proxy > still protects the dashboard when signed out",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/proxy.test.ts"
+  },
+  {
+    "name": "unauthenticated guard runs before reading body, limiter, env or fetch",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "authenticated streaming uses fixed caps, last ten turns and server-only credentials",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "Worker overrides and process environment fallback",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects malformed/oversized input before upstream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "malformed JSON and excessive older user turns also reject",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rate limit exposes exact UI message",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "upstream error bodies and network details never reach client",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "truncated upstream streams produce explicit failure frame",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "cancel and request disconnect abort the provider",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "fetch with no headers aborts at 30 seconds",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "assistant history of 2000 chars is accepted and capped at 2000",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "assistant history of 2001 chars is accepted and capped at 2000",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "assistant history of 12001 chars is accepted and capped at 2000",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "headers alone do not satisfy the 30-second first-byte deadline",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "first body byte clears the early deadline; 45-second total bound remains",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "plan-covered emits no sources or unavailable note and consumes one slot",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "gap emits sources before text and isolates injected web content",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web missing still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web planner-400 still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web planner-500 still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web planner-json still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web planner-timeout still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web search-400 still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web search-500 still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web search-json still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "web search-timeout still streams plan answer without a note unless toggled",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects non-boolean webSearch \"true\"",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects non-boolean webSearch 1",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects non-boolean webSearch null",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects non-boolean webSearch {}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "rejects non-boolean webSearch %j",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "forced web searches plan-covered question once without Cohere",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "forced web missing-key fails soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "forced web http fails soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "forced web timeout fails soft",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/coach-ai/route.test.ts"
+  },
+  {
+    "name": "request validators > accepts all current generated templates",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > accepts existing shapes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"age\":12}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"age\":101}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"weight\":0}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"weight\":null}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"weight\":2000}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"raceDate\":\"2026-02-30\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"raceDate\":\"2026-1-01\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"location\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"fiveKTime\":\"bad\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"weightUnit\":\"stone\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"daysPerWeek\":7}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"category\":\"other\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"fitnessLevel\":\"elite\"}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects invalid profile {\"sessionLength\":50}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > accepts nullable and empty profile values",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > rejects duplicate sessions and invalid blocks",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > enforces session count and enum bounds",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > validates status, title, metadata and messages",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "request validators > bounds actual bytes and malformed JSON",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/validate.test.ts"
+  },
+  {
+    "name": "returns 401 for both methods without DB access",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/route.test.ts"
+  },
+  {
+    "name": "persists generated plan owned only by session and does not expose foreign plan",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/route.test.ts"
+  },
+  {
+    "name": "rejects invalid plan and metadata without writes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/route.test.ts"
+  },
+  {
+    "name": "logs auth failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/route.test.ts"
+  },
+  {
+    "name": "logs D1 failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/route.test.ts"
+  },
+  {
+    "name": "returns 401 for every method without session and makes no DB call",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/profile/route.test.ts"
+  },
+  {
+    "name": "saves and reads session-owned profile, ignoring supplied userId",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/profile/route.test.ts"
+  },
+  {
+    "name": "rejects invalid profile/onboarding/body without writes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/profile/route.test.ts"
+  },
+  {
+    "name": "logs auth failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/profile/route.test.ts"
+  },
+  {
+    "name": "logs D1 failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/profile/route.test.ts"
+  },
+  {
+    "name": "returns 401 without session or DB calls",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/sessions/[id]/route.test.ts"
+  },
+  {
+    "name": "returns 404 for foreign or missing active session",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/sessions/[id]/route.test.ts"
+  },
+  {
+    "name": "updates own active session and rejects invalid status without mutation",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/sessions/[id]/route.test.ts"
+  },
+  {
+    "name": "logs auth failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/sessions/[id]/route.test.ts"
+  },
+  {
+    "name": "logs D1 failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/plan/sessions/[id]/route.test.ts"
+  },
+  {
+    "name": "round trips citations/sources and orders same-millisecond messages by insertion",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/coach.test.ts"
+  },
+  {
+    "name": "isolates every coach operation and hides archived threads",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/coach.test.ts"
+  },
+  {
+    "name": "bumps updated time and reorders threads",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/coach.test.ts"
+  },
+  {
+    "name": "returns 401 for both methods without DB access",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/[id]/messages/route.test.ts"
+  },
+  {
+    "name": "returns 404 for foreign and missing threads, with no writes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/[id]/messages/route.test.ts"
+  },
+  {
+    "name": "creates message with server UUID and reads it back; invalid input writes nothing",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/[id]/messages/route.test.ts"
+  },
+  {
+    "name": "logs auth failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/[id]/messages/route.test.ts"
+  },
+  {
+    "name": "logs D1 failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/[id]/messages/route.test.ts"
+  },
+  {
+    "name": "returns 401 for both methods without DB access",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/route.test.ts"
+  },
+  {
+    "name": "creates session-owned thread and lists only own threads",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/route.test.ts"
+  },
+  {
+    "name": "rejects invalid titles without writes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/route.test.ts"
+  },
+  {
+    "name": "logs auth failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/route.test.ts"
+  },
+  {
+    "name": "logs D1 failures and returns generic 500",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/app/api/me/threads/route.test.ts"
+  },
+  {
+    "name": "query matches name headline and location without case",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "specialties match any selected",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "level availability and verification filters",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "combined filters and empty results",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "verified first then availability and name without mutation",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "active filters counted",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/people/filter-coaches.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 1",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 2",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 3",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 4",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 5",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > heading level 6",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > preserves paragraph newlines",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > normalizes CRLF only",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > bullets",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > ordered lists preserve start",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > quote",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > fenced code stays literal",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > tilde fence",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > rule",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > table",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > table without separator stays text",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > empty",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "markdown blocks > unclosed fence",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > bold **bold**",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > bold __bold__",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > italic *italic*",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > italic _italic_",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > nested emphasis",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inline code",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > https link",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > http link",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > citation",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inert URL javascript:alert",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inert URL data:text/html,evil",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inert URL vbscript:evil",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inert URL //evil.test",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > inert URL https://a.test/\u0000",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > HTML stays text",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > punctuation untouched",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > unclosed markup stays literal",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "inline > long and hostile delimiter lines finish quickly",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "triple emphasis",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "bare URL underscores stay intact",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "URL parentheses stay intact",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/markdown.test.ts"
+  },
+  {
+    "name": "saves twice into one row, stores seconds/kg and stamps onboarding once",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/profile.test.ts"
+  },
+  {
+    "name": "isolates both profile reads and upserts",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/profile.test.ts"
+  },
+  {
+    "name": "cascades a user deletion through all five tables",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/profile.test.ts"
+  },
+  {
+    "name": "HTTP 401 is discriminated for every endpoint",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "HTTP 404 is discriminated for every endpoint",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "HTTP 500 is discriminated for every endpoint",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "valid wrappers, server ids, encoded ids and POST payloads",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "malformed list rejected: {}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "malformed list rejected: {\"threads\":[{}]}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "malformed list rejected: {\"threads\":[{\"id\":\"t\",\"title\":\"Chat\",\"createdAt\":1,\"updatedAt\":\"bad\",\"archivedAt\":null}]}",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "invalid JSON and network failures returned",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "nested message fields validated",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "all endpoints reject malformed payloads and transport failures",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/threads-client.test.ts"
+  },
+  {
+    "name": "SSE parser tolerates every byte boundary, CRLF and a provider EOF without DONE",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream.test.ts"
+  },
+  {
+    "name": "refuses incomplete/error stream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream.test.ts"
+  },
+  {
+    "name": "refuses incomplete/error stream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream.test.ts"
+  },
+  {
+    "name": "refuses incomplete/error stream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream.test.ts"
+  },
+  {
+    "name": "refuses incomplete/error stream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream.test.ts"
+  },
+  {
+    "name": "Apple secret verifies with correct claims and six-month maximum",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/apple-client-secret.test.ts"
+  },
+  {
+    "name": "Search web defaults off with a 44px native button",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/composer.test.ts"
+  },
+  {
+    "name": "submit forwards toggle and resets it",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/composer.test.ts"
+  },
+  {
+    "name": "Enter sends and resets selected web search",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/composer.test.ts"
+  },
+  {
+    "name": "Stop preserves the toggle",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/composer.test.ts"
+  },
+  {
+    "name": "history loading state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "history idle state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "history ready state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "history error state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "history signedOut state",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "newest first, title, relative time, selection and 44px target",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "relative time boundaries and future timestamps",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/components/coach-ai/history-drawer.test.ts"
+  },
+  {
+    "name": "full card",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "hash headers # ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "hash headers ## ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "hash headers ###### ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "bold headers",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "mixed case",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "duplicate sections merge",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "empty sections omitted",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "confidence optional",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "list next move becomes prose",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "fallback: ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "fallback: Today's session is easy.",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "fallback: Coach's take\nRun.",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "fallback: Coach's take\nNext move",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "linear long line",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "preamble survives card conversion",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "CRLF",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/coach-take.test.ts"
+  },
+  {
+    "name": "reads identity only from the session",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/session-user.test.ts"
+  },
+  {
+    "name": "train selectors > today wins over yesterday and rolls into next week",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > catch-up and all done",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > parses 60 min",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > parses 45-60 min",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > parses 1 hr",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > parses 1h 15m",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > parses unknown",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > empty week has zero compliance",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "train selectors > ISO Sunday and calendar countdown",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/train/selectors.test.ts"
+  },
+  {
+    "name": "routeDirection > enters deeper routes from the right and shallower routes from the left",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/motion.test.ts"
+  },
+  {
+    "name": "routeDirection > does not shift peers, trailing slashes, query strings or hashes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/motion.test.ts"
+  },
+  {
+    "name": "planSequence > advances only at each exact stage boundary and completes only at the end",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/motion.test.ts"
+  },
+  {
+    "name": "keeps CSS and SSR motion tokens aligned and reduced motion instant",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/motion.test.ts"
+  },
+  {
+    "name": "reads both authored milliseconds and browser-normalized seconds",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/motion.test.ts"
+  },
+  {
+    "name": "allowlists tier open",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier pro",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier beginner",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier doubles",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier ../pro",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier OPEN",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier constructor",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "allowlists tier ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "bundles beginner curriculum and compact plan",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "bundles open curriculum and compact plan",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "bundles pro curriculum and compact plan",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "bundled rules stay synchronized with versioned markdown",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "advice format and plan conflict priority",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "no web block without results",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/prompt.test.ts"
+  },
+  {
+    "name": "display conversions > round trips 5:30",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > round trips 1:02:10",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > round trips ",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > round trips 0:00",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > round trips 59:59",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects 5:60",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects 1:99:00",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects oops",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects NaN",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects 5:3",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects -1:30",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects 1.5:30",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > rejects 99999999999999999:00",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > normalizes hours",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > round trips pounds, kg and null",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "display conversions > returns ISO timestamps",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/api/convert.test.ts"
+  },
+  {
+    "name": "protects /dashboard",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /dashboard/",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /dashboard/nested",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /onboarding",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /plan",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /profile",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /session",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /session/abc",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /session/w1-d1/",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /coach-ai",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /people",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /people/coaches",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "protects /people/coaches/c-001",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves / public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /sign-in public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /api/auth/callback/google public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /_next/static/test.js public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /favicon.ico public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /logo.svg public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "leaves /dashboardish public",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "proxy literal matcher stays synchronized",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "rejects unsafe callback //evil.test",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "rejects unsafe callback https://evil.test",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "rejects unsafe callback /\\evil.test",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "rejects unsafe callback /\nevil.test",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/auth/protected-routes.test.ts"
+  },
+  {
+    "name": "empty stream",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "single tail",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "finalized paragraphs",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "unclosed fence stays together",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "closed fence finalizes",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "short fence does not close long fence",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "CRLF",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "whitespace blanks",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "append-only finalized prefix remains stable",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "withholds incomplete delimiter hi [",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "withholds incomplete delimiter hi [1",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "withholds incomplete delimiter hi **",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "withholds incomplete delimiter hi *",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "withholds incomplete delimiter hi `",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/stream-split.test.ts"
+  },
+  {
+    "name": "known IDs deduplicate, unknown IDs disappear, labels and href resolve",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/citations.test.ts"
+  },
+  {
+    "name": "every possible split across a marker stays hidden until complete",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/citations.test.ts"
+  },
+  {
+    "name": "removes markers and preceding space",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/copy-text.test.ts"
+  },
+  {
+    "name": "removes adjacent markers",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/copy-text.test.ts"
+  },
+  {
+    "name": "preserves markdown and decimal",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/copy-text.test.ts"
+  },
+  {
+    "name": "empty copy",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/copy-text.test.ts"
+  },
+  {
+    "name": "card copy uses plain labels and removes markers",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/copy-text.test.ts"
+  },
+  {
+    "name": "twenty messages per rolling five minutes, separated by user, window expires",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/rate-limit.test.ts"
+  },
+  {
+    "name": "retry delay rounds up to the earliest available slot without extending the window",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/rate-limit.test.ts"
+  },
+  {
+    "name": "derives exact step for searching=false, sources=0",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/thinking-steps.test.ts"
+  },
+  {
+    "name": "derives exact step for searching=true, sources=0",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/thinking-steps.test.ts"
+  },
+  {
+    "name": "derives exact step for searching=false, sources=1",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/thinking-steps.test.ts"
+  },
+  {
+    "name": "derives exact step for searching=true, sources=3",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/thinking-steps.test.ts"
+  },
+  {
+    "name": "nextRevealLength > reveals at least one char per frame",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/reveal.test.ts"
+  },
+  {
+    "name": "nextRevealLength > catches up on a large backlog, capped at 400 per frame",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/reveal.test.ts"
+  },
+  {
+    "name": "nextRevealLength > scales the step with pending text",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/reveal.test.ts"
+  },
+  {
+    "name": "nextRevealLength > never overshoots the total",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/reveal.test.ts"
+  },
+  {
+    "name": "nextRevealLength > clamps frame time between 1 and 4 frames",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/reveal.test.ts"
+  },
+  {
+    "name": "requires userId as the first parameter of every exported data function",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/db/scoping.test.ts"
+  },
+  {
+    "name": "absent webSearch defaults false",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/request.test.ts"
+  },
+  {
+    "name": "boolean webSearch true preserved",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/request.test.ts"
+  },
+  {
+    "name": "boolean webSearch false preserved",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/request.test.ts"
+  },
+  {
+    "name": "composer constants remain available without a mock reply path",
+    "file": "/private/tmp/hardening-rebased-main-baseline/src/lib/coach-ai/mock-coach.test.ts"
+  }
+]

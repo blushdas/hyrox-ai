@@ -1,3 +1,4 @@
+import { isNativeCallback } from "@/lib/auth/pkce";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
@@ -15,7 +16,7 @@ export async function proxy(request: NextRequest) {
   }
   if (request.nextUrl.pathname === "/sign-in" && token) {
     // Only the native completion path may bypass the signed-in dashboard redirect.
-    if (request.nextUrl.searchParams.get("callbackUrl") === "/auth/native-complete") return NextResponse.next();
+    if (isNativeCallback(request.nextUrl.searchParams.get("callbackUrl"))) return NextResponse.next();
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
   return NextResponse.next();

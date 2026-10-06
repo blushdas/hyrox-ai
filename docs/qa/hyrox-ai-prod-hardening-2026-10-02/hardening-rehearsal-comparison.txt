@@ -1,0 +1,11 @@
+users: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+accounts: 3 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+sessions: 3 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+native_auth_codes: 9 before -> 6 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+verification_tokens: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+athlete_profiles: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+training_plans: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+plan_sessions: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+coach_threads: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+coach_messages: 2 before -> 2 after; all retained column values match (account secrets NULL; codes gain NULL challenge)
+Orphan account/session and all three orphan native codes removed explicitly; valid users and all five app tables unchanged.

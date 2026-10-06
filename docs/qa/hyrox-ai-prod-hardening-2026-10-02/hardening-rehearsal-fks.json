@@ -1,0 +1,80 @@
+[
+  {
+    "results": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "userId",
+        "to": "id",
+        "on_update": "NO ACTION",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "userId",
+        "to": "id",
+        "on_update": "NO ACTION",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "userId",
+        "to": "id",
+        "on_update": "NO ACTION",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [
+      {
+        "access_token": null,
+        "refresh_token": null,
+        "id_token": null,
+        "session_state": null,
+        "oauth_token": null,
+        "oauth_token_secret": null
+      },
+      {
+        "access_token": null,
+        "refresh_token": null,
+        "id_token": null,
+        "session_state": null,
+        "oauth_token": null,
+        "oauth_token_secret": null
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]

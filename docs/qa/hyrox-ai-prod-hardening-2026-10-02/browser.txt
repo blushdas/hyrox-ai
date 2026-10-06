@@ -1,0 +1,8 @@
+npm run dev -- --port 3000
+Error: listen EADDRINUSE: address already in use :::3000
+Fallback: node node_modules/next/dist/bin/next dev --port 3020
+Ready in 290ms
+@Browser navigation http://localhost:3020/profile -> http://localhost:3020/onboarding
+Visible: When's your race?; no local athlete profile exists. Existing localhost browser cookie caused /sign-in to redirect to /dashboard; no credentials typed and no data submitted.
+Console: eval() is not supported in this environment. React requires eval() in development mode for various debugging features. React will never use eval() in production mode.
+Production CSP intentionally excludes unsafe-eval. Dev debugging warning remains; production console/OAuth checks deferred to manual sign-in after deploy.

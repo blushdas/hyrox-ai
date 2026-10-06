@@ -1,0 +1,3 @@
+Read-only gh repo view blushdas/hyrox-ai --json nameWithOwner,isPrivate,url,defaultBranchRef
+{"defaultBranchRef":{"name":"main"},"isPrivate":false,"nameWithOwner":"blushdas/hyrox-ai","url":"https://github.com/blushdas/hyrox-ai"}
+Configured origin: https://github.com/blushdas/hyrox-ai.git

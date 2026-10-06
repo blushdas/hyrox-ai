@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ✓ src/app/api/native-auth/exchange/route.test.ts (3 tests) 9ms
+ ✓ src/lib/auth/native-auth.test.ts (15 tests) 21ms
+
+ Test Files  2 passed (2)
+      Tests  18 passed (18)
+   Start at  17:11:02
+   Duration  276ms (transform 47ms, setup 0ms, collect 79ms, tests 30ms, environment 0ms, prepare 90ms)
+
+(node:85320) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85319) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+EXIT 0

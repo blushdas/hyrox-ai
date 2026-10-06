@@ -1,0 +1,99 @@
+
+ RUN  v3.2.7 /Users/troy/.claude/worktrees/hyrox-ai-prod-hardening
+
+ ❯ src/lib/db/quota.test.ts (3 tests | 1 failed) 45ms
+   × allows 25 plans, rejects 26 without archiving or orphan sessions 8ms
+     → promise resolved "{ …(4) }" instead of rejecting
+   ✓ counts archived threads toward 100 and isolates users 3ms
+   ✓ allows 500 messages then writes nothing, including thread timestamp 34ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  16:09:43
+   Duration  418ms (transform 36ms, setup 0ms, collect 40ms, tests 45ms, environment 0ms, prepare 52ms)
+
+(node:2196) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/db/quota.test.ts > allows 25 plans, rejects 26 without archiving or orphan sessions
+AssertionError: promise resolved "{ …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "id": "c13cb4e9-2742-4258-ab9d-2a8cee2db62c",
++   "raceDate": "2027-01-01",
++   "totalWeeks": 1,
++   "weeks": [
++     {
++       "phase": "foundation",
++       "phaseWeek": 2,
++       "sessions": [
++         {
++           "coachNote": "Easy effort",
++           "cooldown": {
++             "duration": "5 min",
++             "exercises": [
++               {
++                 "distance": "1 km",
++                 "exercise": "Run",
++                 "rpe": 3,
++               },
++             ],
++             "title": "Warmup",
++           },
++           "day": 1,
++           "duration": "60 min",
++           "id": "session-1",
++           "mainSet": {
++             "duration": "5 min",
++             "exercises": [
++               {
++                 "distance": "1 km",
++                 "exercise": "Run",
++                 "rpe": 3,
++               },
++             ],
++             "title": "Warmup",
++           },
++           "phase": "foundation",
++           "status": "pending",
++           "title": "Easy engine",
++           "type": "engine_builder",
++           "warmup": {
++             "duration": "5 min",
++             "exercises": [
++               {
++                 "distance": "1 km",
++                 "exercise": "Run",
++                 "rpe": 3,
++               },
++             ],
++             "title": "Warmup",
++           },
++           "week": 1,
++         },
++       ],
++       "totalPhaseWeeks": 4,
++       "week": 1,
++     },
++   ],
+  }
+
+ ❯ src/lib/db/quota.test.ts:14:39
+     12|  let id="";for(let i=0;i<25;i++)id=(await createPlan("alice",plan)).id;
+     13|  expect((await getActivePlan("alice"))?.id).toBe(id);
+     14|  await expect(createPlan("alice",plan)).rejects.toBeInstanceOf(QuotaEx…
+       |                                       ^
+     15|  expect((await getActivePlan("alice"))?.id).toBe(id);
+     16|  expect(test.sqlite.prepare("SELECT COUNT(*) AS n FROM plan_sessions")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+EXIT 1

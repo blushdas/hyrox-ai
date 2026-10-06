@@ -1,0 +1,3 @@
+$ node node_modules/eslint/bin/eslint.js src/lib/auth/native-auth.test.ts src/lib/api/session-user.test.ts src/lib/db/rate-limit.test.ts
+
+EXIT 0

@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     if (!secret) throw new Error("AUTH_SECRET is required");
     const body: unknown = await request.json();
     const code = body && typeof body === "object" && "code" in body ? body.code : null;
-    const userId = await consumeNativeAuthCode(DB, code, Date.now());
+    const userId = await consumeNativeAuthCode(DB, code, body && typeof body === "object" && "code_verifier" in body ? body.code_verifier : null, Date.now());
     if (!userId) return nativeUnauthorized(headers);
     const user = await DB.prepare("SELECT id, name, email, image FROM users WHERE id = ?").bind(userId).first<NativeUser>();
     if (!user) return nativeUnauthorized(headers);

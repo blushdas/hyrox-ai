@@ -27,7 +27,7 @@ it("rejects invalid profile/onboarding/body without writes", async () => {
 
 it("logs auth failures and returns generic 500", async () => {
  const cause = new Error("D1 unavailable"); vi.mocked(auth).mockRejectedValueOnce(cause); const log = vi.spyOn(console,"error").mockImplementation(() => undefined);
- const response = await route.GET(); expect(response.status).toBe(500); expect(await response.json()).toEqual({error:"Internal server error"}); expect(log).toHaveBeenCalledWith("Persistence request failed",cause);
+ const response = await route.GET(); expect(response.status).toBe(500); expect(await response.json()).toEqual({error:"Internal server error"}); expect(log).toHaveBeenCalledWith("Persistence request failed","Error");
 });
 
 it("logs D1 failures and returns generic 500", async () => {

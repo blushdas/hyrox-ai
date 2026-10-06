@@ -1,75 +1,74 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { encode, decode } from "next-auth/jwt";
-import { consumeNativeAuthCode, mintNativeAuthCode, encodeNativeToken, decodeNativeToken, nativeCorsHeaders, type NativeDatabase } from "./native-auth";
-
-type Row = { codeHash: string; userId: string; expiresAt: number; usedAt: number | null };
-function database() {
-  const rows = new Map<string, Row>();
-  const statements: string[] = [];
-  const db: NativeDatabase = {
-    prepare(sql) {
-      statements.push(sql);
-      return { bind(...values) { return {
-        async run() {
-          if (!sql.startsWith("INSERT INTO native_auth_codes")) throw new Error("Unexpected SQL");
-          const [codeHash, userId, expiresAt] = values as [string, string, number];
-          rows.set(codeHash, { codeHash, userId, expiresAt, usedAt: null });
-        },
-        async first<T>() {
-          if (!sql.startsWith("UPDATE native_auth_codes SET usedAt")) throw new Error("Unexpected SQL");
-          const [usedAt, codeHash, now] = values as [number, string, number];
-          const row = rows.get(codeHash);
-          // Honor the actual predicates so removing one breaks the behavior tests.
-          if (!row || (sql.includes("usedAt IS NULL") && row.usedAt !== null) ||
-              (sql.includes("expiresAt > ?") && row.expiresAt <= now)) return null;
-          row.usedAt = usedAt;
-          return { userId: row.userId } as T;
-        },
-      }; } };
-    },
-  };
-  return { db, rows, statements };
-}
-
-describe("native one-time codes", () => {
-  it("stores only SHA-256 hashes, with exactly 60 seconds of life", async () => {
-    const { db, rows } = database();
-    const code = await mintNativeAuthCode(db, "user", 1000);
-    expect(code).toMatch(/^[A-Za-z0-9_-]{43}$/);
-    const row = [...rows.values()][0];
-    expect(row.codeHash).toMatch(/^[a-f0-9]{64}$/);
-    expect(JSON.stringify(row)).not.toContain(code);
-    expect(row.expiresAt).toBe(61000);
-    expect(await consumeNativeAuthCode(db, code, 60999)).toBe("user");
-  });
-  it("rejects at the exact expiry boundary and afterwards", async () => {
-    for (const now of [61000, 61001]) {
-      const { db } = database();
-      const code = await mintNativeAuthCode(db, "user", 1000);
-      expect(await consumeNativeAuthCode(db, code, now)).toBeNull();
-    }
-  });
-  it("rejects replay, including two concurrent consumers", async () => {
-    const { db } = database();
-    const code = await mintNativeAuthCode(db, "user", 1000);
-    const results = await Promise.all([consumeNativeAuthCode(db, code, 2000), consumeNativeAuthCode(db, code, 2000)]);
-    expect(results.filter(Boolean)).toEqual(["user"]);
-    expect(await consumeNativeAuthCode(db, code, 3000)).toBeNull();
-  });
-  it("rejects a well-formed unknown code", async () => {
-    const { db } = database();
-    await mintNativeAuthCode(db, "user", 1000);
-    expect(await consumeNativeAuthCode(db, "x".repeat(43), 2000)).toBeNull();
-  });
-  it("rejects malformed input before touching D1", async () => {
-    const { db, statements } = database();
-    for (const code of [null, undefined, 1, {}, "", "a".repeat(42), "a".repeat(44), "!".repeat(43)]) {
-      expect(await consumeNativeAuthCode(db, code, 0)).toBeNull();
-    }
-    expect(statements).toEqual([]);
-  });
+import { createTestDb } from "@/lib/api/test-d1";
+import { challengeFromVerifier } from "./pkce";
+import { consumeNativeAuthCode, mintNativeAuthCode, encodeNativeToken, decodeNativeToken, nativeCorsHeaders } from "./native-auth";
+const verifier = "v".repeat(43);
+it("stores hashes, enforces 60s TTL and burns replayed codes atomically", async () => {
+ const test = createTestDb();
+ try {
+  const code = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
+  const row = test.sqlite.prepare("SELECT * FROM native_auth_codes").get();
+  expect(code).toMatch(/^[A-Za-z0-9_-]{43}$/);
+  expect(row).toMatchObject({ codeHash: expect.stringMatching(/^[a-f0-9]{64}$/) });
+  expect(JSON.stringify(row)).not.toContain(code);
+  expect(row).toMatchObject({ expiresAt: 61000, usedAt: null });
+  const attempts = await Promise.all([consumeNativeAuthCode(test.db, code, verifier, 60999), consumeNativeAuthCode(test.db, code, verifier, 60999)]);
+  expect(attempts.filter(Boolean)).toEqual(["alice"]);
+  expect(await consumeNativeAuthCode(test.db, code, verifier, 60001)).toBeNull();
+ } finally { test.close(); }
 });
-
+it("rejects a well-formed unknown code", async () => {
+ const test = createTestDb();
+ try {
+  const existing = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
+  // Pick a valid code guaranteed to differ from the real stored code.
+  const unknown = (existing[0] === "x" ? "y" : "x") + existing.slice(1);
+  expect(await consumeNativeAuthCode(test.db, unknown, verifier, 2000)).toBeNull();
+  expect(test.sqlite.prepare("SELECT usedAt FROM native_auth_codes").get()).toEqual({ usedAt: null });
+ } finally { test.close(); }
+});
+it("rejects malformed input before touching D1", async () => {
+ const test = createTestDb();
+ const prepare = vi.spyOn(test.db, "prepare");
+ try {
+  for (const code of [null, undefined, 1, {}, "", "a".repeat(42), "a".repeat(44), "!".repeat(43)]) {
+   expect(await consumeNativeAuthCode(test.db, code, verifier, 2000)).toBeNull();
+  }
+  expect(prepare).not.toHaveBeenCalled();
+ } finally { prepare.mockRestore(); test.close(); }
+});
+it.each([null, undefined, "w".repeat(43), "v", {}, 1])("wrong or missing verifier %s burns the code", async bad => {
+ const test = createTestDb();
+ try {
+  const code = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
+  expect(await consumeNativeAuthCode(test.db, code, bad, 2000)).toBeNull();
+  expect(test.sqlite.prepare("SELECT usedAt FROM native_auth_codes").get()).toEqual({ usedAt: 2000 });
+  expect(await consumeNativeAuthCode(test.db, code, verifier, 2001)).toBeNull();
+ } finally { test.close(); }
+});
+it.each([61000, 62000])("rejects code at/after expiry %s", async now => {
+ const test = createTestDb();
+ try {
+  const code = await mintNativeAuthCode(test.db, "alice", 1000, await challengeFromVerifier(verifier));
+  expect(await consumeNativeAuthCode(test.db, code, verifier, now)).toBeNull();
+ } finally { test.close(); }
+});
+it("purges at most 100 used/expired rows on each mint and retains live codes", async () => {
+ const test = createTestDb();
+ try {
+  for (let i=0;i<120;i++) test.sqlite.prepare("INSERT INTO native_auth_codes VALUES (?,?,?,?,?)").run(String(i), "alice", i<60?1000:999999, i<60?null:2, "c".repeat(43));
+  test.sqlite.prepare("INSERT INTO native_auth_codes VALUES (?,?,?,?,?)").run("live", "bob", 999999, null, "c".repeat(43));
+  await mintNativeAuthCode(test.db,"alice",2000,await challengeFromVerifier(verifier));
+  expect(test.sqlite.prepare("SELECT COUNT(*) AS n FROM native_auth_codes").get()).toEqual({n:22});
+  expect(test.sqlite.prepare("SELECT userId FROM native_auth_codes WHERE codeHash='live'").get()).toEqual({userId:"bob"});
+ } finally { test.close(); }
+});
+it("rejects invalid challenge before minting", async () => {
+ const test=createTestDb();
+ try { await expect(mintNativeAuthCode(test.db,"alice",0,"bad")).rejects.toThrow(); expect(test.sqlite.prepare("SELECT COUNT(*) AS n FROM native_auth_codes").get()).toEqual({n:0}); }
+ finally { test.close(); }
+});
 describe("native bearer tokens", () => {
   const secret = "throwaway-unit-test-secret-native-auth";
   const user = { id: "user", name: "QA", email: "qa@example.invalid", image: null };
