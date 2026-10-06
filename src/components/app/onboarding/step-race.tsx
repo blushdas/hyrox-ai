@@ -22,7 +22,7 @@ export function StepRace({ data, onChange }: Props) {
           When&apos;s your race?
         </h2>
         <p className="text-muted-foreground text-sm">
-          We&apos;ll build your plan backwards from race day.
+          We&apos;ll set you up with a 12-week HYROX plan for your category.
         </p>
       </div>
 
