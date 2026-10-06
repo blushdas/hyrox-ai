@@ -9,7 +9,7 @@ type Props = {
 
 const dayOptions = [
   { value: 3 as const, label: "3 days", desc: "Minimum effective" },
-  { value: 4 as const, label: "4 days", desc: "Recommended for beginners" },
+  { value: 4 as const, label: "4 days", desc: "Recommended for beginners (used by Coach AI)" },
   { value: 5 as const, label: "5 days", desc: "Full program" },
 ]
 

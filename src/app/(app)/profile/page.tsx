@@ -195,6 +195,9 @@ export default function ProfilePage() {
           variant="ghost"
           className="w-full justify-start rounded-none border-b text-danger"
           onClick={async () => {
+            useAthleteStore.getState().clearProfile()
+            usePlanStore.getState().clearPlan()
+            useCoachAIStore.getState().reset()
             if (Capacitor.isNativePlatform()) {
               try {
                 await clearNativeToken()
