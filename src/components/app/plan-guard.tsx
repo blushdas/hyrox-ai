@@ -4,7 +4,9 @@ import { useAthleteStore } from "@/stores/athlete-store"
 import { Skeleton } from "@/components/shell/primitives"
 import { useRouter } from "next/navigation"
 import { usePlanStore } from "@/stores/plan-store"
-import { isSyncSettled, shouldRedirectToOnboarding } from "@/lib/account/sync"
+import { Capacitor } from "@capacitor/core"
+import { Button } from "@/components/ui/button"
+import { hydrateFromAccount, isSyncSettled, shouldRedirectToOnboarding } from "@/lib/account/sync"
 
 const hasHydrated = () => usePlanStore.persist.hasHydrated() && useAthleteStore.persist.hasHydrated()
 const subscribeHydration = (notify: () => void) => {
@@ -26,7 +28,16 @@ export function PlanGuard({ children }: { children: React.ReactNode }) {
     }
   }, [hydrated, syncStatus, plan, router])
 
-  if (!hydrated || !isSyncSettled(syncStatus) || !plan) return <Skeleton />
+  if (!hydrated || !isSyncSettled(syncStatus)) return <Skeleton />
+  if (syncStatus === "error" && !plan) {
+    return (
+      <div role="alert" className="space-y-4 py-6">
+        <p className="text-sm text-muted-foreground">Couldn&apos;t load your account. Check your connection and try again.</p>
+        <Button onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}>Retry</Button>
+      </div>
+    )
+  }
+  if (!plan) return <Skeleton />
 
   return <>{children}</>
 }

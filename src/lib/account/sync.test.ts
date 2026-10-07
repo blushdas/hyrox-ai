@@ -47,7 +47,10 @@ beforeEach(() => {
   useAthleteStore.setState({ profile: null, onboardingComplete: false, ownerUserId: null, syncStatus: "idle", sessionUserId: null })
   usePlanStore.setState({ plan: null, currentWeek: 1, ownerUserId: null })
 })
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => {
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+})
 
 const signedIn = (id: string): Routes => ({ "GET /api/auth/session": () => json({ user: { id }, expires: "x" }) })
 
@@ -126,6 +129,50 @@ describe("hydrateFromAccount", () => {
     expect(useAthleteStore.getState().profile?.location).toBe("Local")
     expect(usePlanStore.getState().plan?.id).toBe("local")
     expect(calls()).toEqual(["GET /api/auth/session"])
+  })
+
+  it.each([
+    ["5xx", () => json({}, 500)],
+    ["network error", () => Promise.reject(new TypeError("offline"))],
+  ] as const)("hides owned local data and pushes nothing when the session lookup fails: %s", async (_, failing) => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined)
+    useAthleteStore.setState({ profile: profile("Alice"), onboardingComplete: true, ownerUserId: "alice", sessionUserId: "alice" })
+    usePlanStore.setState({ plan: planWith("alice-plan"), ownerUserId: "alice" })
+    route({ "GET /api/auth/session": failing })
+    await hydrateFromAccount({ native: false })
+    expect(useAthleteStore.getState()).toMatchObject({ syncStatus: "error", sessionUserId: null, profile: null, ownerUserId: null })
+    expect(usePlanStore.getState().plan).toBeNull()
+    expect(mocks.reset).toHaveBeenCalledOnce()
+    expect(calls()).toEqual(["GET /api/auth/session"])
+    expect(await saveProfileAndPlan(profile("X"), planWith("x"), {})).toBe("failed")
+    expect(calls()).toEqual(["GET /api/auth/session"])
+  })
+
+  it("on a failed session lookup keeps unowned local data but still errors", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined)
+    useAthleteStore.setState({ profile: profile("Draft") })
+    usePlanStore.setState({ plan: planWith("draft") })
+    route({ "GET /api/auth/session": () => json({}, 502) })
+    await hydrateFromAccount({ native: false })
+    expect(useAthleteStore.getState().syncStatus).toBe("error")
+    expect(usePlanStore.getState().plan?.id).toBe("draft")
+  })
+
+  it("settles to error when hydrate throws unexpectedly", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined)
+    route({
+      ...signedIn("bob"),
+      "GET /api/me/profile": () => json({ profile: profile("Bob"), onboardingCompletedAt: 1 }),
+      "GET /api/me/plan": () => json({ plan: planWith("p") }),
+    })
+    const original = usePlanStore.getState().setPlan
+    usePlanStore.setState({ setPlan: () => { throw new RangeError("boom") } })
+    try {
+      await hydrateFromAccount({ native: false })
+    } finally {
+      usePlanStore.setState({ setPlan: original })
+    }
+    expect(useAthleteStore.getState().syncStatus).toBe("error")
   })
 
   it("issues zero requests on native", async () => {
@@ -234,6 +281,31 @@ describe("saveProfileAndPlan", () => {
     expect(usePlanStore.getState().plan?.id).toBe("plan-123")
   })
 
+  it("returns failed, not quota, when the quota follow-up read fails", async () => {
+    route({
+      "PUT /api/me/profile": () => json({ profile: profile("Mine"), onboardingCompletedAt: 1 }),
+      "POST /api/me/plan": () => json({ error: "Quota exceeded" }, 409),
+      "GET /api/me/plan": () => json({}, 500),
+    })
+    expect(await saveProfileAndPlan(profile("Mine"), local, {})).toBe("failed")
+    expect(usePlanStore.getState().plan?.id).toBe("plan-123")
+  })
+
+  it("does not patch the server id onto a newer plan when saves race", async () => {
+    const newer = planWith("plan-456")
+    let release: (r: Response) => void = () => undefined
+    route({
+      "PUT /api/me/profile": () => json({ profile: profile("Mine"), onboardingCompletedAt: 1 }),
+      "POST /api/me/plan": () => new Promise<Response>((resolve) => { release = resolve }),
+    })
+    const first = saveProfileAndPlan(profile("Mine"), local, {})
+    await vi.waitFor(() => expect(calls()).toContain("POST /api/me/plan"))
+    usePlanStore.setState({ plan: newer })
+    release(json({ plan: { ...local, id: "server-first" } }, 201))
+    expect(await first).toBe("saved")
+    expect(usePlanStore.getState().plan?.id).toBe("plan-456")
+  })
+
   it.each([500, 401, 429])("returns failed on a %i from the profile PUT and posts nothing", async (status) => {
     route({ "PUT /api/me/profile": () => json({ error: "x" }, status) })
     expect(await saveProfileAndPlan(profile("Mine"), local, {})).toBe("failed")
@@ -318,11 +390,14 @@ describe("redirect rules", () => {
     for (const hydrated of [true, false]) {
       for (const status of ["idle", "loading", "ready", "signedOut", "error"] as const) {
         for (const p of [plan, null]) {
-          const expected = hydrated && ["ready", "signedOut", "error"].includes(status) && p === null
+          const expected = hydrated && ["ready", "signedOut"].includes(status) && p === null
           expect(shouldRedirectToOnboarding(hydrated, status, p)).toBe(expected)
         }
       }
     }
+  })
+  it("never redirects on error, so a failed lookup shows retry instead of onboarding", () => {
+    expect(shouldRedirectToOnboarding(true, "error", null)).toBe(false)
   })
   it("never redirects while idle even though hydration finished", () => {
     expect(shouldRedirectToOnboarding(true, "idle", null)).toBe(false)

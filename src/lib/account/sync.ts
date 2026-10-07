@@ -6,7 +6,7 @@ import { useCoachAIStore } from "@/stores/coach-ai-store"
 import {
   getAccountPlan,
   getAccountProfile,
-  getSessionUserId,
+  getSessionUser,
   patchAccountSession,
   postAccountPlan,
   putAccountProfile,
@@ -20,8 +20,9 @@ let generation = 0
 export const isSyncSettled = (status: SyncStatus): boolean =>
   status === "ready" || status === "signedOut" || status === "error"
 
+// An error is not an answer: with no plan we show a retry state rather than sending the user to onboarding.
 export const shouldRedirectToOnboarding = (hydrated: boolean, status: SyncStatus, plan: TrainingPlan | null): boolean =>
-  hydrated && isSyncSettled(status) && plan === null
+  hydrated && (status === "ready" || status === "signedOut") && plan === null
 
 function setOwners(userId: string) {
   useAthleteStore.getState().setOwner(userId)
@@ -30,6 +31,18 @@ function setOwners(userId: string) {
 
 export async function hydrateFromAccount({ native }: { native: boolean }): Promise<void> {
   const run = ++generation
+  try {
+    await hydrate(run, native)
+  } catch (error) {
+    // An unexpected throw must never leave the app on the loading skeleton.
+    console.error("Account hydrate failed", error instanceof Error ? error.name : "unknown")
+    if (run === generation && useAthleteStore.getState().syncStatus === "loading") {
+      useAthleteStore.getState().setSyncStatus("error")
+    }
+  }
+}
+
+async function hydrate(run: number, native: boolean): Promise<void> {
   useAthleteStore.getState().setSyncStatus("loading")
   useAthleteStore.persist.rehydrate()
   usePlanStore.persist.rehydrate()
@@ -38,13 +51,26 @@ export async function hydrateFromAccount({ native }: { native: boolean }): Promi
     return
   }
 
-  const userId = await getSessionUserId()
+  const session = await getSessionUser()
   if (run !== generation) return
-  useAthleteStore.getState().setSessionUserId(userId)
-  if (userId === null) {
+  if (session.kind === "failed") {
+    // Who is signed in is unknown, so owned local data may belong to someone else: never render or push it.
+    useAthleteStore.getState().setSessionUserId(null)
+    if (useAthleteStore.getState().ownerUserId !== null || usePlanStore.getState().ownerUserId !== null) {
+      useAthleteStore.getState().clearProfile()
+      usePlanStore.getState().clearPlan()
+      useCoachAIStore.getState().reset()
+    }
+    useAthleteStore.getState().setSyncStatus("error")
+    return
+  }
+  if (session.kind === "signedOut") {
+    useAthleteStore.getState().setSessionUserId(null)
     useAthleteStore.getState().setSyncStatus("signedOut")
     return
   }
+  const userId = session.id
+  useAthleteStore.getState().setSessionUserId(userId)
 
   if (useAthleteStore.getState().ownerUserId !== userId || usePlanStore.getState().ownerUserId !== userId) {
     // Local data belongs to someone else or to nobody; drop it before any server data is applied.
@@ -90,7 +116,8 @@ export async function saveProfileAndPlan(
   const created = await postAccountPlan(plan)
   if (created.kind === "ok") {
     const current = usePlanStore.getState().plan
-    if (current) usePlanStore.getState().setPlan({ ...current, id: created.value.plan.id })
+    // A newer save may have replaced the posted plan while this request was in flight.
+    if (current && current.id === plan.id) usePlanStore.getState().setPlan({ ...current, id: created.value.plan.id })
     setOwners(userId)
     return "saved"
   }
@@ -98,7 +125,8 @@ export async function saveProfileAndPlan(
 
   // The old active plan is untouched on the server; show that one instead of the unsaved local plan.
   const active = await getAccountPlan()
-  if (active.kind === "ok" && active.value.plan !== null) {
+  if (active.kind !== "ok") return "failed"
+  if (active.value.plan !== null) {
     usePlanStore.getState().setPlan(active.value.plan)
     setOwners(userId)
   }

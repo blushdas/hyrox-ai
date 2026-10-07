@@ -4,7 +4,7 @@ import type { AthleteProfile, TrainingPlan } from "@/lib/types"
 import {
   getAccountPlan,
   getAccountProfile,
-  getSessionUserId,
+  getSessionUser,
   isAccountProfile,
   isTrainingPlan,
   patchAccountSession,
@@ -25,23 +25,30 @@ beforeEach(() => {
 })
 afterEach(() => vi.unstubAllGlobals())
 
-describe("getSessionUserId", () => {
+describe("getSessionUser", () => {
   it("returns the user id and bypasses the cache", async () => {
     fetcher.mockResolvedValue(json({ user: { id: "u1", email: "a@b.c" }, expires: "x" }))
-    expect(await getSessionUserId()).toBe("u1")
+    expect(await getSessionUser()).toEqual({ kind: "user", id: "u1" })
     expect(fetcher).toHaveBeenCalledExactlyOnceWith("/api/auth/session", { cache: "no-store" })
   })
-  it.each([null, {}, { user: {} }, { user: { id: "" } }, { user: { id: 5 } }, { user: null }, []])("returns null for body %j", async (body) => {
+  it.each([null, {}, { user: null }])("reads a clean 200 with body %j as signed out", async (body) => {
     fetcher.mockResolvedValue(json(body))
-    expect(await getSessionUserId()).toBeNull()
+    expect(await getSessionUser()).toEqual({ kind: "signedOut" })
   })
-  it("returns null for non-JSON, non-2xx and thrown fetch", async () => {
+  it.each([[{ user: {} }], [{ user: { id: "" } }], [{ user: { id: 5 } }], [[]], [{ user: "x" }]])("reads malformed body %j as failed", async (body) => {
+    fetcher.mockResolvedValue(json(body))
+    expect(await getSessionUser()).toEqual({ kind: "failed" })
+  })
+  it("reads non-JSON, non-2xx and thrown fetch as failed, never signed out", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined)
     fetcher.mockResolvedValueOnce(new Response("<html>", { status: 200 }))
-    expect(await getSessionUserId()).toBeNull()
+    expect(await getSessionUser()).toEqual({ kind: "failed" })
     fetcher.mockResolvedValueOnce(json({ user: { id: "u1" } }, 500))
-    expect(await getSessionUserId()).toBeNull()
+    expect(await getSessionUser()).toEqual({ kind: "failed" })
+    fetcher.mockResolvedValueOnce(json(null, 503))
+    expect(await getSessionUser()).toEqual({ kind: "failed" })
     fetcher.mockRejectedValueOnce(new TypeError("offline"))
-    expect(await getSessionUserId()).toBeNull()
+    expect(await getSessionUser()).toEqual({ kind: "failed" })
   })
 })
 

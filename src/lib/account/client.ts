@@ -69,17 +69,21 @@ async function request<T>(
   }
 }
 
-export async function getSessionUserId(): Promise<string | null> {
+export type SessionLookup = { kind: "user"; id: string } | { kind: "signedOut" } | { kind: "failed" }
+
+// Only a clean 200 with no user means signed out; any transport, status or shape problem is "failed".
+export async function getSessionUser(): Promise<SessionLookup> {
   try {
     const response = await fetch("/api/auth/session", { cache: "no-store" })
-    if (!response.ok) return null
+    if (!response.ok) return { kind: "failed" }
     const data: unknown = await response.json()
-    if (!record(data) || !record(data.user)) return null
+    if (data === null || (record(data) && (data.user === undefined || data.user === null))) return { kind: "signedOut" }
+    if (!record(data) || !record(data.user)) return { kind: "failed" }
     const id = data.user.id
-    return typeof id === "string" && id !== "" ? id : null
-  } catch {
-    // Signed-out and unreachable look the same to the caller: no known user.
-    return null
+    return typeof id === "string" && id !== "" ? { kind: "user", id } : { kind: "failed" }
+  } catch (error) {
+    console.error("Session lookup failed", error instanceof Error ? error.name : "unknown")
+    return { kind: "failed" }
   }
 }
 
