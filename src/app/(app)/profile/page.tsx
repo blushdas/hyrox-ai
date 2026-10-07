@@ -74,11 +74,9 @@ export default function ProfilePage() {
     void saveProfileAndPlan(updated, plan, {}).then((result) => {
       if (result === "failed") toast.error(SAVE_FAILED_MESSAGE)
       else if (result === "quota") toast(QUOTA_MESSAGE)
+      else toast.success("Plan regenerated!", { description: "Your new plan is ready." })
     })
     setEditingRaceDate(false)
-    toast.success("Plan regenerated!", {
-      description: "Your new plan is ready.",
-    })
   }
 
   function handleResetOnboarding() {

@@ -16,8 +16,9 @@ import { StepFitness } from "@/components/app/onboarding/step-fitness"
 import { StepBiometrics } from "@/components/app/onboarding/step-biometrics"
 import { StepAvailability } from "@/components/app/onboarding/step-availability"
 import { StepAssessment } from "@/components/app/onboarding/step-assessment"
-import { checkProfile, checkTime, PROFILE_MESSAGES, QUOTA_MESSAGE, SAVE_FAILED_MESSAGE } from "@/lib/account/profile-input"
-import { saveProfileAndPlan } from "@/lib/account/sync"
+import { checkProfile, QUOTA_MESSAGE, SAVE_FAILED_MESSAGE } from "@/lib/account/profile-input"
+import { Capacitor } from "@capacitor/core"
+import { hydrateFromAccount, saveProfileAndPlan } from "@/lib/account/sync"
 import type { AthleteProfile } from "@/lib/types"
 
 const TOTAL_STEPS = 5
@@ -249,9 +250,22 @@ export default function OnboardingPage() {
               return null
             })()}
 
+          {step === TOTAL_STEPS && syncStatus === "error" && (
+            <div role="alert" className="mb-3 p-3 bg-surface-1 border-l border-danger">
+              <p className="text-[13px] text-danger">Couldn&apos;t reach your account.</p>
+              <button
+                type="button"
+                className="mt-1 text-[13px] underline"
+                onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           <Button
             onClick={handleNext}
-            disabled={!validateStep() || loading || (step === TOTAL_STEPS && (syncStatus === "loading" || syncStatus === "idle"))}
+            disabled={!validateStep() || loading || (step === TOTAL_STEPS && (syncStatus === "loading" || syncStatus === "idle" || syncStatus === "error"))}
             className="w-full h-12 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-40"
           >
             {loading
