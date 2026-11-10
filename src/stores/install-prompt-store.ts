@@ -64,6 +64,9 @@ export const useInstallPromptStore = create<InstallPromptState>((set, get) => ({
     if (!event) return
     try {
       await event.prompt()
+      const choice = await event.userChoice
+      // Only an accepted install is final; a cancelled prompt may be offered again within the cap.
+      if (choice.outcome === "accepted") get().dismiss()
     } catch (error) {
       console.error("Install prompt failed", error)
     } finally {
