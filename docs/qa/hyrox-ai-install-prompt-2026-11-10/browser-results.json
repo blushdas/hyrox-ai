@@ -1,0 +1,55 @@
+{
+  "manifestErrors": [],
+  "installabilityErrors": [],
+  "icons": {
+    "icon-192.png": [
+      200,
+      "image/png",
+      192,
+      192
+    ],
+    "icon-512.png": [
+      200,
+      "image/png",
+      512,
+      512
+    ],
+    "icon-maskable-512.png": [
+      200,
+      "image/png",
+      512,
+      512
+    ],
+    "apple-touch-icon.png": [
+      200,
+      "image/png",
+      180,
+      180
+    ]
+  },
+  "isolatedComponent": {
+    "promptCalls": 1,
+    "bannerAfterPrompt": 0,
+    "iosInstallButtons": 0,
+    "dismissalStored": "true",
+    "bannerAfterReload": 0,
+    "bannerAfterAppinstalled": 0,
+    "viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        1280,
+        900
+      ]
+    ]
+  },
+  "dashboardAttempt": "page.goto('http://localhost:3000/dashboard')",
+  "dashboardResult": {
+    "url": "http://localhost:3000/sign-in?callbackUrl=%2Fdashboard",
+    "body": "FINISHER\nHYROX TRAINING\nSign in\nYour HYROX plan, session by session.\nContinue with Google"
+  },
+  "console": "React development eval() blocked by existing CSP; no manifest/image CSP errors",
+  "network": "Inspected requests; manifest and icons 200, no failed requests observed"
+}
