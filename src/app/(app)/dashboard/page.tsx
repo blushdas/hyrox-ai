@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
 import {
   PageHeader,
   MonoLabel,
@@ -29,14 +30,7 @@ export default function DashboardPage() {
   const { profile } = useAthleteStore()
   const { plan, currentWeek, setCurrentWeek } = usePlanStore()
 
-  if (!plan || !profile) return <>
-    <PageHeader title="Train" />
-    <section className="my-6 space-y-4 rounded-lg border border-border bg-surface-1 p-6">
-      <h2 className="text-xl font-semibold">Build my plan</h2>
-      <p className="text-sm text-muted-foreground">Ready when you are. Add your race details to create your training plan.</p>
-      <Link href="/onboarding?redo=1" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:ring-2 focus-visible:ring-primary">Build my plan</Link>
-    </section>
-  </>
+  if (!plan || !profile) return <BuildPlanEmptyState title="Train" />
   const now = new Date()
   const today = getTodayIsoWeekday(now)
   const raceDays = getRaceCountdownDays(profile.raceDate, now)

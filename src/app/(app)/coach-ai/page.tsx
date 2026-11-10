@@ -1,4 +1,6 @@
 "use client"
+
+import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
 import { Suspense, useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { usePlanStore } from "@/stores/plan-store"
@@ -21,7 +23,7 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
     session ? `Why is ${session.title} in week ${session.week}?` : "",
   )
   const chat = useCoachAIStore()
-  if (!plan) return <Skeleton />
+  if (!plan) return <BuildPlanEmptyState title="Coach AI" />
   const context = {
     plan,
     currentWeek,

@@ -1,8 +1,10 @@
 "use client"
 
+import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
+
 import { usePlanStore } from "@/stores/plan-store"
 import { useRouter } from "next/navigation"
-import { PageHeader, Section, Skeleton } from "@/components/shell/primitives"
+import { PageHeader, Section } from "@/components/shell/primitives"
 import { TrainSegments, PlanWeekRow } from "@/components/train/train-components"
 import { getPlanOverview } from "@/lib/train/selectors"
 import type { Phase } from "@/lib/types"
@@ -16,7 +18,7 @@ const descriptions: Record<Phase, string> = {
 export default function PlanPage() {
   const { plan, currentWeek, setCurrentWeek } = usePlanStore()
   const router = useRouter()
-  if (!plan) return <Skeleton />
+  if (!plan) return <BuildPlanEmptyState title="Plan" />
   const rows = getPlanOverview(plan)
   const phases = [...new Set(rows.map((r) => r.phase))]
   const maxLoad = Math.max(0, ...rows.map((r) => r.load))

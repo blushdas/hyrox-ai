@@ -1,5 +1,7 @@
 "use client"
 
+import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
+
 import { use } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -18,7 +20,6 @@ import {
   EmptyState,
   MonoLabel,
   IntensityTicks,
-  Skeleton,
 } from "@/components/shell/primitives"
 import { StepList, DAYS } from "@/components/train/train-components"
 
@@ -35,7 +36,7 @@ export default function SessionDetailPage({
     .flatMap((w) => w.sessions)
     .find((s) => s.id === id)
 
-  if (!plan) return <Skeleton />
+  if (!plan) return <BuildPlanEmptyState title="Session" />
   if (!session)
     return (
       <EmptyState

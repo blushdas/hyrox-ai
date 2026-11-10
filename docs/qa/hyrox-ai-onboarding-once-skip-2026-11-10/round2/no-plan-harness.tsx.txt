@@ -1,0 +1,27 @@
+"use client"
+import { Suspense, useState } from "react"
+import PlanPage from "@/app/(app)/plan/page"
+import CoachPage from "@/app/(app)/coach-ai/page"
+import SessionDetailPage from "@/app/(app)/session/[id]/session-detail"
+import DashboardPage from "@/app/(app)/dashboard/page"
+import { useAthleteStore } from "@/stores/athlete-store"
+import { usePlanStore } from "@/stores/plan-store"
+const params = Promise.resolve({ id: "missing-session" })
+export default function NoPlanHarness() {
+ const [screen, setScreen] = useState("Plan")
+ function fixture(loading: boolean) {
+  usePlanStore.getState().clearPlan()
+  useAthleteStore.setState({ profile: null, onboardingComplete: true, syncStatus: loading ? "loading" : "ready" })
+ }
+ return <main className="mx-auto max-w-3xl p-4">
+  <p className="mb-3 text-sm text-muted-foreground">Unauthenticated component fixture — no session fabricated</p>
+  <div className="flex flex-wrap gap-2">
+   <button className="min-h-11 border px-3" onClick={() => fixture(false)}>Ready fixture</button>
+   <button className="min-h-11 border px-3" onClick={() => fixture(true)}>Loading fixture</button>
+   {["Plan", "Coach AI", "Session", "Train"].map(title => <button className="min-h-11 border px-3" key={title} onClick={() => setScreen(title)}>Show {title}</button>)}
+  </div>
+  <Suspense fallback={<p>Loading session fixture</p>}>
+   {screen === "Plan" ? <PlanPage /> : screen === "Coach AI" ? <CoachPage /> : screen === "Session" ? <SessionDetailPage params={params} /> : <DashboardPage />}
+  </Suspense>
+ </main>
+}
