@@ -1,0 +1,41 @@
+> node --experimental-strip-types scripts/build.mts
+▲ Next.js 16.3.6 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 75ms
+  Creating an optimized production build ...
+✓ Compiled successfully in 1262ms
+  Running TypeScript ...
+  Finished TypeScript in 2.2s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/19) ...
+  Generating static pages using 9 workers (4/19)
+  Generating static pages using 9 workers (9/19)
+  Generating static pages using 9 workers (14/19)
+✓ Generating static pages using 9 workers (19/19) in 275ms
+  Finalizing page optimization ...
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/coach-ai
+├ ƒ /api/me/account
+├ ƒ /api/me/plan
+├ ƒ /api/me/plan/sessions/[id]
+├ ƒ /api/me/profile
+├ ƒ /api/me/threads
+├ ƒ /api/me/threads/[id]/messages
+├ ƒ /api/native-auth/exchange
+├ ƒ /api/native-auth/session
+├ ƒ /auth/native-complete
+├ ○ /coach-ai
+├ ○ /dashboard
+├ ○ /manifest.webmanifest
+├ ○ /onboarding
+├ ○ /plan
+├ ○ /profile
+├ ● /session/[id]
+└ ○ /sign-in
+ƒ Proxy (Middleware)
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

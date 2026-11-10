@@ -49,7 +49,7 @@ test.each([false, true])("open panel markup and motion props (reduced=%s)", asyn
   const motions: Record<string, unknown>[] = []
   vi.doMock("framer-motion", async () => {
     const React = await import("react")
-    const element = (tag: string) => (props: Record<string, unknown>) => {
+    const element = (tag: string) => function MockMotionElement(props: Record<string, unknown>) {
       motions.push(props)
       const { children, initial, animate, exit, transition, ...dom } = props
       void initial; void animate; void exit; void transition

@@ -5,8 +5,15 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const authOrigin = process.env.NEXT_PUBLIC_AUTH_ORIGIN;
-if (!authOrigin || !URL.canParse(authOrigin) || new URL(authOrigin).protocol !== "https:") {
+// A generic Capacitor export can be inspected without packaging a runnable app.
+// Keep the hosted-auth requirement for the actual build:ios packaging command.
+const exportOnly = process.argv.includes("--export-only");
+if ((authOrigin || !exportOnly) && (!authOrigin || !URL.canParse(authOrigin) || new URL(authOrigin).protocol !== "https:")) {
   throw new Error("NEXT_PUBLIC_AUTH_ORIGIN must be set to a hosted HTTPS origin for build:ios");
+}
+
+if (exportOnly && !authOrigin) {
+  process.stderr.write("Capacitor export only: NEXT_PUBLIC_AUTH_ORIGIN is unset. Use build:ios with a hosted HTTPS origin before packaging.\n");
 }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");

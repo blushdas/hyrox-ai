@@ -168,6 +168,7 @@ function parseWorkoutLine(line: string): ExerciseSet | null {
 
 // 5-day/week, 12-week plan from real HYROX Beginner data
 export function generateBeginnerPlan(_raceDate: string): WeekPlan[] {
+  void _raceDate // Fixed sample weeks do not depend on the requested race date.
   const weeks: WeekPlan[] = []
 
   for (let w = 1; w <= 12; w++) {
@@ -198,6 +199,7 @@ export function generateBeginnerPlan(_raceDate: string): WeekPlan[] {
 
 // 5-day/week, 12-week plan from real HYROX Open data
 export function generateOpenPlan(_raceDate: string): WeekPlan[] {
+  void _raceDate // Fixed sample weeks do not depend on the requested race date.
   const weeks: WeekPlan[] = []
 
   for (let w = 1; w <= 12; w++) {
@@ -227,6 +229,7 @@ export function generateOpenPlan(_raceDate: string): WeekPlan[] {
 
 // 5-day/week, 12-week plan from real HYROX Pro data
 export function generateProPlan(_raceDate: string): WeekPlan[] {
+  void _raceDate // Fixed sample weeks do not depend on the requested race date.
   const weeks: WeekPlan[] = []
 
   for (let w = 1; w <= 12; w++) {
