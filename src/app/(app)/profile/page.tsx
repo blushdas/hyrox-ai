@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { Capacitor } from "@capacitor/core"
@@ -8,7 +8,7 @@ import { clearNativeToken } from "@/lib/auth/native-session-client"
 import { toast } from "sonner"
 import { Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { DatePicker, weeksUntilRace } from "@/components/ui/date-picker"
 import { PageHeader, Section, MonoLabel, Avatar } from "@/components/shell/primitives"
 import { getRaceCountdownDays } from "@/lib/train/selectors"
 import { useAthleteStore } from "@/stores/athlete-store"
@@ -46,18 +46,26 @@ export default function ProfilePage() {
   const [editingRaceDate, setEditingRaceDate] = useState(false)
   const [newRaceDate, setNewRaceDate] = useState(profile?.raceDate ?? "")
 
-  useEffect(() => {
-    if (!profile) router.replace("/onboarding")
-  }, [profile, router])
-
-  if (!profile) return null
+  if (!profile) return <>
+    <PageHeader title="Profile" />
+    <p className="py-6 text-muted-foreground">Build your plan to add race and athlete details.</p>
+    <Button onClick={() => router.push("/onboarding?redo=1")}>Build my plan</Button>
+    <Button variant="ghost" onClick={async () => {
+      useAthleteStore.getState().clearProfile()
+      usePlanStore.getState().clearPlan()
+      useCoachAIStore.getState().reset()
+      if (Capacitor.isNativePlatform()) { await clearNativeToken(); window.location.href = "/sign-in" }
+      else await signOut({ callbackUrl: "/sign-in" })
+    }}>Sign out</Button>
+    {!Capacitor.isNativePlatform() && <>
+      <Button variant="destructive" onClick={() => setDeleteOpen(true)}>Delete account</Button>
+      <DeleteAccountDialog open={deleteOpen} busy={deleting} onOpenChange={setDeleteOpen} onConfirm={handleDeleteAccount} />
+    </>}
+  </>
 
   function handleRaceDateSave() {
     if (!newRaceDate || !profile) return
-    const weeks = Math.floor(
-      (new Date(newRaceDate).getTime() - Date.now()) /
-        (7 * 24 * 60 * 60 * 1000),
-    )
+    const weeks = weeksUntilRace(newRaceDate)
     if (weeks < 4) {
       toast.error("Race must be at least 4 weeks away")
       return
@@ -80,8 +88,7 @@ export default function ProfilePage() {
   }
 
   function handleResetOnboarding() {
-    clearPlan()
-    router.push("/onboarding")
+    router.push("/onboarding?redo=1")
   }
 
   const stats = [
@@ -168,13 +175,7 @@ export default function ProfilePage() {
               </div>
               {stat.label === "Race Date" && editingRaceDate && (
                 <div className="space-y-3 border-b py-4">
-                  <Input
-                    aria-label="Race date"
-                    type="date"
-                    value={newRaceDate}
-                    onChange={(e) => setNewRaceDate(e.target.value)}
-                    min={new Date().toISOString().split("T")[0]}
-                  />
+                  <DatePicker label="Race date" value={newRaceDate} onChange={setNewRaceDate} />
                   <div className="flex flex-wrap gap-2">
                     <Button onClick={handleRaceDateSave}>
                       Save and regenerate plan

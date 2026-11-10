@@ -25,7 +25,7 @@ it("migration preserves all valid rows, strips six secrets, removes orphans, and
    }
    const appTables=["athlete_profiles","training_plans","plan_sessions","coach_threads","coach_messages"];
    for(const table of appTables)for(const row of fixture.sqlite.prepare(`SELECT * FROM ${table}`).all() as Record<string,string|number|null>[]){
-    const columns=Object.keys(row);db.prepare(`INSERT INTO ${table} (${columns.join(",")}) VALUES (${columns.map(()=>"?").join(",")})`).run(...Object.values(row));
+    const columns=Object.keys(row).filter(column=>column!=="onboarding_skipped");db.prepare(`INSERT INTO ${table} (${columns.join(",")}) VALUES (${columns.map(()=>"?").join(",")})`).run(...columns.map(column=>row[column]));
    }
    const before=Object.fromEntries(appTables.map(table=>[table,db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()]));
    const accounts=db.prepare("SELECT * FROM accounts WHERE userId!='orphan' ORDER BY id").all();

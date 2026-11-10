@@ -1,14 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   PageHeader,
   MonoLabel,
   EmptyState,
   Section,
-  Skeleton,
 } from "@/components/shell/primitives"
 import {
   TrainSegments,
@@ -29,17 +26,17 @@ import { usePlanStore } from "@/stores/plan-store"
 import { InstallBanner } from "@/components/shared/install-banner"
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const { profile, onboardingComplete } = useAthleteStore()
+  const { profile } = useAthleteStore()
   const { plan, currentWeek, setCurrentWeek } = usePlanStore()
 
-  useEffect(() => {
-    if (!onboardingComplete || !profile) {
-      router.replace("/onboarding")
-    }
-  }, [onboardingComplete, profile, router])
-
-  if (!plan || !profile) return <Skeleton />
+  if (!plan || !profile) return <>
+    <PageHeader title="Train" />
+    <section className="my-6 space-y-4 rounded-lg border border-border bg-surface-1 p-6">
+      <h2 className="text-xl font-semibold">Build my plan</h2>
+      <p className="text-sm text-muted-foreground">Ready when you are. Add your race details to create your training plan.</p>
+      <Link href="/onboarding?redo=1" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:ring-2 focus-visible:ring-primary">Build my plan</Link>
+    </section>
+  </>
   const now = new Date()
   const today = getTodayIsoWeekday(now)
   const raceDays = getRaceCountdownDays(profile.raceDate, now)

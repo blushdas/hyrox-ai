@@ -2,7 +2,7 @@ import type { AthleteProfile, SessionStatus, TrainingPlan } from "@/lib/types"
 
 export type AccountResult<T> =
   | { kind: "ok"; value: T }
-  | { kind: "unauthorized" | "notFound" | "quota" | "invalid" | "failed" }
+  | { kind: "unauthorized" | "notFound" | "quota" | "invalid" | "failed" | "precondition" }
 export type AccountProfile = { profile: AthleteProfile | null; onboardingCompletedAt: number | null }
 
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value)
@@ -46,17 +46,19 @@ async function request<T>(
   parse: (data: Record<string, unknown>) => T | undefined,
   method = "GET",
   body?: unknown,
+  onlyIfEmpty = false,
 ): Promise<AccountResult<T>> {
   try {
     const init: RequestInit = { method }
     if (method === "GET") init.cache = "no-store"
     else {
-      init.headers = { "Content-Type": "application/json" }
+      init.headers = { "Content-Type": "application/json", ...(onlyIfEmpty ? { "If-None-Match": "*" } : {}) }
       init.body = JSON.stringify(body)
     }
     const response = await fetch(url, init)
     if (response.status === 401) return { kind: "unauthorized" }
     if (response.status === 404) return { kind: "notFound" }
+    if (response.status === 412) return { kind: "precondition" }
     if (response.status === 409) return { kind: "quota" }
     if (response.status === 400) return { kind: "invalid" }
     if (!response.ok) return { kind: "failed" }
@@ -89,10 +91,11 @@ export async function getSessionUser(): Promise<SessionLookup> {
 
 const profileOf = (data: Record<string, unknown>) => (isAccountProfile(data) ? data : undefined)
 export const getAccountProfile = () => request("/api/me/profile", profileOf)
-export function putAccountProfile(profile: AthleteProfile, onboardingComplete?: boolean) {
+export function putAccountProfile(profile: AthleteProfile, onboardingComplete?: boolean, onlyIfEmpty = false) {
   const body = onboardingComplete === undefined ? { profile } : { profile, onboardingComplete }
-  return request("/api/me/profile", profileOf, "PUT", body)
+  return request("/api/me/profile", profileOf, "PUT", body, onlyIfEmpty)
 }
+export const putSkipOnboarding = () => request("/api/me/profile", profileOf, "PUT", { skipOnboarding: true })
 const planOf = (data: Record<string, unknown>) => (isNullablePlan(data.plan) ? { plan: data.plan } : undefined)
 export const getAccountPlan = () => request("/api/me/plan", planOf)
 export function postAccountPlan(plan: TrainingPlan) {

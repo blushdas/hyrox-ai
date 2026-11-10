@@ -1,5 +1,6 @@
 "use client"
 
+import { DatePicker } from "@/components/ui/date-picker"
 import { Input } from "@/components/ui/input"
 import type { AthleteProfile, RaceCategory } from "@/lib/types"
 
@@ -32,14 +33,7 @@ export function StepRace({ data, onChange, errors }: Props) {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Race Date *
           </label>
-          <Input
-            aria-label="Race Date"
-            type="date"
-            value={data.raceDate ?? ""}
-            onChange={(e) => onChange({ raceDate: e.target.value })}
-            className="bg-surface-2 border-border text-foreground"
-            min={new Date().toISOString().split("T")[0]}
-          />
+          <DatePicker value={data.raceDate ?? ""} onChange={raceDate => onChange({ raceDate })} />
         </div>
 
         <div>

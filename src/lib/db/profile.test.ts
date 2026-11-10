@@ -2,7 +2,7 @@ import { beforeEach, afterEach, it, expect, vi } from "vitest";
 vi.mock("@/lib/api/db-client", () => ({ getDb: vi.fn() }));
 import { getDb } from "@/lib/api/db-client";
 import { createTestDb, profile, plan } from "@/lib/api/test-d1";
-import { getProfile, upsertProfile } from "./profile";
+import { getProfile, upsertProfile, skipOnboarding } from "./profile";
 import { createPlan } from "./plan";
 import { createThread, appendMessage } from "./coach";
 let test: ReturnType<typeof createTestDb>;
@@ -28,4 +28,19 @@ it("cascades a user deletion through all five tables", async () => {
  const thread = await createThread("alice", { title: "Test" }); await appendMessage("alice", thread.id, { role: "user", content: "Hi", status: "complete", citations: [] });
  test.sqlite.prepare("DELETE FROM users WHERE id = ?").run("alice");
  for (const table of ["athlete_profiles","training_plans","plan_sessions","coach_threads","coach_messages"]) expect(test.sqlite.prepare("SELECT COUNT(*) AS n FROM " + table).get()).toEqual({ n: 0 });
+});
+
+it("skip is idempotent, scoped, preserves a real profile, and supports later onboarding", async () => {
+ vi.spyOn(Date, "now").mockReturnValue(100);
+ expect(await skipOnboarding("alice")).toEqual({ profile: null, onboardingCompletedAt: 100 });
+ vi.mocked(Date.now).mockReturnValue(200);
+ expect(await skipOnboarding("alice")).toEqual({ profile: null, onboardingCompletedAt: 100 });
+ expect(await getProfile("bob")).toEqual({ profile: null, onboardingCompletedAt: null });
+ await upsertProfile("alice", profile, { onboardingComplete: true });
+ expect(await skipOnboarding("alice")).toEqual({ profile, onboardingCompletedAt: 100 });
+});
+it("conditional backfill cannot overwrite a concurrently created real profile", async () => {
+ await upsertProfile("alice", profile, { onboardingComplete: true });
+ expect(await upsertProfile("alice", { ...profile, location: "Stale local" }, { onboardingComplete: true, onlyIfEmpty: true })).toBeNull();
+ expect((await getProfile("alice")).profile).toEqual(profile);
 });

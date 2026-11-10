@@ -19,14 +19,15 @@ const subscribeHydration = (notify: () => void) => {
 export function PlanGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const plan = usePlanStore(s => s.plan)
+  const onboardingComplete = useAthleteStore(s => s.onboardingComplete)
   const syncStatus = useAthleteStore(s => s.syncStatus)
   const hydrated = useSyncExternalStore(subscribeHydration, hasHydrated, () => false)
 
   useEffect(() => {
-    if (shouldRedirectToOnboarding(hydrated, syncStatus, plan)) {
+    if (shouldRedirectToOnboarding(hydrated, syncStatus, plan, onboardingComplete)) {
       router.replace("/onboarding")
     }
-  }, [hydrated, syncStatus, plan, router])
+  }, [hydrated, syncStatus, plan, onboardingComplete, router])
 
   if (!hydrated || !isSyncSettled(syncStatus)) return <Skeleton />
   if (syncStatus === "error" && !plan) {
@@ -37,7 +38,7 @@ export function PlanGuard({ children }: { children: React.ReactNode }) {
       </div>
     )
   }
-  if (!plan) return <Skeleton />
+  if (!plan && !onboardingComplete) return <Skeleton />
 
   return <>{children}</>
 }

@@ -10,19 +10,25 @@ import {
   patchAccountSession,
   postAccountPlan,
   putAccountProfile,
+  putSkipOnboarding,
 } from "./client"
 
 export type SaveResult = "saved" | "quota" | "failed" | "skipped"
 
 // Stale hydrate runs (React strict mode runs effects twice) must never apply their results.
 let generation = 0
+const backfills = new Map<string, Promise<{
+  profile: Awaited<ReturnType<typeof getAccountProfile>>;
+  plan: Awaited<ReturnType<typeof getAccountPlan>>;
+}>>()
+let skipPending: Promise<SaveResult> | null = null
 
 export const isSyncSettled = (status: SyncStatus): boolean =>
   status === "ready" || status === "signedOut" || status === "error"
 
 // An error is not an answer: with no plan we show a retry state rather than sending the user to onboarding.
-export const shouldRedirectToOnboarding = (hydrated: boolean, status: SyncStatus, plan: TrainingPlan | null): boolean =>
-  hydrated && (status === "ready" || status === "signedOut") && plan === null
+export const shouldRedirectToOnboarding = (hydrated: boolean, status: SyncStatus, plan: TrainingPlan | null, onboardingComplete = false): boolean =>
+  hydrated && (status === "ready" || status === "signedOut") && !onboardingComplete && plan === null
 
 function setOwners(userId: string) {
   useAthleteStore.getState().setOwner(userId)
@@ -65,6 +71,7 @@ async function hydrate(run: number, native: boolean): Promise<void> {
     return
   }
   if (session.kind === "signedOut") {
+    backfills.clear()
     useAthleteStore.getState().setSessionUserId(null)
     useAthleteStore.getState().setSyncStatus("signedOut")
     return
@@ -86,6 +93,37 @@ async function hydrate(run: number, native: boolean): Promise<void> {
     return
   }
 
+  const localProfile = useAthleteStore.getState().profile
+  const localPlan = usePlanStore.getState().plan
+  if (profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null
+      && planResult.value.plan === null && localProfile && localPlan
+      && useAthleteStore.getState().ownerUserId === userId && usePlanStore.getState().ownerUserId === userId) {
+    // Share the upload across overlapping hydration runs; only the latest run applies it.
+    let pending = backfills.get(userId)
+    if (!pending) {
+      pending = (async () => {
+        const saved = await putAccountProfile(localProfile, true, true)
+        if (saved.kind === "precondition") {
+          const [profile, plan] = await Promise.all([getAccountProfile(), getAccountPlan()])
+          return { profile, plan }
+        }
+        if (saved.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile: saved, plan: { kind: "failed" } as const }
+        const active = await getAccountPlan()
+        if (active.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile: saved, plan: { kind: "failed" } as const }
+        const posted = active.value.plan === null ? await postAccountPlan(localPlan) : active
+        return { profile: saved, plan: posted }
+      })()
+      backfills.set(userId, pending)
+    }
+    const backfill = await pending
+    if (run !== generation || useAthleteStore.getState().sessionUserId !== userId) return
+    if (backfill.profile.kind !== "ok" || backfill.plan.kind !== "ok") {
+      useAthleteStore.getState().setSyncStatus("error")
+      return
+    }
+    profileResult.value = backfill.profile.value
+    planResult.value = backfill.plan.value
+  }
   const { profile, onboardingCompletedAt } = profileResult.value
   const { plan } = planResult.value
   if (profile === null) {
@@ -98,6 +136,8 @@ async function hydrate(run: number, native: boolean): Promise<void> {
     else usePlanStore.getState().setPlan(plan)
     setOwners(userId)
   }
+  useAthleteStore.getState().setOnboardingComplete(onboardingCompletedAt !== null)
+  setOwners(userId)
   useAthleteStore.getState().setSyncStatus("ready")
 }
 
@@ -111,9 +151,10 @@ export async function saveProfileAndPlan(
   if (userId === null) return "failed"
 
   const saved = await putAccountProfile(profile, options.onboardingComplete)
-  if (saved.kind !== "ok") return "failed"
+  if (saved.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return "failed"
 
   const created = await postAccountPlan(plan)
+  if (useAthleteStore.getState().sessionUserId !== userId) return "failed"
   if (created.kind === "ok") {
     const current = usePlanStore.getState().plan
     // A newer save may have replaced the posted plan while this request was in flight.
@@ -125,7 +166,7 @@ export async function saveProfileAndPlan(
 
   // The old active plan is untouched on the server; show that one instead of the unsaved local plan.
   const active = await getAccountPlan()
-  if (active.kind !== "ok") return "failed"
+  if (active.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return "failed"
   if (active.value.plan !== null) {
     usePlanStore.getState().setPlan(active.value.plan)
     setOwners(userId)
@@ -138,4 +179,24 @@ export async function saveSessionStatus(id: string, status: SessionStatus): Prom
   if (useAthleteStore.getState().sessionUserId === null) return false
   const result = await patchAccountSession(id, status)
   return result.kind === "ok"
+}
+
+export function saveSkippedOnboarding(): Promise<SaveResult> {
+  if (skipPending) return skipPending
+  skipPending = (async (): Promise<SaveResult> => {
+    if (Capacitor.isNativePlatform()) {
+      useAthleteStore.getState().setOnboardingComplete(true)
+      return "skipped"
+    }
+    const userId = useAthleteStore.getState().sessionUserId
+    if (!userId) return "failed"
+    const result = await putSkipOnboarding()
+    if (result.kind !== "ok" || result.value.onboardingCompletedAt === null
+        || useAthleteStore.getState().sessionUserId !== userId) return "failed"
+    if (result.value.profile) useAthleteStore.getState().setProfile(result.value.profile)
+    useAthleteStore.getState().setOnboardingComplete(true)
+    setOwners(userId)
+    return "saved"
+  })().finally(() => { skipPending = null })
+  return skipPending
 }

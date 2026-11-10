@@ -37,3 +37,22 @@ it("logs D1 failures and returns generic 500", async () => {
  expect(response.status).toBe(500); expect(await response.json()).toEqual({ error: "Internal server error" });
  expect(log).toHaveBeenCalled();
 });
+
+it("skip authenticates, persists completion without profile and rejects mixed bodies", async () => {
+ const skipped = await route.PUT(req("PUT", { skipOnboarding: true }));
+ expect(skipped.status).toBe(200);
+ const result = await skipped.json();
+ expect(result).toEqual({ profile: null, onboardingCompletedAt: expect.any(Number) });
+ expect(await (await route.GET()).json()).toEqual(result);
+ for (const body of [{ skipOnboarding: false }, { skipOnboarding: "true" }, { skipOnboarding: true, profile }, { skipOnboarding: true, userId: "bob" }]) expect((await route.PUT(req("PUT", body))).status).toBe(400);
+ vi.mocked(auth).mockResolvedValue(null as never);
+ expect((await route.PUT(req("PUT", { skipOnboarding: true }))).status).toBe(401);
+});
+
+it("conditional backfill returns 412 without modifying an existing account profile", async () => {
+ await route.PUT(req("PUT", { profile, onboardingComplete: true }));
+ const request = req("PUT", { profile: { ...profile, location: "Stale local" }, onboardingComplete: true });
+ request.headers.set("If-None-Match", "*");
+ expect((await route.PUT(request)).status).toBe(412);
+ expect((await (await route.GET()).json()).profile).toEqual(profile);
+});
