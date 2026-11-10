@@ -51,9 +51,10 @@ Extra steps only when the change needs them:
 ## Scripts
 
 - `npm run dev`: local dev server.
-- `npm run build`: Next.js production build.
+- `npm run build`: Next.js production build, including server routes.
+- `CAPACITOR_BUILD=1 npm run build`: static export to `out/` using an isolated staging copy without server routes; leaves the web `.next` build intact. Without `NEXT_PUBLIC_AUTH_ORIGIN`, this is an inspection-only export, not a ready-to-package app.
 - `npm test`: Vitest unit tests.
 - `npm run test:e2e`: Playwright end-to-end tests.
 - `npm run deploy`: build and deploy the Worker.
 - `npm run db:migrate`: apply D1 migrations to the remote database.
-- `npm run build:ios`: stage the web build for the iOS shell.
+- `npm run build:ios`: stage the web build for the iOS shell; requires an exported `NEXT_PUBLIC_AUTH_ORIGIN` pointing to the hosted HTTPS auth backend before packaging in Xcode.

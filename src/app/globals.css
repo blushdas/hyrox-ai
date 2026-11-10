@@ -162,3 +162,15 @@
   .motion-sheet[open] { opacity: 0; transform: translateY(100%); }
   .motion-sheet[open]::backdrop { opacity: 0; }
 }
+
+/* Install sheet: slides up on transform + opacity only; reduced motion zeroes the duration globally. */
+.install-sheet {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo);
+}
+.install-sheet[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}

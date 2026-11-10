@@ -15,7 +15,7 @@ export default function App() {
         <SafeAreaView style={styles.center}>
           <Text style={styles.warn}>EXPO_PUBLIC_WEB_URL not set</Text>
           <Text style={styles.hint}>
-            Set it in expo-shell/.env to your Mac's LAN IP running{"\n"}
+            Set it in expo-shell/.env to your Mac&apos;s LAN IP running{"\n"}
             `npm run dev -- -H 0.0.0.0`, e.g.{"\n"}
             EXPO_PUBLIC_WEB_URL=http://192.168.1.23:3000
           </Text>

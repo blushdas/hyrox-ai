@@ -26,6 +26,8 @@ import {
 import { useAthleteStore } from "@/stores/athlete-store"
 import { usePlanStore } from "@/stores/plan-store"
 
+import { InstallBanner } from "@/components/shared/install-banner"
+
 export default function DashboardPage() {
   const router = useRouter()
   const { profile, onboardingComplete } = useAthleteStore()
@@ -60,6 +62,7 @@ export default function DashboardPage() {
         meta={`WK ${String(currentWeek).padStart(2, "0")} · ${week?.phase ?? "PLAN"} ${week?.phaseWeek ?? 0}/${week?.totalPhaseWeeks ?? 0}`}
         action={raceDays !== null && <MonoLabel>{raceDays} DAYS</MonoLabel>}
       />
+      <InstallBanner className="bottom-[calc(64px+env(safe-area-inset-bottom)+12px)] lg:bottom-4" />
       <TrainSegments />
       {next ? (
         <NextSessionHero
