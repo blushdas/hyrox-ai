@@ -1,1 +1,0 @@
-PASS: dependencies/lockfile/proxy/security headers unchanged; web API output retained; static export excludes APIs, includes exact manifest, four identical icons, and 60 session pages.
