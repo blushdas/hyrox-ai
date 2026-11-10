@@ -49,6 +49,19 @@ describe("deferred install store", () => {
     expect(prompt).toHaveBeenCalledTimes(1)
     expect(useInstallPromptStore.getState().event).toBeNull()
   })
+  it("dismisses for good only when the install is accepted", async () => {
+    const setItem = vi.fn()
+    vi.stubGlobal("window", { localStorage: { setItem } })
+    const fake = (outcome: "accepted" | "dismissed") => ({ prompt: vi.fn().mockResolvedValue(undefined), userChoice: Promise.resolve({ outcome, platform: "web" }) }) as unknown as InstallPromptEvent
+    useInstallPromptStore.getState().setEvent(fake("dismissed"))
+    await useInstallPromptStore.getState().promptInstall()
+    expect(useInstallPromptStore.getState().dismissed).toBe(false)
+    expect(setItem).not.toHaveBeenCalled()
+    useInstallPromptStore.getState().setEvent(fake("accepted"))
+    await useInstallPromptStore.getState().promptInstall()
+    expect(useInstallPromptStore.getState().dismissed).toBe(true)
+    expect(setItem).toHaveBeenCalledWith(INSTALL_DISMISSED_KEY, "true")
+  })
   it("clears failed events and reports the failure", async () => {
     const error = new Error("prompt unavailable")
     const report = vi.spyOn(console, "error").mockImplementation(() => undefined)

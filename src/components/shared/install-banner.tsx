@@ -45,7 +45,9 @@ export function InstallBanner({ className = "bottom-4" }: InstallBannerProps) {
   const [environment, setEnvironment] = useState<Pick<InstallEnvironment, "native" | "standalone" | "isIosSafari"> | null>(null)
   const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [prompting, setPrompting] = useState(false)
   const exitTimer = useRef<number | undefined>(undefined)
+  const pendingCommit = useRef<(() => void) | undefined>(undefined)
 
   useEffect(() => {
     const media = window.matchMedia("(display-mode: standalone)")
@@ -71,7 +73,7 @@ export function InstallBanner({ className = "bottom-4" }: InstallBannerProps) {
 
   // Wait a beat so the sheet never competes with the first paint or a first tap.
   useEffect(() => {
-    if (mode === "hidden" || mounted) return
+    if (mode === "hidden" || mounted || prompting) return
     if (!shouldOfferInstall(readInstallSeen())) return
     const timer = window.setTimeout(() => {
       bumpInstallSeen()
@@ -79,25 +81,40 @@ export function InstallBanner({ className = "bottom-4" }: InstallBannerProps) {
       window.requestAnimationFrame(() => window.requestAnimationFrame(() => setVisible(true)))
     }, SHOW_DELAY_MS)
     return () => window.clearTimeout(timer)
-  }, [mode, mounted])
+  }, [mode, mounted, prompting])
 
-  useEffect(() => () => window.clearTimeout(exitTimer.current), [])
+  // Leaving mid-exit must not drop the pending choice: flush it instead of cancelling.
+  useEffect(() => () => {
+    if (exitTimer.current === undefined) return
+    window.clearTimeout(exitTimer.current)
+    exitTimer.current = undefined
+    pendingCommit.current?.()
+    pendingCommit.current = undefined
+  }, [])
 
-  // Close with the exit transition, then remember the choice so it stays closed.
-  const close = (after?: () => void) => {
+  // Close with the exit transition, then run the commit (e.g. remember the dismissal).
+  const close = (commit?: () => void) => {
     setVisible(false)
+    pendingCommit.current = commit
     exitTimer.current = window.setTimeout(() => {
-      dismiss()
+      exitTimer.current = undefined
+      pendingCommit.current = undefined
+      commit?.()
       setMounted(false)
-      after?.()
     }, EXIT_MS)
+  }
+
+  // Fire inside the tap so the browser still sees a user gesture; the sheet exits on its own.
+  const install = () => {
+    setPrompting(true)
+    void promptInstall()
+    close()
   }
 
   if (!mounted || mode === "hidden") return null
 
   return (
     <section
-      role="region"
       aria-label="Install FINISHER"
       data-visible={visible}
       className={`install-sheet fixed inset-x-0 z-40 mx-auto w-[calc(100%-32px)] max-w-[380px] rounded-lg border border-hairline bg-surface-1 p-4 shadow-[0_12px_32px_rgba(0,0,0,0.55)] ${className}`}
@@ -143,7 +160,7 @@ export function InstallBanner({ className = "bottom-4" }: InstallBannerProps) {
         <div className="mt-3 flex gap-2">
           <button
             type="button"
-            onClick={() => close(() => void promptInstall())}
+            onClick={install}
             className="min-h-11 flex-1 rounded-md bg-accent px-4 text-[14px] font-semibold text-accent-ink hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Install
