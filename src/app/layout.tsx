@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/sonner"
 import { NativeAuthGate } from "@/components/shared/native-auth-gate"
 import { StoreHydrator } from "@/components/shared/store-hydrator"
 
+import { InstallEventListener } from "@/components/shared/install-event-listener"
+
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -24,6 +26,8 @@ export const metadata: Metadata = {
   title: "FINISHER — HYROX Training App",
   description:
     "Your personalized HYROX race-day training plan. Built from the official coaching manual.",
+  appleWebApp: { capable: true, title: "FINISHER", statusBarStyle: "black-translucent" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
   openGraph: {
     title: "FINISHER — HYROX Training App",
     description:
@@ -43,6 +47,7 @@ export default function RootLayout({
         className={`${geist.variable} ${mono.variable} antialiased min-h-screen bg-background text-foreground`}
       >
         <StoreHydrator />
+        <InstallEventListener />
         <NativeAuthGate>{children}</NativeAuthGate>
         <Toaster />
       </body>

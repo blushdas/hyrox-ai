@@ -1,0 +1,71 @@
+/Users/troy/.claude/worktrees/hyrox-ai-install-prompt/public/icons/apple-touch-icon.png:  PNG image data, 180 x 180, 8-bit/color RGB, non-interlaced
+/Users/troy/.claude/worktrees/hyrox-ai-install-prompt/public/icons/icon-192.png:          PNG image data, 192 x 192, 8-bit/color RGB, non-interlaced
+/Users/troy/.claude/worktrees/hyrox-ai-install-prompt/public/icons/icon-maskable-512.png: PNG image data, 512 x 512, 8-bit/color RGB, non-interlaced
+/Users/troy/.claude/worktrees/hyrox-ai-install-prompt/public/icons/icon-512.png:          PNG image data, 512 x 512, 8-bit/color RGB, non-interlaced
+apple-touch-icon.png
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com https://appleid.apple.com
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 10 Nov 2026 03:19:16 GMT
+ETag: W/"270-1a1c3779572"
+Content-Type: image/png
+Content-Length: 624
+Date: Tue, 10 Nov 2026 03:23:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+icon-192.png
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com https://appleid.apple.com
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 10 Nov 2026 03:19:16 GMT
+ETag: W/"2a3-1a1c37794f9"
+Content-Type: image/png
+Content-Length: 675
+Date: Tue, 10 Nov 2026 03:23:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+icon-maskable-512.png
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com https://appleid.apple.com
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 10 Nov 2026 03:19:16 GMT
+ETag: W/"d17-1a1c377956d"
+Content-Type: image/png
+Content-Length: 3351
+Date: Tue, 10 Nov 2026 03:23:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+icon-512.png
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com https://appleid.apple.com
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 10 Nov 2026 03:19:16 GMT
+ETag: W/"d17-1a1c377952f"
+Content-Type: image/png
+Content-Length: 3351
+Date: Tue, 10 Nov 2026 03:23:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5

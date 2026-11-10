@@ -1,0 +1,1 @@
+Invariant assertions PASS: dependencies, lockfile, proxy, headers unchanged; no service-worker code
