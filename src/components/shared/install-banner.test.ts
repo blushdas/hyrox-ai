@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { getInstallMode, isIosSafari } from "./install-banner"
-import { INSTALL_DISMISSED_KEY, useInstallPromptStore, type InstallPromptEvent } from "@/stores/install-prompt-store"
+import { getInstallMode, isIosSafari, shouldOfferInstall } from "./install-banner"
+import { INSTALL_DISMISSED_KEY, INSTALL_MAX_SEEN, INSTALL_SEEN_KEY, bumpInstallSeen, readInstallSeen, useInstallPromptStore, type InstallPromptEvent } from "@/stores/install-prompt-store"
 
 const base = { native: false, standalone: false, dismissed: false, installed: false, hasEvent: true, isIosSafari: false }
 const safari = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1"
@@ -75,5 +75,29 @@ describe("deferred install store", () => {
     expect(useInstallPromptStore.getState().dismissed).toBe(true)
     expect(report).toHaveBeenCalled()
     report.mockRestore()
+  })
+})
+
+describe("install impressions cap", () => {
+  beforeEach(() => vi.unstubAllGlobals())
+  it("offers until the cap, then stops for good", () => {
+    expect(shouldOfferInstall(0)).toBe(true)
+    expect(shouldOfferInstall(INSTALL_MAX_SEEN - 1)).toBe(true)
+    expect(shouldOfferInstall(INSTALL_MAX_SEEN)).toBe(false)
+  })
+  it("counts each appearance in storage", () => {
+    const store: Record<string, string> = {}
+    vi.stubGlobal("window", { localStorage: { getItem: (k: string) => store[k] ?? null, setItem: (k: string, v: string) => { store[k] = v } } })
+    expect(readInstallSeen()).toBe(0)
+    bumpInstallSeen()
+    bumpInstallSeen()
+    expect(store[INSTALL_SEEN_KEY]).toBe("2")
+    expect(shouldOfferInstall(readInstallSeen())).toBe(false)
+  })
+  it("fails closed when storage is denied", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined)
+    vi.stubGlobal("window", { localStorage: { getItem: () => { throw new Error("denied") } } })
+    expect(shouldOfferInstall(readInstallSeen())).toBe(false)
+    warn.mockRestore()
   })
 })

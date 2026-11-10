@@ -1,9 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Capacitor } from "@capacitor/core"
-import { X } from "lucide-react"
-import { useInstallPromptStore } from "@/stores/install-prompt-store"
+import { Share, SquarePlus, X } from "lucide-react"
+import {
+  INSTALL_MAX_SEEN,
+  bumpInstallSeen,
+  readInstallSeen,
+  useInstallPromptStore,
+} from "@/stores/install-prompt-store"
 
 type InstallEnvironment = {
   native: boolean
@@ -13,6 +18,9 @@ type InstallEnvironment = {
   hasEvent: boolean
   isIosSafari: boolean
 }
+
+const SHOW_DELAY_MS = 2500
+const EXIT_MS = 220
 
 export function getInstallMode(environment: InstallEnvironment): "hidden" | "prompt" | "ios" {
   if (environment.native || environment.standalone || environment.dismissed || environment.installed) return "hidden"
@@ -26,9 +34,18 @@ export function isIosSafari(userAgent: string, maxTouchPoints: number): boolean 
   return ios && /Version\//i.test(userAgent) && /Safari\//i.test(userAgent) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA|FBAN|FBAV|Instagram/i.test(userAgent)
 }
 
-export function InstallBanner() {
+export function shouldOfferInstall(seen: number): boolean {
+  return seen < INSTALL_MAX_SEEN
+}
+
+type InstallBannerProps = { className?: string }
+
+export function InstallBanner({ className = "bottom-4" }: InstallBannerProps) {
   const { event, installed, dismissed, hydrated, dismiss, promptInstall } = useInstallPromptStore()
   const [environment, setEnvironment] = useState<Pick<InstallEnvironment, "native" | "standalone" | "isIosSafari"> | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const exitTimer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     const media = window.matchMedia("(display-mode: standalone)")
@@ -42,26 +59,104 @@ export function InstallBanner() {
     return () => media.removeEventListener("change", update)
   }, [])
 
-  if (!environment || !hydrated) return null
-  const mode = getInstallMode({ ...environment, dismissed, installed, hasEvent: event !== null })
-  if (mode === "hidden") return null
+  // Running as an installed app proves they already did it: never offer again.
+  const standalone = environment?.standalone === true
+  useEffect(() => {
+    if (standalone && hydrated && !dismissed) dismiss()
+  }, [standalone, hydrated, dismissed, dismiss])
+
+  const mode = environment && hydrated
+    ? getInstallMode({ ...environment, dismissed, installed, hasEvent: event !== null })
+    : "hidden"
+
+  // Wait a beat so the sheet never competes with the first paint or a first tap.
+  useEffect(() => {
+    if (mode === "hidden" || mounted) return
+    if (!shouldOfferInstall(readInstallSeen())) return
+    const timer = window.setTimeout(() => {
+      bumpInstallSeen()
+      setMounted(true)
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => setVisible(true)))
+    }, SHOW_DELAY_MS)
+    return () => window.clearTimeout(timer)
+  }, [mode, mounted])
+
+  useEffect(() => () => window.clearTimeout(exitTimer.current), [])
+
+  // Close with the exit transition, then remember the choice so it stays closed.
+  const close = (after?: () => void) => {
+    setVisible(false)
+    exitTimer.current = window.setTimeout(() => {
+      dismiss()
+      setMounted(false)
+      after?.()
+    }, EXIT_MS)
+  }
+
+  if (!mounted || mode === "hidden") return null
 
   return (
-    <section aria-label="Install FINISHER" className="mt-4 flex items-start gap-3 rounded-md border border-hairline bg-surface-1 p-4">
-      <div className="min-w-0 flex-1">
-        <h2 className="font-semibold">Install FINISHER</h2>
-        <p className="mt-1 text-sm text-text-2">
-          {mode === "prompt" ? "Add it to your home screen for one-tap access." : "Tap Share, then Add to Home Screen."}
-        </p>
-        {mode === "prompt" && (
-          <button type="button" onClick={() => void promptInstall()} className="mt-3 min-h-11 rounded-sm bg-accent px-4 font-semibold text-accent-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+    <section
+      role="region"
+      aria-label="Install FINISHER"
+      data-visible={visible}
+      className={`install-sheet fixed inset-x-0 z-40 mx-auto w-[calc(100%-32px)] max-w-[380px] rounded-lg border border-hairline bg-surface-1 p-4 shadow-[0_12px_32px_rgba(0,0,0,0.55)] ${className}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="text-[15px] font-semibold leading-5">Add FINISHER to your home screen</h2>
+          <p className="mt-0.5 text-[13px] text-text-2">One tap to today&apos;s session.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => close()}
+          aria-label="Dismiss install prompt"
+          className="-mr-2 -mt-2 flex min-h-11 min-w-11 items-center justify-center rounded-md text-text-2 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-accent"
+        >
+          <X size={18} aria-hidden="true" />
+        </button>
+      </div>
+
+      {mode === "ios" ? (
+        <>
+          <ol className="mt-3 space-y-2 text-[14px]">
+            <li className="flex items-center gap-3 rounded-md bg-surface-2 px-3 py-2.5">
+              <span className="tnum flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-ink">1</span>
+              <span className="flex-1">Tap Share</span>
+              <Share size={18} className="text-text-2" aria-hidden="true" />
+            </li>
+            <li className="flex items-center gap-3 rounded-md bg-surface-2 px-3 py-2.5">
+              <span className="tnum flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-ink">2</span>
+              <span className="flex-1">Add to Home Screen</span>
+              <SquarePlus size={18} className="text-text-2" aria-hidden="true" />
+            </li>
+          </ol>
+          <button
+            type="button"
+            onClick={() => close()}
+            className="mt-3 min-h-11 w-full rounded-md text-[13px] font-medium text-text-2 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            Already added
+          </button>
+        </>
+      ) : (
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            onClick={() => close(() => void promptInstall())}
+            className="min-h-11 flex-1 rounded-md bg-accent px-4 text-[14px] font-semibold text-accent-ink hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
             Install
           </button>
-        )}
-      </div>
-      <button type="button" onClick={dismiss} aria-label="Dismiss install prompt" className="flex min-h-11 min-w-11 items-center justify-center text-text-2 focus-visible:outline-2 focus-visible:outline-accent">
-        <X size={20} aria-hidden="true" />
-      </button>
+          <button
+            type="button"
+            onClick={() => close()}
+            className="min-h-11 rounded-md px-4 text-[13px] font-medium text-text-2 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            Not now
+          </button>
+        </div>
+      )}
     </section>
   )
 }

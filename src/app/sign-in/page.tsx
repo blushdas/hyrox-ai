@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { Logo } from "@/components/shared/logo"
+import { InstallBanner } from "@/components/shared/install-banner"
 import { SignInButtons } from "./sign-in-buttons"
 
 export const metadata = { title: "Sign in — FINISHER" }
@@ -22,6 +23,7 @@ export default function SignInPage() {
             <SignInButtons />
           </Suspense>
         </div>
+        <InstallBanner />
       </section>
     </main>
   )

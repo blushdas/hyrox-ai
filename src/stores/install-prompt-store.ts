@@ -3,6 +3,27 @@
 import { create } from "zustand"
 
 export const INSTALL_DISMISSED_KEY = "finisher:install-dismissed"
+export const INSTALL_SEEN_KEY = "finisher:install-seen"
+// The sheet is an offer, not a nag: at most this many appearances, ever.
+export const INSTALL_MAX_SEEN = 2
+
+export function readInstallSeen(): number {
+  try {
+    const value = Number(window.localStorage.getItem(INSTALL_SEEN_KEY))
+    return Number.isFinite(value) && value > 0 ? value : 0
+  } catch (error) {
+    console.warn("Install impressions could not be read", error)
+    return INSTALL_MAX_SEEN
+  }
+}
+
+export function bumpInstallSeen(): void {
+  try {
+    window.localStorage.setItem(INSTALL_SEEN_KEY, String(readInstallSeen() + 1))
+  } catch (error) {
+    console.warn("Install impression could not be saved", error)
+  }
+}
 
 export type InstallPromptEvent = Event & {
   prompt: () => Promise<void>
