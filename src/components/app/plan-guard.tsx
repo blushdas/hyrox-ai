@@ -18,7 +18,9 @@ const subscribeHydration = (notify: () => void) => {
 
 export function PlanGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const onboardingComplete = useAthleteStore(s => s.onboardingComplete)
+  const hasPlan = usePlanStore(s => s.plan !== null)
+  // Native has no account to ask yet, so a saved local plan stands in for "onboarded" there only.
+  const onboardingComplete = useAthleteStore(s => s.onboardingComplete) || (Capacitor.isNativePlatform() && hasPlan)
   const syncStatus = useAthleteStore(s => s.syncStatus)
   const hydrated = useSyncExternalStore(subscribeHydration, hasHydrated, () => false)
 

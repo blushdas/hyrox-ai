@@ -44,7 +44,8 @@ export async function skipOnboarding(userId: string) {
  (user_id, race_date, location, category, fitness_level, gender, weight_unit, days_per_week, session_length_min, onboarding_completed_at, created_at, updated_at, onboarding_skipped)
  VALUES (?, '', '', 'open', 'beginner_mid', '', 'kg', 4, 60, ?, ?, ?, 1)
  ON CONFLICT(user_id) DO UPDATE SET
- onboarding_completed_at=COALESCE(athlete_profiles.onboarding_completed_at, excluded.onboarding_completed_at), updated_at=excluded.updated_at`)
+ onboarding_completed_at=excluded.onboarding_completed_at, updated_at=excluded.updated_at
+ WHERE athlete_profiles.onboarding_completed_at IS NULL`)
  .bind(userId, now, now, now).run();
  return getProfile(userId);
 }

@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core"
+import { signOut } from "next-auth/react"
 import type { AthleteProfile, SessionStatus, TrainingPlan } from "@/lib/types"
 import { useAthleteStore, type SyncStatus } from "@/stores/athlete-store"
 import { usePlanStore } from "@/stores/plan-store"
@@ -95,7 +96,8 @@ async function hydrate(run: number, native: boolean): Promise<void> {
     usePlanStore.getState().clearPlan()
     useAthleteStore.getState().setSessionUserId(null)
     useAthleteStore.getState().setSyncStatus("signedOut")
-    window.location.assign("/sign-in")
+    // Clear the dead session first: the proxy sends token holders on /sign-in straight back to /dashboard.
+    await signOut({ callbackUrl: "/sign-in" })
     return
   }
   if (profileResult.kind !== "ok" || planResult.kind !== "ok") {
@@ -107,7 +109,10 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   const localPlan = usePlanStore.getState().plan
   const missingProfile = profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null && localProfile !== null
   const missingPlan = planResult.value.plan === null && localPlan !== null
-  if ((missingProfile || missingPlan)
+  // An empty account only takes a complete local pair; a lone local entity is never pushed as "completed".
+  const accountEmpty = profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null && planResult.value.plan === null
+  const partialLocal = accountEmpty && !(localProfile && localPlan)
+  if ((missingProfile || missingPlan) && !partialLocal
       && useAthleteStore.getState().ownerUserId === userId && usePlanStore.getState().ownerUserId === userId) {
     let pending = backfills.get(userId)
     if (!pending) {

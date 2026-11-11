@@ -11,9 +11,10 @@ const mocks = vi.hoisted(() => {
     removeItem: (key: string) => void data.delete(key),
   }
   Object.defineProperty(globalThis, "window", { configurable: true, value: { localStorage } })
-  return { native: vi.fn(() => false), reset: vi.fn() }
+  return { native: vi.fn(() => false), reset: vi.fn(), signOut: vi.fn(async () => undefined) }
 })
 vi.mock("@capacitor/core", () => ({ Capacitor: { isNativePlatform: mocks.native } }))
+vi.mock("next-auth/react", () => ({ signOut: mocks.signOut }))
 vi.mock("@/stores/coach-ai-store", () => ({ useCoachAIStore: { getState: () => ({ reset: mocks.reset }) } }))
 
 import { useAthleteStore } from "@/stores/athlete-store"
@@ -508,12 +509,24 @@ it("backfill loses a concurrent profile claim without posting a stale plan", asy
 })
 
 it.each(["profile", "plan"])("401 from account %s expires the session and navigates to sign-in", async entity => {
- const assign = vi.fn()
- Object.assign(window, { location: { assign } })
+ mocks.signOut.mockClear()
  route({ ...signedIn("expired"), "GET /api/me/profile": () => entity === "profile" ? json({}, 401) : json({ profile: null, onboardingCompletedAt: null }), "GET /api/me/plan": () => entity === "plan" ? json({}, 401) : json({ plan: null }) })
  await hydrateFromAccount({ native: false })
- expect(assign).toHaveBeenCalledWith("/sign-in")
+ // The dead session must be cleared, or the proxy bounces /sign-in back to /dashboard in a loop.
+ expect(mocks.signOut).toHaveBeenCalledWith({ callbackUrl: "/sign-in" })
  expect(useAthleteStore.getState()).toMatchObject({ onboardingComplete: false, syncStatus: "signedOut", sessionUserId: null })
+})
+it.each(["profile", "plan"])("an empty account never receives a lone local %s", async lone => {
+ const id = `lone-${lone}`
+ useAthleteStore.setState({ profile: lone === "profile" ? profile("Local") : null, ownerUserId: id })
+ usePlanStore.setState({ plan: lone === "plan" ? planWith("local") : null, ownerUserId: id })
+ route({ ...signedIn(id),
+  "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: null }),
+  "GET /api/me/plan": () => json({ plan: null }),
+ })
+ await hydrateFromAccount({ native: false })
+ expect(calls().filter(c => c.startsWith("PUT") || c.startsWith("POST"))).toHaveLength(0)
+ expect(useAthleteStore.getState().onboardingComplete).toBe(false)
 })
 it.each(["profile", "plan", "both"])("backfill pushes only missing entities when account has %s", async existing => {
  const id = `entities-${existing}`

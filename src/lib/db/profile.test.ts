@@ -38,6 +38,12 @@ it("skip is idempotent, scoped, preserves a real profile, and supports later onb
  expect(await getProfile("bob")).toEqual({ profile: null, onboardingCompletedAt: null });
  await upsertProfile("alice", profile, { onboardingComplete: true });
  expect(await skipOnboarding("alice")).toEqual({ profile, onboardingCompletedAt: 100 });
+ const row = async () => (await getDb()).prepare("SELECT * FROM athlete_profiles WHERE user_id = ?").bind("alice").first();
+ const before = await row();
+ vi.mocked(Date.now).mockReturnValue(300);
+ await skipOnboarding("alice");
+ // A completed user's row must stay byte-identical, including updated_at.
+ expect(await row()).toEqual(before);
 });
 it("conditional backfill cannot overwrite a concurrently created real profile", async () => {
  await upsertProfile("alice", profile, { onboardingComplete: true });
