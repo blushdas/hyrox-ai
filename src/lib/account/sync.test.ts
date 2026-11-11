@@ -77,18 +77,35 @@ describe("hydrateFromAccount", () => {
     expect(usePlanStore.getState().plan?.id).toBe("bob-plan")
   })
 
-  it("treats pre-feature local data with no owner as foreign and never uploads it", async () => {
+  it("claims pre-feature local data with no owner once into an empty account", async () => {
     useAthleteStore.setState({ profile: profile("Legacy"), onboardingComplete: true })
     usePlanStore.setState({ plan: planWith("legacy") })
     route({
       ...signedIn("bob"),
       "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: null }),
       "GET /api/me/plan": () => json({ plan: null }),
+      "PUT /api/me/profile": () => json({ profile: profile("Legacy"), onboardingCompletedAt: 5 }),
+      "POST /api/me/plan": () => json({ plan: planWith("server-legacy") }),
     })
     await hydrateFromAccount({ native: false })
-    expect(useAthleteStore.getState().profile).toBeNull()
-    expect(usePlanStore.getState().plan).toBeNull()
+    expect(calls()).toContain("PUT /api/me/profile")
+    expect(calls()).toContain("POST /api/me/plan")
+    expect(useAthleteStore.getState()).toMatchObject({ ownerUserId: "bob", onboardingComplete: true })
+    expect(usePlanStore.getState().plan?.id).toBe("server-legacy")
+  })
+
+  it("does not push a local plan into a skipped account that has no profile", async () => {
+    useAthleteStore.setState({ profile: profile("Typed"), ownerUserId: "skipper" })
+    usePlanStore.setState({ plan: planWith("typed"), ownerUserId: "skipper" })
+    route({
+      ...signedIn("skipper"),
+      "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: 9 }),
+      "GET /api/me/plan": () => json({ plan: null }),
+    })
+    await hydrateFromAccount({ native: false })
     expect(calls().every((c) => c.startsWith("GET "))).toBe(true)
+    expect(usePlanStore.getState().plan).toBeNull()
+    expect(useAthleteStore.getState().onboardingComplete).toBe(true)
   })
 
   it("backfills owned profile and plan once into an empty account", async () => {
@@ -451,6 +468,12 @@ describe("saveSkippedOnboarding", () => {
     expect(calls()).toEqual(["PUT /api/me/profile"])
     expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({ skipOnboarding: true })
     expect(useAthleteStore.getState()).toMatchObject({ onboardingComplete: true, ownerUserId: "skip-save", profile: null })
+  })
+  it("native skip completes this launch without an account call", async () => {
+    mocks.native.mockReturnValue(true)
+    expect(await saveSkippedOnboarding()).toBe("skipped")
+    expect(useAthleteStore.getState().onboardingComplete).toBe(true)
+    expect(calls()).toEqual([])
   })
   it("failed skip leaves completion false and allows retry", async () => {
     useAthleteStore.setState({ sessionUserId: "skip-fail" })

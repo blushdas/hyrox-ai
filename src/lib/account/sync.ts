@@ -82,8 +82,13 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   const userId = session.id
   useAthleteStore.getState().setSessionUserId(userId)
 
-  if (useAthleteStore.getState().ownerUserId !== userId || usePlanStore.getState().ownerUserId !== userId) {
-    // Local data belongs to someone else or to nobody; drop it before any server data is applied.
+  const athleteOwner = useAthleteStore.getState().ownerUserId
+  const planOwner = usePlanStore.getState().ownerUserId
+  if (athleteOwner === null && planOwner === null) {
+    // Pre-account local data (made before owners existed) is claimed once by the first account to sign in on this device.
+    setOwners(userId)
+  } else if (athleteOwner !== userId || planOwner !== userId) {
+    // Local data belongs to someone else; drop it before any server data is applied.
     useAthleteStore.getState().clearProfile()
     usePlanStore.getState().clearPlan()
     useCoachAIStore.getState().reset()
@@ -108,7 +113,9 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   const localProfile = useAthleteStore.getState().profile
   const localPlan = usePlanStore.getState().plan
   const missingProfile = profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null && localProfile !== null
-  const missingPlan = planResult.value.plan === null && localPlan !== null
+  // A plan is never pushed to an account that has no profile row (a skipped account), or the two would disagree.
+  const accountHasProfile = profileResult.value.profile !== null || missingProfile
+  const missingPlan = planResult.value.plan === null && localPlan !== null && accountHasProfile
   // An empty account only takes a complete local pair; a lone local entity is never pushed as "completed".
   const accountEmpty = profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null && planResult.value.plan === null
   const partialLocal = accountEmpty && !(localProfile && localPlan)
@@ -210,7 +217,8 @@ export function saveSkippedOnboarding(): Promise<SaveResult> {
   if (skipPending) return skipPending
   skipPending = (async (): Promise<SaveResult> => {
     if (Capacitor.isNativePlatform()) {
-      useAthleteStore.getState().setOnboardingComplete(false)
+      // Native has no account; skipping lets this launch reach the dashboard.
+      useAthleteStore.getState().setOnboardingComplete(true)
       return "skipped"
     }
     const userId = useAthleteStore.getState().sessionUserId
