@@ -82,13 +82,8 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   const userId = session.id
   useAthleteStore.getState().setSessionUserId(userId)
 
-  const athleteOwner = useAthleteStore.getState().ownerUserId
-  const planOwner = usePlanStore.getState().ownerUserId
-  if (athleteOwner === null && planOwner === null) {
-    // Pre-account local data (made before owners existed) is claimed once by the first account to sign in on this device.
-    setOwners(userId)
-  } else if (athleteOwner !== userId || planOwner !== userId) {
-    // Local data belongs to someone else; drop it before any server data is applied.
+  if (useAthleteStore.getState().ownerUserId !== userId || usePlanStore.getState().ownerUserId !== userId) {
+    // Local data belongs to someone else or to nobody; drop it before any server data is applied.
     useAthleteStore.getState().clearProfile()
     usePlanStore.getState().clearPlan()
     useCoachAIStore.getState().reset()
@@ -129,7 +124,8 @@ async function hydrate(run: number, native: boolean): Promise<void> {
           const saved = await putAccountProfile(localProfile, true, true)
           profile = saved.kind === "precondition" ? await getAccountProfile() : saved
         }
-        if (useAthleteStore.getState().sessionUserId !== userId) return { profile, plan: { kind: "failed" } as const }
+        // A plan never goes up without its profile, or the account would hold a plan with no profile.
+        if (profile.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile, plan: { kind: "failed" } as const }
         let plan: Awaited<ReturnType<typeof getAccountPlan>> = planResult
         if (missingPlan && localPlan) {
           // The server's conditional insert protects a plan created since the initial read.

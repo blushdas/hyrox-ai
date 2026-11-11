@@ -77,21 +77,32 @@ describe("hydrateFromAccount", () => {
     expect(usePlanStore.getState().plan?.id).toBe("bob-plan")
   })
 
-  it("claims pre-feature local data with no owner once into an empty account", async () => {
+  it("treats pre-feature local data with no owner as foreign and never uploads it", async () => {
     useAthleteStore.setState({ profile: profile("Legacy"), onboardingComplete: true })
     usePlanStore.setState({ plan: planWith("legacy") })
     route({
       ...signedIn("bob"),
       "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: null }),
       "GET /api/me/plan": () => json({ plan: null }),
-      "PUT /api/me/profile": () => json({ profile: profile("Legacy"), onboardingCompletedAt: 5 }),
-      "POST /api/me/plan": () => json({ plan: planWith("server-legacy") }),
     })
     await hydrateFromAccount({ native: false })
-    expect(calls()).toContain("PUT /api/me/profile")
-    expect(calls()).toContain("POST /api/me/plan")
-    expect(useAthleteStore.getState()).toMatchObject({ ownerUserId: "bob", onboardingComplete: true })
-    expect(usePlanStore.getState().plan?.id).toBe("server-legacy")
+    expect(useAthleteStore.getState().profile).toBeNull()
+    expect(usePlanStore.getState().plan).toBeNull()
+    expect(calls().every((c) => c.startsWith("GET "))).toBe(true)
+  })
+
+  it("never posts a plan when the profile backfill failed", async () => {
+    useAthleteStore.setState({ profile: profile("Local"), ownerUserId: "halfway" })
+    usePlanStore.setState({ plan: planWith("local"), ownerUserId: "halfway" })
+    route({
+      ...signedIn("halfway"),
+      "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: null }),
+      "GET /api/me/plan": () => json({ plan: null }),
+      "PUT /api/me/profile": () => json({}, 500),
+    })
+    await hydrateFromAccount({ native: false })
+    expect(calls()).not.toContain("POST /api/me/plan")
+    expect(useAthleteStore.getState().syncStatus).toBe("error")
   })
 
   it("does not push a local plan into a skipped account that has no profile", async () => {
