@@ -1,0 +1,4 @@
+"use client"
+import { useState } from "react"
+import { DatePicker } from "@/components/ui/date-picker"
+export default function ModalFixture() { const [value,setValue]=useState(""); return <main className="mx-auto max-w-xl p-6"><h1>Local calendar fixture</h1><button id="background" onClick={()=>{throw Error("Background activated")}}>Background action</button><DatePicker value={value} onChange={setValue} /><a href="#outside">Outside link</a></main> }

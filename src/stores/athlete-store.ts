@@ -60,9 +60,9 @@ export const useAthleteStore = create<AthleteState>()(
       name: "finisher-athlete",
       skipHydration: true,
       // Sync status and the session user describe this tab, not the saved data.
+      merge: (persisted, current) => ({ ...current, ...(persisted as Partial<AthleteState>), onboardingComplete: false }),
       partialize: (state) => ({
         profile: state.profile,
-        onboardingComplete: state.onboardingComplete,
         ownerUserId: state.ownerUserId,
       }),
     }

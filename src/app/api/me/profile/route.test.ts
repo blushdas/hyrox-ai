@@ -56,3 +56,12 @@ it("conditional backfill returns 412 without modifying an existing account profi
  expect((await route.PUT(request)).status).toBe(412);
  expect((await (await route.GET()).json()).profile).toEqual(profile);
 });
+
+it("skip with a foreign userId cannot write or modify that user's row", async () => {
+ await route.PUT(req("PUT", { skipOnboarding: true }))
+ const before = test.sqlite.prepare("SELECT * FROM athlete_profiles ORDER BY user_id").all()
+ expect((await route.PUT(req("PUT", { skipOnboarding: true, userId: "bob" }))).status).toBe(400)
+ expect(test.sqlite.prepare("SELECT * FROM athlete_profiles ORDER BY user_id").all()).toEqual(before)
+ expect(test.sqlite.prepare("SELECT user_id, onboarding_skipped FROM athlete_profiles").all()).toEqual([{ user_id: "alice", onboarding_skipped: 1 }])
+ expect(test.sqlite.prepare("SELECT * FROM athlete_profiles WHERE user_id='bob'").all()).toEqual([])
+})

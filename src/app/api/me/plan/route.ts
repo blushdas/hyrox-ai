@@ -7,6 +7,6 @@ export async function POST(request: Request) {
   const body = await readBody(request); if (!body.ok) return invalid(body.error);
   const plan = validatePlan(body.value.plan); if (!plan.ok) return invalid(plan.error);
   const meta = validatePlanMeta(body.value); if (!meta.ok) return invalid(meta.error);
-  return Response.json({ plan: await createPlan(userId, plan.value, meta.value) }, { status: 201 });
+  return Response.json({ plan: await createPlan(userId, plan.value, meta.value, request.headers.get("If-None-Match") === "*") }, { status: 201 });
  });
 }

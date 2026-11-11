@@ -18,27 +18,27 @@ const subscribeHydration = (notify: () => void) => {
 
 export function PlanGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const plan = usePlanStore(s => s.plan)
   const onboardingComplete = useAthleteStore(s => s.onboardingComplete)
   const syncStatus = useAthleteStore(s => s.syncStatus)
   const hydrated = useSyncExternalStore(subscribeHydration, hasHydrated, () => false)
 
   useEffect(() => {
-    if (shouldRedirectToOnboarding(hydrated, syncStatus, plan, onboardingComplete)) {
+    if (syncStatus === "signedOut") router.replace("/sign-in")
+    if (shouldRedirectToOnboarding(hydrated, syncStatus, onboardingComplete)) {
       router.replace("/onboarding")
     }
-  }, [hydrated, syncStatus, plan, onboardingComplete, router])
+  }, [hydrated, syncStatus, onboardingComplete, router])
 
   if (!hydrated || !isSyncSettled(syncStatus)) return <Skeleton />
-  if (syncStatus === "error" && !plan) {
+  if (syncStatus === "error") {
     return (
       <div role="alert" className="space-y-4 py-6">
         <p className="text-sm text-muted-foreground">Couldn&apos;t load your account. Check your connection and try again.</p>
-        <Button onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}>Retry</Button>
+        <Button onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}>Try again</Button>
       </div>
     )
   }
-  if (!plan && !onboardingComplete) return <Skeleton />
+  if (!onboardingComplete) return <Skeleton />
 
   return <>{children}</>
 }

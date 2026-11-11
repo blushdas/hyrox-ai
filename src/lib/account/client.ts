@@ -65,8 +65,8 @@ async function request<T>(
     const data: unknown = await response.json()
     const value = record(data) ? parse(data) : undefined
     return value === undefined ? { kind: "failed" } : { kind: "ok", value }
-  } catch {
-    // Transport and JSON errors are reported to the caller, never logged with profile or plan data.
+  } catch (error) {
+    console.error("Account request failed", error instanceof Error ? error.name : "unknown")
     return { kind: "failed" }
   }
 }
@@ -98,12 +98,13 @@ export function putAccountProfile(profile: AthleteProfile, onboardingComplete?: 
 export const putSkipOnboarding = () => request("/api/me/profile", profileOf, "PUT", { skipOnboarding: true })
 const planOf = (data: Record<string, unknown>) => (isNullablePlan(data.plan) ? { plan: data.plan } : undefined)
 export const getAccountPlan = () => request("/api/me/plan", planOf)
-export function postAccountPlan(plan: TrainingPlan) {
+export function postAccountPlan(plan: TrainingPlan, onlyIfEmpty = false) {
   return request(
     "/api/me/plan",
     (data) => (isTrainingPlan(data.plan) ? { plan: data.plan } : undefined),
     "POST",
     { plan, source: "template" },
+    onlyIfEmpty,
   )
 }
 export function patchAccountSession(id: string, status: SessionStatus) {

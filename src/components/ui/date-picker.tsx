@@ -30,6 +30,7 @@ export function DatePicker({ value, onChange, label = "Race Date" }: {
 }) {
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(() => value && !isPastDate(value) ? value : dateKey(new Date()))
+  const [popupElement, setPopupElement] = useState<HTMLDivElement | null>(null)
   const active = useRef<HTMLButtonElement>(null)
   const reduced = useReducedMotion()
   const date = parseDate(focused)
@@ -39,6 +40,31 @@ export function DatePicker({ value, onChange, label = "Race Date" }: {
   const month = first.toLocaleDateString("en-GB", { month: "long", year: "numeric" })
 
   useEffect(() => { if (open) active.current?.focus() }, [focused, open])
+
+  useEffect(() => {
+    if (!open || !popupElement) return
+    const changed = new Map<HTMLElement, boolean>()
+    let branch: HTMLElement = popupElement
+    while (branch.parentElement) {
+      for (const sibling of branch.parentElement.children) {
+        if (sibling instanceof HTMLElement && sibling !== branch && !sibling.hasAttribute("data-base-ui-focus-guard")) {
+          changed.set(sibling, sibling.inert)
+          sibling.setAttribute("inert", "")
+        }
+      }
+      branch = branch.parentElement
+      if (branch === document.body) break
+    }
+    return () => { for (const [element, inert] of changed) { if (inert) element.setAttribute("inert", ""); else element.removeAttribute("inert") } }
+  }, [open, popupElement])
+
+  function trapTab(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Tab") return
+    const items = [...event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), [href], [tabindex="0"]')].filter(element => element.tabIndex >= 0)
+    const first = items[0], last = items[items.length - 1]
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+  }
 
   function move(days: number) {
     const next = parseDate(focused)
@@ -61,7 +87,7 @@ export function DatePicker({ value, onChange, label = "Race Date" }: {
     }
   }
 
-  return <Popover.Root open={open} onOpenChange={next => {
+  return <Popover.Root modal open={open} onOpenChange={next => {
     if (next) setFocused(value && !isPastDate(value) ? value : dateKey(new Date()))
     setOpen(next)
   }}>
@@ -71,7 +97,7 @@ export function DatePicker({ value, onChange, label = "Race Date" }: {
     </Popover.Trigger>
     <Popover.Portal>
       <Popover.Positioner sideOffset={8} collisionPadding={2} align="start" className="z-50">
-        <Popover.Popup aria-label="Choose race date" initialFocus={active} className="w-[316px] max-w-[calc(100vw-4px)] border border-border bg-surface-1 p-[3px] text-foreground">
+        <Popover.Popup ref={setPopupElement} onKeyDown={trapTab} aria-modal="true" aria-label="Choose race date" initialFocus={active} className="w-[316px] max-w-[calc(100vw-4px)] border border-border bg-surface-1 p-[3px] text-foreground">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced, true)}>
             <div className="flex items-center justify-between">
               <button type="button" aria-label="Previous month" disabled={date.getFullYear() === new Date().getFullYear() && date.getMonth() === new Date().getMonth()} onClick={() => changeMonth(-1)} className={`flex size-11 items-center justify-center disabled:opacity-30 ${focusClass}`}><ChevronLeft className="size-4" /></button>

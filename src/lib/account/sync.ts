@@ -27,8 +27,8 @@ export const isSyncSettled = (status: SyncStatus): boolean =>
   status === "ready" || status === "signedOut" || status === "error"
 
 // An error is not an answer: with no plan we show a retry state rather than sending the user to onboarding.
-export const shouldRedirectToOnboarding = (hydrated: boolean, status: SyncStatus, plan: TrainingPlan | null, onboardingComplete = false): boolean =>
-  hydrated && (status === "ready" || status === "signedOut") && !onboardingComplete && plan === null
+export const shouldRedirectToOnboarding = (hydrated: boolean, status: SyncStatus, onboardingComplete: boolean): boolean =>
+  hydrated && status === "ready" && !onboardingComplete
 
 function setOwners(userId: string) {
   useAthleteStore.getState().setOwner(userId)
@@ -52,6 +52,7 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   useAthleteStore.getState().setSyncStatus("loading")
   useAthleteStore.persist.rehydrate()
   usePlanStore.persist.rehydrate()
+  useAthleteStore.getState().setOnboardingComplete(false)
   if (native) {
     useAthleteStore.getState().setSyncStatus("ready")
     return
@@ -71,6 +72,7 @@ async function hydrate(run: number, native: boolean): Promise<void> {
     return
   }
   if (session.kind === "signedOut") {
+    useAthleteStore.getState().setOnboardingComplete(false)
     backfills.clear()
     useAthleteStore.getState().setSessionUserId(null)
     useAthleteStore.getState().setSyncStatus("signedOut")
@@ -88,6 +90,14 @@ async function hydrate(run: number, native: boolean): Promise<void> {
 
   const [profileResult, planResult] = await Promise.all([getAccountProfile(), getAccountPlan()])
   if (run !== generation) return
+  if (profileResult.kind === "unauthorized" || planResult.kind === "unauthorized") {
+    useAthleteStore.getState().clearProfile()
+    usePlanStore.getState().clearPlan()
+    useAthleteStore.getState().setSessionUserId(null)
+    useAthleteStore.getState().setSyncStatus("signedOut")
+    window.location.assign("/sign-in")
+    return
+  }
   if (profileResult.kind !== "ok" || planResult.kind !== "ok") {
     useAthleteStore.getState().setSyncStatus("error")
     return
@@ -95,29 +105,34 @@ async function hydrate(run: number, native: boolean): Promise<void> {
 
   const localProfile = useAthleteStore.getState().profile
   const localPlan = usePlanStore.getState().plan
-  if (profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null
-      && planResult.value.plan === null && localProfile && localPlan
+  const missingProfile = profileResult.value.profile === null && profileResult.value.onboardingCompletedAt === null && localProfile !== null
+  const missingPlan = planResult.value.plan === null && localPlan !== null
+  if ((missingProfile || missingPlan)
       && useAthleteStore.getState().ownerUserId === userId && usePlanStore.getState().ownerUserId === userId) {
-    // Share the upload across overlapping hydration runs; only the latest run applies it.
     let pending = backfills.get(userId)
     if (!pending) {
       pending = (async () => {
-        const saved = await putAccountProfile(localProfile, true, true)
-        if (saved.kind === "precondition") {
-          const [profile, plan] = await Promise.all([getAccountProfile(), getAccountPlan()])
-          return { profile, plan }
+        let profile: Awaited<ReturnType<typeof getAccountProfile>> = profileResult
+        if (missingProfile && localProfile) {
+          const saved = await putAccountProfile(localProfile, true, true)
+          profile = saved.kind === "precondition" ? await getAccountProfile() : saved
         }
-        if (saved.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile: saved, plan: { kind: "failed" } as const }
-        const active = await getAccountPlan()
-        if (active.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile: saved, plan: { kind: "failed" } as const }
-        const posted = active.value.plan === null ? await postAccountPlan(localPlan) : active
-        return { profile: saved, plan: posted }
+        if (useAthleteStore.getState().sessionUserId !== userId) return { profile, plan: { kind: "failed" } as const }
+        let plan: Awaited<ReturnType<typeof getAccountPlan>> = planResult
+        if (missingPlan && localPlan) {
+          // The server's conditional insert protects a plan created since the initial read.
+          plan = await postAccountPlan(localPlan, true)
+        }
+        return { profile, plan }
       })()
       backfills.set(userId, pending)
     }
     const backfill = await pending
     if (run !== generation || useAthleteStore.getState().sessionUserId !== userId) return
     if (backfill.profile.kind !== "ok" || backfill.plan.kind !== "ok") {
+      backfills.delete(userId)
+      console.error("Account backfill failed", backfill.profile.kind, backfill.plan.kind)
+      if (backfill.profile.kind === "ok") useAthleteStore.getState().setOnboardingComplete(backfill.profile.value.onboardingCompletedAt !== null)
       useAthleteStore.getState().setSyncStatus("error")
       return
     }
@@ -128,14 +143,13 @@ async function hydrate(run: number, native: boolean): Promise<void> {
   const { plan } = planResult.value
   if (profile === null) {
     useAthleteStore.getState().clearProfile()
-    usePlanStore.getState().clearPlan()
   } else {
     useAthleteStore.getState().setProfile(profile)
     useAthleteStore.getState().setOnboardingComplete(onboardingCompletedAt !== null)
-    if (plan === null) usePlanStore.getState().clearPlan()
-    else usePlanStore.getState().setPlan(plan)
     setOwners(userId)
   }
+  if (plan === null) usePlanStore.getState().clearPlan()
+  else usePlanStore.getState().setPlan(plan)
   useAthleteStore.getState().setOnboardingComplete(onboardingCompletedAt !== null)
   setOwners(userId)
   useAthleteStore.getState().setSyncStatus("ready")
@@ -150,10 +164,13 @@ export async function saveProfileAndPlan(
   const userId = useAthleteStore.getState().sessionUserId
   if (userId === null) return "failed"
 
+  const firstCompletion = options.onboardingComplete === true && !useAthleteStore.getState().onboardingComplete
   const saved = await putAccountProfile(profile, options.onboardingComplete)
   if (saved.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return "failed"
 
-  const created = await postAccountPlan(plan)
+  useAthleteStore.getState().setOnboardingComplete(saved.value.onboardingCompletedAt !== null)
+  setOwners(userId)
+  const created = await postAccountPlan(plan, firstCompletion)
   if (useAthleteStore.getState().sessionUserId !== userId) return "failed"
   if (created.kind === "ok") {
     const current = usePlanStore.getState().plan
@@ -162,7 +179,10 @@ export async function saveProfileAndPlan(
     setOwners(userId)
     return "saved"
   }
-  if (created.kind !== "quota") return "failed"
+  if (created.kind !== "quota") {
+    console.error("Account plan save failed", created.kind)
+    return "failed"
+  }
 
   // The old active plan is untouched on the server; show that one instead of the unsaved local plan.
   const active = await getAccountPlan()
@@ -185,7 +205,7 @@ export function saveSkippedOnboarding(): Promise<SaveResult> {
   if (skipPending) return skipPending
   skipPending = (async (): Promise<SaveResult> => {
     if (Capacitor.isNativePlatform()) {
-      useAthleteStore.getState().setOnboardingComplete(true)
+      useAthleteStore.getState().setOnboardingComplete(false)
       return "skipped"
     }
     const userId = useAthleteStore.getState().sessionUserId

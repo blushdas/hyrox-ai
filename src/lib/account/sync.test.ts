@@ -110,18 +110,18 @@ describe("hydrateFromAccount", () => {
   })
 
   it("hydrates a skipped account without a profile or a plan", async () => {
-    route({ ...signedIn("skip"), "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: 12 }), "GET /api/me/plan": () => json({ plan: null }) })
+    route({ ...signedIn("skip"), "GET /api/me/profile": () => json({ profile: null, onboardingCompletedAt: 12 }), "GET /api/me/plan": () => json({ plan: null }), "POST /api/me/plan": () => json({ plan: planWith("uploaded") }) })
     await hydrateFromAccount({ native: false })
     expect(useAthleteStore.getState()).toMatchObject({ profile: null, onboardingComplete: true, ownerUserId: "skip", syncStatus: "ready" })
-    expect(shouldRedirectToOnboarding(true, "ready", null, useAthleteStore.getState().onboardingComplete)).toBe(false)
+    expect(shouldRedirectToOnboarding(true, "ready", useAthleteStore.getState().onboardingComplete)).toBe(false)
   })
 
   it("never backfills over an existing account profile", async () => {
     useAthleteStore.setState({ profile: profile("Local"), ownerUserId: "existing" })
     usePlanStore.setState({ plan: planWith("local"), ownerUserId: "existing" })
-    route({ ...signedIn("existing"), "GET /api/me/profile": () => json({ profile: profile("Remote"), onboardingCompletedAt: 1 }), "GET /api/me/plan": () => json({ plan: null }) })
+    route({ ...signedIn("existing"), "GET /api/me/profile": () => json({ profile: profile("Remote"), onboardingCompletedAt: 1 }), "GET /api/me/plan": () => json({ plan: null }), "POST /api/me/plan": () => json({ plan: planWith("uploaded") }) })
     await hydrateFromAccount({ native: false })
-    expect(calls().every(c => c.startsWith("GET"))).toBe(true)
+    expect(calls()).not.toContain("PUT /api/me/profile")
     expect(useAthleteStore.getState().profile?.location).toBe("Remote")
   })
 
@@ -265,6 +265,7 @@ describe("saveProfileAndPlan", () => {
     expect(put?.headers).toEqual({ "Content-Type": "application/json" })
     expect(JSON.parse(String(put?.body))).toEqual({ profile: profile("Mine"), onboardingComplete: true })
     expect(JSON.parse(String(post?.body))).toEqual({ plan: local, source: "template" })
+    expect(post?.headers).toMatchObject({ "If-None-Match": "*" })
     expect(usePlanStore.getState().plan?.id).toBe("server-uuid")
     expect(usePlanStore.getState().plan?.weeks).toEqual(local.weeks)
     expect(useAthleteStore.getState().ownerUserId).toBe("bob")
@@ -341,7 +342,7 @@ describe("saveProfileAndPlan", () => {
     })
     expect(await saveProfileAndPlan(profile("Mine"), local, {})).toBe("failed")
     expect(usePlanStore.getState().plan?.id).toBe("plan-123")
-    expect(usePlanStore.getState().ownerUserId).toBeNull()
+    expect(usePlanStore.getState().ownerUserId).toBe("bob")
   })
 
   it("returns failed on a network error", async () => {
@@ -405,24 +406,25 @@ describe("redirect rules", () => {
   it("settles only on ready, signedOut and error", () => {
     expect(["idle", "loading", "ready", "signedOut", "error"].map((s) => isSyncSettled(s as never))).toEqual([false, false, true, true, true])
   })
-  it("redirects only when hydrated, settled and plan-less", () => {
+  it("redirects from account state regardless of local plan", () => {
     const plan = planWith("p")
     for (const hydrated of [true, false]) {
       for (const status of ["idle", "loading", "ready", "signedOut", "error"] as const) {
         for (const p of [plan, null]) {
+          usePlanStore.setState({ plan: p })
           for (const completed of [true, false]) {
-            const expected = hydrated && ["ready", "signedOut"].includes(status) && p === null && !completed
-            expect(shouldRedirectToOnboarding(hydrated, status, p, completed)).toBe(expected)
+            const expected = hydrated && status === "ready" && !completed
+            expect(shouldRedirectToOnboarding(hydrated, status, completed)).toBe(expected)
           }
         }
       }
     }
   })
   it("never redirects on error, so a failed lookup shows retry instead of onboarding", () => {
-    expect(shouldRedirectToOnboarding(true, "error", null)).toBe(false)
+    expect(shouldRedirectToOnboarding(true, "error", false)).toBe(false)
   })
   it("never redirects while idle even though hydration finished", () => {
-    expect(shouldRedirectToOnboarding(true, "idle", null)).toBe(false)
+    expect(shouldRedirectToOnboarding(true, "idle", false)).toBe(false)
   })
 })
 
@@ -498,8 +500,64 @@ it("backfill loses a concurrent profile claim without posting a stale plan", asy
   "GET /api/me/profile": () => json(++reads === 1 ? { profile: null, onboardingCompletedAt: null } : { profile: profile("Remote"), onboardingCompletedAt: 1 }),
   "GET /api/me/plan": () => json({ plan: null }),
   "PUT /api/me/profile": () => json({ error: "Profile already exists" }, 412),
+  "POST /api/me/plan": () => json({ plan: planWith("uploaded") }),
  })
  await hydrateFromAccount({ native: false })
  expect(useAthleteStore.getState().profile?.location).toBe("Remote")
- expect(calls()).not.toContain("POST /api/me/plan")
+ expect(calls().filter(c => c === "POST /api/me/plan")).toHaveLength(1)
+})
+
+it.each(["profile", "plan"])("401 from account %s expires the session and navigates to sign-in", async entity => {
+ const assign = vi.fn()
+ Object.assign(window, { location: { assign } })
+ route({ ...signedIn("expired"), "GET /api/me/profile": () => entity === "profile" ? json({}, 401) : json({ profile: null, onboardingCompletedAt: null }), "GET /api/me/plan": () => entity === "plan" ? json({}, 401) : json({ plan: null }) })
+ await hydrateFromAccount({ native: false })
+ expect(assign).toHaveBeenCalledWith("/sign-in")
+ expect(useAthleteStore.getState()).toMatchObject({ onboardingComplete: false, syncStatus: "signedOut", sessionUserId: null })
+})
+it.each(["profile", "plan", "both"])("backfill pushes only missing entities when account has %s", async existing => {
+ const id = `entities-${existing}`
+ useAthleteStore.setState({ profile: profile("Local"), ownerUserId: id })
+ usePlanStore.setState({ plan: planWith("local"), ownerUserId: id })
+ route({ ...signedIn(id),
+  "GET /api/me/profile": () => json({ profile: existing === "plan" ? null : profile("Remote"), onboardingCompletedAt: existing === "plan" ? null : 1 }),
+  "GET /api/me/plan": () => json({ plan: existing === "profile" ? null : planWith("remote") }),
+  "PUT /api/me/profile": () => json({ profile: profile("Local"), onboardingCompletedAt: 2 }),
+  "POST /api/me/plan": () => json({ plan: planWith("uploaded") }),
+ })
+ await hydrateFromAccount({ native: false })
+ expect(calls().filter(c => c === "PUT /api/me/profile")).toHaveLength(existing === "plan" ? 1 : 0)
+ expect(calls().filter(c => c === "POST /api/me/plan")).toHaveLength(existing === "profile" ? 1 : 0)
+ expect(usePlanStore.getState().plan?.id).toBe(existing === "profile" ? "uploaded" : "remote")
+})
+it("retains local plan after partial backfill failure, logs, then retries missing plan next load", async () => {
+ const log = vi.spyOn(console, "error").mockImplementation(() => undefined)
+ useAthleteStore.setState({ profile: profile("Local"), ownerUserId: "retry-entity" })
+ usePlanStore.setState({ plan: planWith("local"), ownerUserId: "retry-entity" })
+ let saved = false, attempts = 0
+ route({ ...signedIn("retry-entity"),
+  "GET /api/me/profile": () => json({ profile: saved ? profile("Local") : null, onboardingCompletedAt: saved ? 42 : null }),
+  "GET /api/me/plan": () => json({ plan: null }),
+  "PUT /api/me/profile": () => { saved = true; return json({ profile: profile("Local"), onboardingCompletedAt: 42 }) },
+  "POST /api/me/plan": () => ++attempts === 1 ? json({}, 500) : json({ plan: planWith("retried") }),
+ })
+ await hydrateFromAccount({ native: false })
+ expect(usePlanStore.getState().plan?.id).toBe("local")
+ expect(log).toHaveBeenCalledWith("Account backfill failed", "ok", "failed")
+ await hydrateFromAccount({ native: false })
+ expect(usePlanStore.getState().plan?.id).toBe("retried")
+ expect(calls().filter(c => c === "PUT /api/me/profile")).toHaveLength(1)
+ expect(attempts).toBe(2)
+})
+it("ignores old persisted completion and does not persist a newly received flag", async () => {
+ window.localStorage.setItem("finisher-athlete", JSON.stringify({ state: { onboardingComplete: true }, version: 0 }))
+ await useAthleteStore.persist.rehydrate()
+ expect(useAthleteStore.getState().onboardingComplete).toBe(false)
+ useAthleteStore.getState().setOnboardingComplete(true)
+ expect(JSON.parse(window.localStorage.getItem("finisher-athlete")!).state).not.toHaveProperty("onboardingComplete")
+ route({ "GET /api/auth/session": () => json(null) })
+ await hydrateFromAccount({ native: false })
+ expect(useAthleteStore.getState().onboardingComplete).toBe(false)
+ await hydrateFromAccount({ native: true })
+ expect(useAthleteStore.getState().onboardingComplete).toBe(false)
 })

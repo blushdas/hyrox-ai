@@ -131,3 +131,11 @@ describe("runtime guards", () => {
     expect(isTrainingPlan(null)).toBe(false)
   })
 })
+
+it("logs transport errors using the existing redacted console logger", async () => {
+ const logger = vi.spyOn(console, "error").mockImplementation(() => undefined)
+ fetcher.mockRejectedValue(new TypeError("private sensitive transport detail"))
+ expect(await getAccountProfile()).toEqual({ kind: "failed" })
+ expect(logger).toHaveBeenCalledWith("Account request failed", "TypeError")
+ logger.mockRestore()
+})

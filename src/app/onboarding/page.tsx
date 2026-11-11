@@ -50,7 +50,7 @@ const defaults: Partial<AthleteProfile> = {
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const { setProfile, setOnboardingComplete, onboardingComplete } = useAthleteStore()
+  const { setProfile, onboardingComplete } = useAthleteStore()
   const syncStatus = useAthleteStore((s) => s.syncStatus)
   const { generatePlan } = usePlanGenerator()
   const [redo, setRedo] = useState<boolean | null>(null)
@@ -65,6 +65,7 @@ export default function OnboardingPage() {
   const reduced = useReducedMotion()
 
   useEffect(() => {
+    if (syncStatus === "signedOut") router.replace("/sign-in")
     if (redo === false && isSyncSettled(syncStatus) && syncStatus !== "error" && onboardingComplete && !loading) router.replace("/dashboard")
   }, [redo, syncStatus, onboardingComplete, loading, router])
 
@@ -137,7 +138,6 @@ export default function OnboardingPage() {
     const profile = data as AthleteProfile
     setProfile(profile)
     const plan = generatePlan(profile)
-    setOnboardingComplete(true)
     const result = await saveProfileAndPlan(profile, plan, { onboardingComplete: true })
     if (result === "failed") toast.error(SAVE_FAILED_MESSAGE)
     else if (result === "quota") toast(QUOTA_MESSAGE)
@@ -273,7 +273,7 @@ export default function OnboardingPage() {
                 className="mt-1 text-[13px] underline"
                 onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}
               >
-                Retry
+                Try again
               </button>
             </div>
           )}

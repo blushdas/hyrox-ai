@@ -79,5 +79,10 @@ it("redo completion generates and saves a normal profile and plan", async () => 
   await (button.props.onClick as () => Promise<void>)()
   expect(mocks.generate).toHaveBeenCalledOnce()
   expect(mocks.save).toHaveBeenCalledWith(expect.objectContaining({ fitnessLevel: "beginner_mid" }), plan, { onboardingComplete: true })
-  expect(mocks.complete).toHaveBeenCalledWith(true)
+  expect(mocks.complete).not.toHaveBeenCalled()
+})
+
+it("account-fetch error offers the exact Try again action", () => {
+ mocks.status = "error"
+ expect(find(OnboardingPage(), element => element.props.children === "Try again")).toBeDefined()
 })
