@@ -1,11 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { DURATION_FAST, PLAN_DURATION, motionTransition, planStages } from "@/lib/motion"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/shell/primitives"
+import { weeksUntilRace } from "@/components/ui/date-picker"
 import { Logo } from "@/components/shared/logo"
 import { useAthleteStore } from "@/stores/athlete-store"
 import { usePlanGenerator } from "@/hooks/use-plan-generator"
@@ -15,6 +18,9 @@ import { StepFitness } from "@/components/app/onboarding/step-fitness"
 import { StepBiometrics } from "@/components/app/onboarding/step-biometrics"
 import { StepAvailability } from "@/components/app/onboarding/step-availability"
 import { StepAssessment } from "@/components/app/onboarding/step-assessment"
+import { checkProfile, QUOTA_MESSAGE, SAVE_FAILED_MESSAGE } from "@/lib/account/profile-input"
+import { Capacitor } from "@capacitor/core"
+import { hydrateFromAccount, isSyncSettled, saveSkippedOnboarding, saveProfileAndPlan } from "@/lib/account/sync"
 import type { AthleteProfile } from "@/lib/types"
 
 const TOTAL_STEPS = 5
@@ -44,14 +50,24 @@ const defaults: Partial<AthleteProfile> = {
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const { setProfile, setOnboardingComplete } = useAthleteStore()
+  const { setProfile, onboardingComplete } = useAthleteStore()
+  const syncStatus = useAthleteStore((s) => s.syncStatus)
   const { generatePlan } = usePlanGenerator()
+  const [redo, setRedo] = useState<boolean | null>(null)
+  const [skipping, setSkipping] = useState(false)
+  const skipBusy = useRef(false)
+  useEffect(() => { setRedo(new URLSearchParams(window.location.search).get("redo") === "1") }, [])
   const [step, setStep] = useState(1)
   const [data, setData] = useState<Partial<AthleteProfile>>(defaults)
   const [loading, setLoading] = useState(false)
   const [elapsed, setElapsed] = useState(0)
   const [now] = useState(() => Date.now())
   const reduced = useReducedMotion()
+
+  useEffect(() => {
+    if (syncStatus === "signedOut") router.replace("/sign-in")
+    if (redo === false && isSyncSettled(syncStatus) && syncStatus !== "error" && onboardingComplete && !loading) router.replace("/dashboard")
+  }, [redo, syncStatus, onboardingComplete, loading, router])
 
   useEffect(() => {
     if (!loading) return
@@ -69,23 +85,48 @@ export default function OnboardingPage() {
     setData((prev) => ({ ...prev, ...updates }))
   }
 
+  function fieldErrors() {
+    const errors: Partial<Record<"location" | "fiveKTime" | "tenKTime" | "hyroxTime" | "age" | "weight", string>> = {}
+    const check =
+      step === 1
+        ? checkProfile({ location: data.location })
+        : step === 2
+          ? checkProfile({ fiveKTime: data.fiveKTime, tenKTime: data.tenKTime, hyroxTime: data.hyroxTime })
+          : step === 3
+            ? checkProfile({ age: data.age, weight: data.weight, weightUnit: data.weightUnit })
+            : { ok: true as const }
+    if (!check.ok) for (const { field, message } of check.errors) errors[field] = message
+    return errors
+  }
+  const errors = fieldErrors()
+
   function validateStep(): boolean {
     if (step === 1) {
       const weeksToRace = data.raceDate
-        ? Math.floor(
-            (new Date(data.raceDate).getTime() - now) /
-              (7 * 24 * 60 * 60 * 1000),
-          )
+        ? weeksUntilRace(data.raceDate, new Date(now))
         : 0
-      return !!data.raceDate && weeksToRace >= 4
+      return !!data.raceDate && weeksToRace >= 4 && !errors.location
     }
+    if (step === 2) return !errors.fiveKTime && !errors.tenKTime && !errors.hyroxTime
+    if (step === 3) return !errors.age && !errors.weight
     if (step === 4) return !!data.daysPerWeek && !!data.sessionLength
     if (step === 5) return !!data.fitnessLevel
     return true
   }
 
+  async function handleSkip() {
+    if (skipBusy.current || loading) return
+    skipBusy.current = true
+    setSkipping(true)
+    try {
+      const result = await saveSkippedOnboarding()
+      if (result === "failed") toast.error(SAVE_FAILED_MESSAGE)
+      else router.replace("/dashboard")
+    } finally { skipBusy.current = false; setSkipping(false) }
+  }
+
   async function handleNext() {
-    if (!validateStep()) return
+    if (skipBusy.current || loading || !validateStep()) return
 
     if (step < TOTAL_STEPS) {
       setStep(step + 1)
@@ -96,19 +137,22 @@ export default function OnboardingPage() {
     setLoading(true)
     const profile = data as AthleteProfile
     setProfile(profile)
-    generatePlan(profile)
-    setOnboardingComplete(true)
+    const plan = generatePlan(profile)
+    const result = await saveProfileAndPlan(profile, plan, { onboardingComplete: true })
+    if (result === "failed") toast.error(SAVE_FAILED_MESSAGE)
+    else if (result === "quota") toast(QUOTA_MESSAGE)
 
   }
 
   const stepComponents = [
-    <StepRace key={1} data={data} onChange={updateData} />,
-    <StepFitness key={2} data={data} onChange={updateData} />,
-    <StepBiometrics key={3} data={data} onChange={updateData} />,
+    <StepRace key={1} data={data} onChange={updateData} errors={errors} />,
+    <StepFitness key={2} data={data} onChange={updateData} errors={errors} />,
+    <StepBiometrics key={3} data={data} onChange={updateData} errors={errors} />,
     <StepAvailability key={4} data={data} onChange={updateData} />,
     <StepAssessment key={5} data={data} onChange={updateData} />,
   ]
 
+  if (redo === null || !isSyncSettled(syncStatus) || (redo === false && onboardingComplete && syncStatus !== "error" && !loading)) return <Skeleton />
   if (loading) return <PlanLoader elapsed={elapsed} />
 
   return (
@@ -207,10 +251,7 @@ export default function OnboardingPage() {
           {step === 1 &&
             data.raceDate &&
             (() => {
-              const weeks = Math.floor(
-                (new Date(data.raceDate).getTime() - now) /
-                  (7 * 24 * 60 * 60 * 1000),
-              )
+              const weeks = weeksUntilRace(data.raceDate, new Date(now))
               if (weeks < 4) {
                 return (
                   <div className="mb-3 p-3 bg-surface-1 border-l border-danger">
@@ -224,9 +265,25 @@ export default function OnboardingPage() {
               return null
             })()}
 
+          {syncStatus === "error" && (
+            <div role="alert" className="mb-3 p-3 bg-surface-1 border-l border-danger">
+              <p className="text-[13px] text-danger">Couldn&apos;t reach your account.</p>
+              <button
+                type="button"
+                className="mt-1 text-[13px] underline"
+                onClick={() => void hydrateFromAccount({ native: Capacitor.isNativePlatform() })}
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          <Button variant="ghost" onClick={handleSkip} disabled={skipping || syncStatus === "error"} className="mb-2 min-h-11 w-full">
+            {skipping ? "Saving..." : "Skip for now"}
+          </Button>
           <Button
             onClick={handleNext}
-            disabled={!validateStep() || loading}
+            disabled={!validateStep() || loading || skipping || (step === TOTAL_STEPS && (syncStatus === "loading" || syncStatus === "idle" || syncStatus === "error"))}
             className="w-full h-12 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-40"
           >
             {loading

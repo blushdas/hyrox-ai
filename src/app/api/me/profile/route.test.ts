@@ -37,3 +37,31 @@ it("logs D1 failures and returns generic 500", async () => {
  expect(response.status).toBe(500); expect(await response.json()).toEqual({ error: "Internal server error" });
  expect(log).toHaveBeenCalled();
 });
+
+it("skip authenticates, persists completion without profile and rejects mixed bodies", async () => {
+ const skipped = await route.PUT(req("PUT", { skipOnboarding: true }));
+ expect(skipped.status).toBe(200);
+ const result = await skipped.json();
+ expect(result).toEqual({ profile: null, onboardingCompletedAt: expect.any(Number) });
+ expect(await (await route.GET()).json()).toEqual(result);
+ for (const body of [{ skipOnboarding: false }, { skipOnboarding: "true" }, { skipOnboarding: true, profile }, { skipOnboarding: true, userId: "bob" }]) expect((await route.PUT(req("PUT", body))).status).toBe(400);
+ vi.mocked(auth).mockResolvedValue(null as never);
+ expect((await route.PUT(req("PUT", { skipOnboarding: true }))).status).toBe(401);
+});
+
+it("conditional backfill returns 412 without modifying an existing account profile", async () => {
+ await route.PUT(req("PUT", { profile, onboardingComplete: true }));
+ const request = req("PUT", { profile: { ...profile, location: "Stale local" }, onboardingComplete: true });
+ request.headers.set("If-None-Match", "*");
+ expect((await route.PUT(request)).status).toBe(412);
+ expect((await (await route.GET()).json()).profile).toEqual(profile);
+});
+
+it("skip with a foreign userId cannot write or modify that user's row", async () => {
+ await route.PUT(req("PUT", { skipOnboarding: true }))
+ const before = test.sqlite.prepare("SELECT * FROM athlete_profiles ORDER BY user_id").all()
+ expect((await route.PUT(req("PUT", { skipOnboarding: true, userId: "bob" }))).status).toBe(400)
+ expect(test.sqlite.prepare("SELECT * FROM athlete_profiles ORDER BY user_id").all()).toEqual(before)
+ expect(test.sqlite.prepare("SELECT user_id, onboarding_skipped FROM athlete_profiles").all()).toEqual([{ user_id: "alice", onboarding_skipped: 1 }])
+ expect(test.sqlite.prepare("SELECT * FROM athlete_profiles WHERE user_id='bob'").all()).toEqual([])
+})

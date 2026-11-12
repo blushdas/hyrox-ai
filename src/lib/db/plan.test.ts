@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, it, expect, vi } from "vitest";
 vi.mock("@/lib/api/db-client", () => ({ getDb: vi.fn() }));
 import { getDb } from "@/lib/api/db-client";
-import { createTestDb, plan } from "@/lib/api/test-d1";
+import { createTestDb, plan, profile } from "@/lib/api/test-d1";
 import { createPlan, getActivePlan, updateSessionStatus } from "./plan";
 let test: ReturnType<typeof createTestDb>;
 beforeEach(() => { test = createTestDb(); vi.mocked(getDb).mockResolvedValue(test.db); });
@@ -27,3 +27,21 @@ it("isolates users and updates only active session keys, clearing completed stam
  const next = structuredClone(plan); next.weeks[0].sessions[0].id = "new"; await createPlan("alice", next);
  expect(await updateSessionStatus("alice", "session-1", "completed")).toBeNull(); expect((await getActivePlan("bob"))?.weeks[0].sessions[0].id).toBe("session-1");
 });
+
+it("concurrent first completions preserve one plan row and the first timestamp", async () => {
+ const { upsertProfile, getProfile } = await import("./profile")
+ // D1 serializes transactional batches; serialize the SQLite test adapter the same way.
+ const batch = test.db.batch.bind(test.db)
+ let queue = Promise.resolve<unknown>(undefined)
+ test.db.batch = statements => { const next = queue.then(() => batch(statements)); queue = next; return next }
+ vi.spyOn(Date, "now").mockReturnValue(200).mockReturnValueOnce(100)
+ const complete = async () => {
+  await upsertProfile("alice", profile, { onboardingComplete: true })
+  return createPlan("alice", plan, { source: "template" }, true)
+ }
+ const [first, second] = await Promise.all([complete(), complete()])
+ expect(first.id).toBe(second.id)
+ expect(test.sqlite.prepare("SELECT status, COUNT(*) AS n FROM training_plans GROUP BY status").all()).toEqual([{ status: "active", n: 1 }])
+ expect((await getProfile("alice")).onboardingCompletedAt).toBe(100)
+ vi.restoreAllMocks()
+})

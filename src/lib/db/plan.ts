@@ -8,17 +8,21 @@ type SessionRow = {
  title: string; duration: string; warmup: string; main_set: string; cooldown: string; coach_note: string;
  status: SessionStatus; phase_week: number; total_phase_weeks: number;
 };
-export async function createPlan(userId: string, plan: TrainingPlan, meta: PlanMeta = { source: "template" }): Promise<TrainingPlan> {
+export async function createPlan(userId: string, plan: TrainingPlan, meta: PlanMeta = { source: "template" }, onlyIfEmpty = false): Promise<TrainingPlan> {
  const db = await getDb(); const id = crypto.randomUUID(); const now = Date.now();
  const statements = [
-  db.prepare("UPDATE training_plans SET status = 'archived' WHERE user_id = ? AND status = 'active' AND (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ?").bind(userId, userId, MAX_PLANS),
-  db.prepare("INSERT INTO training_plans (id, user_id, status, source, template_id, total_weeks, race_date, start_date, created_at) SELECT ?, ?, 'active', ?, ?, ?, ?, NULL, ? WHERE (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ?").bind(id, userId, meta.source, meta.templateId ?? null, plan.totalWeeks, plan.raceDate, now, userId, MAX_PLANS),
+  db.prepare("UPDATE training_plans SET status = 'archived' WHERE user_id = ? AND status = 'active' AND ? = 0 AND (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ?").bind(userId, onlyIfEmpty ? 1 : 0, userId, MAX_PLANS),
+  db.prepare("INSERT INTO training_plans (id, user_id, status, source, template_id, total_weeks, race_date, start_date, created_at) SELECT ?, ?, 'active', ?, ?, ?, ?, NULL, ? WHERE (SELECT COUNT(*) FROM training_plans WHERE user_id = ?) < ? AND (? = 0 OR NOT EXISTS (SELECT 1 FROM training_plans WHERE user_id = ? AND status = 'active'))").bind(id, userId, meta.source, meta.templateId ?? null, plan.totalWeeks, plan.raceDate, now, userId, MAX_PLANS, onlyIfEmpty ? 1 : 0, userId),
  ];
  for (const week of plan.weeks) for (const s of week.sessions) {
   statements.push(db.prepare(`INSERT INTO plan_sessions (id, plan_id, user_id, session_key, week, day, type, phase, title, duration, warmup, main_set, cooldown, coach_note, status, completed_at, phase_week, total_phase_weeks)
    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM training_plans WHERE id = ? AND user_id = ?)`).bind(crypto.randomUUID(), id, userId, s.id, s.week, s.day, s.type, s.phase, s.title, s.duration, JSON.stringify(s.warmup), JSON.stringify(s.mainSet), JSON.stringify(s.cooldown), s.coachNote, s.status, s.status === "completed" ? now : null, week.phaseWeek, week.totalPhaseWeeks, id, userId));
  }
  const results = await db.batch(statements);
+ if (onlyIfEmpty) {
+  const active = await getActivePlan(userId);
+  if (active) return active;
+ }
  requireInserted(results, 1);
  return { ...plan, id };
 }

@@ -6,11 +6,12 @@ import type { AthleteProfile } from "@/lib/types"
 type Props = {
   data: Partial<AthleteProfile>
   onChange: (updates: Partial<AthleteProfile>) => void
+  errors?: Partial<Record<"location" | "fiveKTime" | "tenKTime" | "hyroxTime" | "age" | "weight", string>>
 }
 
 const genderOptions = ["Male", "Female", "Non-binary", "Prefer not to say"]
 
-export function StepBiometrics({ data, onChange }: Props) {
+export function StepBiometrics({ data, onChange, errors }: Props) {
   return (
     <div className="space-y-6">
       <div>
@@ -38,9 +39,10 @@ export function StepBiometrics({ data, onChange }: Props) {
               })
             }
             className="bg-surface-2 border-border text-foreground placeholder:text-muted-foreground"
-            min={16}
-            max={80}
+            min={13}
+            max={100}
           />
+          {errors?.age && <p className="mt-1 text-[13px] text-danger">{errors.age}</p>}
         </div>
 
         <div>
@@ -105,6 +107,7 @@ export function StepBiometrics({ data, onChange }: Props) {
               ))}
             </div>
           </div>
+          {errors?.weight && <p className="mt-1 text-[13px] text-danger">{errors.weight}</p>}
         </div>
       </div>
     </div>

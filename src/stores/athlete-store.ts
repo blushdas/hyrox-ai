@@ -4,9 +4,17 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { AthleteProfile, RaceCategory, FitnessLevel } from "@/lib/types"
 
+export type SyncStatus = "idle" | "loading" | "ready" | "signedOut" | "error"
+
 type AthleteState = {
   profile: AthleteProfile | null
   onboardingComplete: boolean
+  ownerUserId: string | null
+  syncStatus: SyncStatus
+  sessionUserId: string | null
+  setOwner: (id: string | null) => void
+  setSyncStatus: (status: SyncStatus) => void
+  setSessionUserId: (id: string | null) => void
   setProfile: (profile: AthleteProfile) => void
   updateProfile: (partial: Partial<AthleteProfile>) => void
   clearProfile: () => void
@@ -34,17 +42,29 @@ export const useAthleteStore = create<AthleteState>()(
     (set) => ({
       profile: null,
       onboardingComplete: false,
+      ownerUserId: null,
+      syncStatus: "idle",
+      sessionUserId: null,
+      setOwner: (id) => set({ ownerUserId: id }),
+      setSyncStatus: (status) => set({ syncStatus: status }),
+      setSessionUserId: (id) => set({ sessionUserId: id }),
       setProfile: (profile) => set({ profile }),
       updateProfile: (partial) =>
         set((state) => ({
           profile: state.profile ? { ...state.profile, ...partial } : { ...defaultProfile, ...partial },
         })),
-      clearProfile: () => set({ profile: null, onboardingComplete: false }),
+      clearProfile: () => set({ profile: null, onboardingComplete: false, ownerUserId: null }),
       setOnboardingComplete: (complete) => set({ onboardingComplete: complete }),
     }),
     {
       name: "finisher-athlete",
       skipHydration: true,
+      // Sync status and the session user describe this tab, not the saved data.
+      merge: (persisted, current) => ({ ...current, ...(persisted as Partial<AthleteState>), onboardingComplete: false }),
+      partialize: (state) => ({
+        profile: state.profile,
+        ownerUserId: state.ownerUserId,
+      }),
     }
   )
 )

@@ -12,6 +12,9 @@ const member = (v: unknown, values: readonly unknown[]) => values.includes(v);
 const phases = ["foundation", "base", "build", "peak", "taper"];
 const statuses = ["pending", "completed", "skipped"];
 const date = (v: unknown) => typeof v === "string" && (v === "" || (/^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v));
+export function validateSkipOnboarding(v: Record<string, unknown>): boolean {
+ return v.skipOnboarding === true && Object.keys(v).length === 1;
+}
 export function validateProfile(v: unknown): Result<AthleteProfile> {
  if (!object(v) || !date(v.raceDate) || !str(v.location, 120) || !member(v.category, ["open", "pro", "doubles"]) || !member(v.fitnessLevel, ["beginner_low", "beginner_mid", "beginner_high"]) || !member(v.weightUnit, ["kg", "lbs"]) || !member(v.daysPerWeek, [3,4,5]) || !member(v.sessionLength, [45,60,75,90]) || !(v.age === null || integer(v.age, 13, 100)) || !str(v.gender, 120)) return bad("Invalid profile");
  for (const key of ["fiveKTime", "tenKTime", "hyroxTime"]) {

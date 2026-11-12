@@ -1,14 +1,12 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
 import {
   PageHeader,
   MonoLabel,
   EmptyState,
   Section,
-  Skeleton,
 } from "@/components/shell/primitives"
 import {
   TrainSegments,
@@ -29,17 +27,10 @@ import { usePlanStore } from "@/stores/plan-store"
 import { InstallBanner } from "@/components/shared/install-banner"
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const { profile, onboardingComplete } = useAthleteStore()
+  const { profile } = useAthleteStore()
   const { plan, currentWeek, setCurrentWeek } = usePlanStore()
 
-  useEffect(() => {
-    if (!onboardingComplete || !profile) {
-      router.replace("/onboarding")
-    }
-  }, [onboardingComplete, profile, router])
-
-  if (!plan || !profile) return <Skeleton />
+  if (!plan || !profile) return <BuildPlanEmptyState title="Train" />
   const now = new Date()
   const today = getTodayIsoWeekday(now)
   const raceDays = getRaceCountdownDays(profile.raceDate, now)

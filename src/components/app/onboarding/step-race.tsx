@@ -1,11 +1,13 @@
 "use client"
 
+import { DatePicker } from "@/components/ui/date-picker"
 import { Input } from "@/components/ui/input"
 import type { AthleteProfile, RaceCategory } from "@/lib/types"
 
 type Props = {
   data: Partial<AthleteProfile>
   onChange: (updates: Partial<AthleteProfile>) => void
+  errors?: Partial<Record<"location" | "fiveKTime" | "tenKTime" | "hyroxTime" | "age" | "weight", string>>
 }
 
 const categories: { value: RaceCategory; label: string; desc: string }[] = [
@@ -14,7 +16,7 @@ const categories: { value: RaceCategory; label: string; desc: string }[] = [
   { value: "doubles", label: "Doubles", desc: "Team of 2" },
 ]
 
-export function StepRace({ data, onChange }: Props) {
+export function StepRace({ data, onChange, errors }: Props) {
   return (
     <div className="space-y-6">
       <div>
@@ -31,14 +33,7 @@ export function StepRace({ data, onChange }: Props) {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Race Date *
           </label>
-          <Input
-            aria-label="Race Date"
-            type="date"
-            value={data.raceDate ?? ""}
-            onChange={(e) => onChange({ raceDate: e.target.value })}
-            className="bg-surface-2 border-border text-foreground"
-            min={new Date().toISOString().split("T")[0]}
-          />
+          <DatePicker value={data.raceDate ?? ""} onChange={raceDate => onChange({ raceDate })} />
         </div>
 
         <div>
@@ -53,6 +48,7 @@ export function StepRace({ data, onChange }: Props) {
             onChange={(e) => onChange({ location: e.target.value })}
             className="bg-surface-2 border-border text-foreground placeholder:text-muted-foreground"
           />
+          {errors?.location && <p className="mt-1 text-[13px] text-danger">{errors.location}</p>}
         </div>
 
         <div>
