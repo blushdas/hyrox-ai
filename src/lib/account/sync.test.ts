@@ -91,6 +91,20 @@ describe("hydrateFromAccount", () => {
     expect(calls().every((c) => c.startsWith("GET "))).toBe(true)
   })
 
+  it("never posts a plan when another tab skipped between the read and the profile write", async () => {
+    useAthleteStore.setState({ profile: profile("Local"), ownerUserId: "racer" })
+    usePlanStore.setState({ plan: planWith("local"), ownerUserId: "racer" })
+    let reads = 0
+    route({
+      ...signedIn("racer"),
+      "GET /api/me/profile": () => json(reads++ === 0 ? { profile: null, onboardingCompletedAt: null } : { profile: null, onboardingCompletedAt: 4 }),
+      "GET /api/me/plan": () => json({ plan: null }),
+      "PUT /api/me/profile": () => json({}, 412),
+    })
+    await hydrateFromAccount({ native: false })
+    expect(calls()).not.toContain("POST /api/me/plan")
+  })
+
   it("never posts a plan when the profile backfill failed", async () => {
     useAthleteStore.setState({ profile: profile("Local"), ownerUserId: "halfway" })
     usePlanStore.setState({ plan: planWith("local"), ownerUserId: "halfway" })

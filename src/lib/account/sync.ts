@@ -125,7 +125,7 @@ async function hydrate(run: number, native: boolean): Promise<void> {
           profile = saved.kind === "precondition" ? await getAccountProfile() : saved
         }
         // A plan never goes up without its profile, or the account would hold a plan with no profile.
-        if (profile.kind !== "ok" || useAthleteStore.getState().sessionUserId !== userId) return { profile, plan: { kind: "failed" } as const }
+        if (profile.kind !== "ok" || profile.value.profile === null || useAthleteStore.getState().sessionUserId !== userId) return { profile, plan: { kind: "failed" } as const }
         let plan: Awaited<ReturnType<typeof getAccountPlan>> = planResult
         if (missingPlan && localPlan) {
           // The server's conditional insert protects a plan created since the initial read.
