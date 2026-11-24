@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { useRouteMotion } from "@/components/shell/app-shell"
-import { motionTransition, routeDirection } from "@/lib/motion"
+import { springTransition, routeDirection } from "@/lib/motion"
 
 export default function AppTemplate({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion()
@@ -11,11 +11,11 @@ export default function AppTemplate({ children }: { children: React.ReactNode })
     <motion.div
       key={to}
       data-route-motion
-      initial={{ opacity: reduced ? 1 : 0, x: reduced ? 0 : routeDirection(from, to) * 16, y: reduced ? 0 : 8 }}
-      animate={{ opacity: 1, x: 0, y: 0 }}
-      transition={motionTransition(reduced)}
+      initial={{ opacity: 0, x: 0, y: 0 }}
+      animate={{ opacity: 1, x: reduced ? 0 : [routeDirection(from, to) * 16, 0], y: reduced ? 0 : [8, 0] }}
+      transition={springTransition(reduced)}
     >
-      {children}
+      <div className="motion-content">{children}</div>
     </motion.div>
   )
 }

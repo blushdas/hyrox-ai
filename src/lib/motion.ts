@@ -2,6 +2,37 @@ export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const
 export const DURATION_FAST = 0.15
 export const DURATION_BASE = 0.22
 
+export const springs = {
+  snappy: { stiffness: 439, damping: 41.9, mass: 1 },
+  default: { stiffness: 247, damping: 26.7, mass: 1 },
+  smooth: { stiffness: 158, damping: 25.1, mass: 1 },
+  bouncy: { stiffness: 158, damping: 17.6, mass: 1 },
+} as const
+
+export function staggerDelay(index: number) {
+  return Math.min(7, Math.max(0, Number.isFinite(index) ? Math.floor(index) : 0)) * 40
+}
+
+// A document lifetime, rather than sessionStorage: a real cold reload can play again.
+export function createColdStartGate() {
+  let played = false
+  return () => {
+    if (played) return false
+    played = true
+    return true
+  }
+}
+
+export function springTransition(reduced: boolean | null, preset: keyof typeof springs = "default") {
+  if (!reduced) return { type: "spring" as const, ...springs[preset] }
+  const styles = typeof document === "undefined" ? null : getComputedStyle(document.documentElement)
+  return {
+    type: "tween" as const,
+    duration: durationSeconds(styles?.getPropertyValue("--dur-enter") ?? "", 0.21),
+    ease: "easeOut" as const,
+  }
+}
+
 export function routeDirection(from: string, to: string): -1 | 0 | 1 {
   const depth = (path: string) => path.split(/[?#]/)[0].split("/").filter(Boolean).length
   return Math.sign(depth(to) - depth(from)) as -1 | 0 | 1

@@ -112,7 +112,7 @@ export function WeekStrip({
           <ChevronRight size={20} />
         </button>
       </div>
-      <div className="grid grid-cols-7 border-y">
+      <div className="motion-stagger grid grid-cols-7 border-y">
         {DAYS.map((d, i) => (
           <button
             key={d}
@@ -162,7 +162,7 @@ export function SessionRow({
     <Link
       id={anchor ? `day-${s.day}` : undefined}
       href={`/session/${s.id}`}
-      className="flex min-h-24 scroll-mt-28 items-center gap-4 border-b py-4 hover:bg-surface-2"
+      className="motion-stagger-row flex min-h-24 scroll-mt-28 items-center gap-4 border-b py-4 hover:bg-surface-2"
     >
       <MonoLabel className="w-8 shrink-0">{DAYS[s.day - 1]}</MonoLabel>
       <div className="min-w-0 flex-1">
@@ -206,7 +206,7 @@ export function StepList({
         <span>{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <ol>
+        <ol className="motion-stagger">
           {block.exercises.map((e, i) => (
             <li key={i} className="flex gap-3 border-t py-4">
               <span className="font-mono text-[11px] text-text-3">
@@ -257,7 +257,7 @@ export function PlanWeekRow({
     <button
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b px-3 py-4 text-left ${active ? "bg-accent-soft text-accent" : ""}`}
+      className={`motion-stagger-row grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b px-3 py-4 text-left ${active ? "bg-accent-soft text-accent" : ""}`}
     >
       <span className="font-mono text-[13px]">
         WK {String(r.week).padStart(2, "0")}
