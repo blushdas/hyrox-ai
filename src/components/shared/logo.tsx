@@ -1,6 +1,7 @@
 "use client"
 
 import { useLayoutEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
 import { createColdStartGate, durationSeconds } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -32,11 +33,16 @@ export function Logo({ className, size = "md" }: LogoProps) {
 
 const claimSplash = createColdStartGate()
 
+// Signed-out visitors are always routed to /sign-in (src/proxy.ts), so the splash plays only there.
+const SPLASH_PATH = "/sign-in"
+
 export function ColdStartSplash() {
+  const eligible = usePathname() === SPLASH_PATH
   const [visible, setVisible] = useState(true)
   const ownsSplash = useRef(false)
 
   useLayoutEffect(() => {
+    if (!eligible) return
     // Retain ownership through Strict Mode's effect replay, while rejecting remounts.
     if (!ownsSplash.current && !claimSplash()) {
       queueMicrotask(() => setVisible(false))
@@ -46,9 +52,9 @@ export function ColdStartSplash() {
     const duration = durationSeconds(getComputedStyle(document.documentElement).getPropertyValue("--dur-splash"), 0.9)
     const timer = window.setTimeout(() => setVisible(false), duration * 1000)
     return () => window.clearTimeout(timer)
-  }, [])
+  }, [eligible])
 
-  if (!visible) return null
+  if (!eligible || !visible) return null
   return (
     <div className="motion-splash" aria-hidden="true" data-cold-start-splash
       onAnimationEnd={(event) => { if (event.target === event.currentTarget) setVisible(false) }}
