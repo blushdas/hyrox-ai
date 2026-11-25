@@ -1,7 +1,7 @@
 "use client"
 
 import { BuildPlanEmptyState } from "@/components/app/build-plan-empty-state"
-import { Suspense, useEffect, useRef, useState } from "react"
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { usePlanStore } from "@/stores/plan-store"
 import { useCoachAIStore } from "@/stores/coach-ai-store"
@@ -23,6 +23,26 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
     session ? `Why is ${session.title} in week ${session.week}?` : "",
   )
   const chat = useCoachAIStore()
+  const thread = useRef<HTMLDivElement>(null)
+  const pendingEntrance = useRef(new Set<string>())
+  useLayoutEffect(() => {
+    if (!pendingEntrance.current.size) return
+    const rows = thread.current?.querySelectorAll<HTMLElement>("[data-message-motion]")
+    chat.messages.forEach((message, index) => {
+      const row = rows?.[index]
+      if (row && pendingEntrance.current.has(message.id)) row.dataset.entrance = message.role
+    })
+    pendingEntrance.current.clear()
+  }, [chat.messages])
+
+  // History can arrive after mount. Only a local send or retry owns an entrance.
+  function animateNewMessages(action: () => void) {
+    const previous = new Set(useCoachAIStore.getState().messages.map(message => message.id))
+    action()
+    for (const message of useCoachAIStore.getState().messages) {
+      if (!previous.has(message.id)) pendingEntrance.current.add(message.id)
+    }
+  }
   if (!plan) return <BuildPlanEmptyState title="Coach AI" />
   const context = {
     plan,
@@ -32,7 +52,7 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
   }
   const send = (prompt: string, webSearch = false) => {
     if (!prompt.trim() || chat.isStreaming) return
-    chat.send(prompt, context, webSearch)
+    animateNewMessages(() => chat.send(prompt, context, webSearch))
     setValue("")
   }
   return (
@@ -60,10 +80,12 @@ function CoachChat({ sessionId }: { sessionId?: string }) {
         phase={plan.weeks.find((w) => w.week === currentWeek)?.phase ?? "plan"}
       />
       {chat.messages.length ? (
-        <ChatThread
-          messages={chat.messages}
-          onRetry={() => chat.retry(context)}
-        />
+        <div ref={thread} className="motion-chat-thread">
+          <ChatThread
+            messages={chat.messages}
+            onRetry={() => animateNewMessages(() => chat.retry(context))}
+          />
+        </div>
       ) : (
         <div className="py-8">
           <p className="max-w-md text-text-2">
@@ -98,7 +120,7 @@ function QueryChat() {
 }
 export default function CoachPage() {
   return (
-    <Suspense fallback={<Skeleton />}>
+    <Suspense fallback={<Skeleton fallback variant="coach-ai" />}>
       <QueryChat />
     </Suspense>
   )

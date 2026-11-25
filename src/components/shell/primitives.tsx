@@ -31,7 +31,7 @@ export function PageHeader({
   return (
     <header className="sticky top-0 z-20 border-b bg-background pt-[env(safe-area-inset-top)]">
       <div className="flex min-h-24 items-center justify-between gap-4 py-5">
-        <div className="min-w-0">
+        <div className="motion-splash-surface min-w-0">
           {meta && <MonoLabel>{meta}</MonoLabel>}
           <h1 className="mt-1 text-[22px] font-semibold leading-7 tracking-[-0.015em]">
             {title}
@@ -124,19 +124,23 @@ export function ErrorState({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "plan" | "coach-ai" | "profile" }) {
+export function Skeleton({ variant = "dashboard", fallback = false }: { fallback?: boolean; variant?: "dashboard" | "plan" | "coach-ai" | "profile" }) {
   const ref = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
     const node = ref.current
-    if (!node) return
+    const content = node?.closest(".motion-content")
+    if (!fallback || !node || !content) return
+    content.classList.remove("motion-content-enter")
     const path = window.location.pathname
     return () => {
       const rect = node.getBoundingClientRect()
-      const snapshot = node.cloneNode(true) as HTMLDivElement
       // Suspense removes its fallback immediately. Keep only an inert visual copy
       // for the CSS exit; skip Strict Mode replays and navigation to another route.
       queueMicrotask(() => {
-        if (node.isConnected || window.location.pathname !== path || !rect.height) return
+        if (node.isConnected || !content.isConnected || window.location.pathname !== path ||
+          !rect.height || content.querySelector("[data-motion-skeleton]")) return
+        content.classList.add("motion-content-enter")
+        const snapshot = node.cloneNode(true) as HTMLDivElement
         snapshot.removeAttribute("role")
         snapshot.removeAttribute("aria-label")
         snapshot.removeAttribute("data-motion-skeleton")
@@ -154,7 +158,7 @@ export function Skeleton({ variant = "dashboard" }: { variant?: "dashboard" | "p
         window.setTimeout(() => snapshot.remove(), duration * 1000)
       })
     }
-  }, [])
+  }, [fallback])
   return (
     <div ref={ref} data-motion-skeleton aria-label={`Loading ${variant}`} role="status" className="space-y-5 py-6 motion-safe:animate-pulse">
       <div aria-hidden="true" className="space-y-5">

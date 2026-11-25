@@ -90,9 +90,11 @@ export default function DashboardPage() {
       )}
       <Section label="THIS WEEK">
         {week?.sessions.length ? (
-          [...week.sessions]
-            .sort((a, b) => a.day - b.day)
-            .map((s) => <SessionRow key={s.id} session={s} anchor />)
+          <div className="motion-stagger">
+            {[...week.sessions]
+              .sort((a, b) => a.day - b.day)
+              .map((s) => <SessionRow key={s.id} session={s} anchor />)}
+          </div>
         ) : (
           <EmptyState label="REST WEEK">
             No sessions planned this week.
@@ -100,9 +102,11 @@ export default function DashboardPage() {
         )}
       </Section>
       <Section label="COMING UP">
-        {upcoming.map((s) => (
-          <SessionRow key={s.id} session={s} />
-        ))}
+        <div className="motion-stagger">
+          {upcoming.map((s) => (
+            <SessionRow key={s.id} session={s} />
+          ))}
+        </div>
       </Section>
       <Link
         href="/plan"

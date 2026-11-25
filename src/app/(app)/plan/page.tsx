@@ -37,18 +37,20 @@ export default function PlanPage() {
             label={`${phase} · WK ${group[0].week}–${group[group.length - 1].week}`}
           >
             <p className="mb-4 text-sm text-text-2">{descriptions[phase]}</p>
-            {group.map((row) => (
-              <PlanWeekRow
-                key={row.week}
-                row={row}
-                maxLoad={maxLoad}
-                active={row.week === currentWeek}
-                onSelect={() => {
-                  setCurrentWeek(row.week)
-                  router.push("/dashboard")
-                }}
-              />
-            ))}
+            <div className="motion-stagger">
+              {group.map((row) => (
+                <PlanWeekRow
+                  key={row.week}
+                  row={row}
+                  maxLoad={maxLoad}
+                  active={row.week === currentWeek}
+                  onSelect={() => {
+                    setCurrentWeek(row.week)
+                    router.push("/dashboard")
+                  }}
+                />
+              ))}
+            </div>
           </Section>
         )
       })}

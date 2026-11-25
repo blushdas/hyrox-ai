@@ -86,7 +86,7 @@ describe("spring motion", () => {
       expect(css).toContain(`--dur-${name}: ${ms}ms`)
     }
     expect(css).toContain("--stagger: 40ms")
-    expect(css).toContain("@supports (animation-timing-function: linear(0, 1))")
+    expect(css).toContain("@supports (transition-timing-function: linear(0, 1))")
     for (const preset of ["snappy", "default", "bouncy"]) {
       expect(css).toContain(`--spring-${preset}: cubic-bezier(0.22, 1, 0.36, 1)`)
       expect(css).toContain(`--spring-${preset}: linear(`)

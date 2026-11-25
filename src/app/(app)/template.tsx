@@ -15,7 +15,11 @@ export default function AppTemplate({ children }: { children: React.ReactNode })
       animate={{ opacity: 1, x: reduced ? 0 : [routeDirection(from, to) * 16, 0], y: reduced ? 0 : [8, 0] }}
       transition={springTransition(reduced)}
     >
-      <div className="motion-content">{children}</div>
+      <div className="motion-content" onAnimationEnd={event => {
+        if (event.target === event.currentTarget) event.currentTarget.classList.remove("motion-content-enter")
+      }}>
+        {children}
+      </div>
     </motion.div>
   )
 }

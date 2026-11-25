@@ -162,7 +162,7 @@ export function SessionRow({
     <Link
       id={anchor ? `day-${s.day}` : undefined}
       href={`/session/${s.id}`}
-      className="motion-stagger-row flex min-h-24 scroll-mt-28 items-center gap-4 border-b py-4 hover:bg-surface-2"
+      className="flex min-h-24 scroll-mt-28 items-center gap-4 border-b py-4 hover:bg-surface-2"
     >
       <MonoLabel className="w-8 shrink-0">{DAYS[s.day - 1]}</MonoLabel>
       <div className="min-w-0 flex-1">
@@ -257,7 +257,7 @@ export function PlanWeekRow({
     <button
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`motion-stagger-row grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b px-3 py-4 text-left ${active ? "bg-accent-soft text-accent" : ""}`}
+      className={`grid min-h-24 w-full grid-cols-[56px_1fr_44px] items-center gap-3 border-b px-3 py-4 text-left ${active ? "bg-accent-soft text-accent" : ""}`}
     >
       <span className="font-mono text-[13px]">
         WK {String(r.week).padStart(2, "0")}

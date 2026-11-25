@@ -109,7 +109,6 @@
     font-size: 15px;
     line-height: 22px;
   }
-  a[href] { display: inline-block; }
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
@@ -189,7 +188,7 @@
 
 
 /* Sampled physical springs (mass 1); old engines retain the bezier above. */
-@supports (animation-timing-function: linear(0, 1)) {
+@supports (transition-timing-function: linear(0, 1)) {
   :root {
     --spring-snappy: linear(0, 0.0485, 0.1553, 0.2818, 0.4071, 0.5209, 0.6192, 0.7012, 0.7679, 0.8212, 0.8633, 0.8961, 0.9215, 0.9409, 0.9557, 0.9669, 0.9754, 0.9817, 0.9864, 0.99, 0.9926, 0.9946, 0.996, 0.9971, 1);
     --spring-default: linear(0, 0.0618, 0.1978, 0.3568, 0.5099, 0.6429, 0.7509, 0.8339, 0.895, 0.938, 0.967, 0.9855, 0.9966, 1.0027, 1.0055, 1.0064, 1.0061, 1.0053, 1.0042, 1.0033, 1.0024, 1.0017, 1.0011, 1.0007, 1);
@@ -199,11 +198,18 @@
 
 /* No disabled surface gets press feedback; focus-visible stays in the base layer. */
 :where(button, a[href], [role="button"], .motion-press):not(:disabled, [aria-disabled="true"], [data-disabled]) {
-  transition: transform var(--dur-move) var(--spring-snappy);
+  --press-duration: var(--dur-move);
+  --press-easing: var(--spring-snappy);
+  --color-fade: var(--duration-fast) var(--ease-out-expo);
+  transition: transform var(--press-duration) var(--press-easing),
+    color var(--color-fade), background-color var(--color-fade), border-color var(--color-fade),
+    outline-color var(--color-fade), text-decoration-color var(--color-fade),
+    fill var(--color-fade), stroke var(--color-fade);
 }
 :where(button, a[href], [role="button"], .motion-press):not(:disabled, [aria-disabled="true"], [data-disabled]):active {
   transform: scale(0.97);
-  transition: transform var(--dur-press) ease-out;
+  --press-duration: var(--dur-press);
+  --press-easing: ease-out;
 }
 
 @keyframes motion-row-enter {
@@ -219,26 +225,42 @@
   to { opacity: 0; }
 }
 /* Backwards fill hides delayed rows, then relinquishes transform to press feedback. */
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(-n + 8) {
+.motion-stagger > *:nth-child(-n + 8) {
   animation: motion-row-enter var(--dur-move) var(--spring-default) backwards;
   animation-delay: calc(var(--motion-index, 0) * var(--stagger));
 }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(2) { --motion-index: 1; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(3) { --motion-index: 2; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(4) { --motion-index: 3; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(5) { --motion-index: 4; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(6) { --motion-index: 5; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(7) { --motion-index: 6; }
-:is(.motion-stagger > *, .motion-stagger-row):nth-child(8) { --motion-index: 7; }
+.motion-stagger > *:nth-child(2) { --motion-index: 1; }
+.motion-stagger > *:nth-child(3) { --motion-index: 2; }
+.motion-stagger > *:nth-child(4) { --motion-index: 3; }
+.motion-stagger > *:nth-child(5) { --motion-index: 4; }
+.motion-stagger > *:nth-child(6) { --motion-index: 5; }
+.motion-stagger > *:nth-child(7) { --motion-index: 6; }
+.motion-stagger > *:nth-child(8) { --motion-index: 7; }
+
+/* The thread renderer supplies inline rise/fade styles even on history mounts. */
+.motion-chat-thread [data-message-motion] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.motion-chat-thread [data-message-motion]:not([data-entrance]) [data-response-content] > div {
+  opacity: 1 !important;
+}
+.motion-chat-thread [data-entrance] > :first-child {
+  animation: motion-bubble-enter var(--dur-enter) var(--spring-default) backwards;
+  transform-origin: bottom left;
+}
+.motion-chat-thread [data-entrance="user"] > :first-child { transform-origin: bottom right; }
+@keyframes motion-bubble-enter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 
 .motion-skeleton-exit {
   animation: motion-fade-exit var(--dur-exit) ease-out forwards;
 }
-.motion-content {
+.motion-content-enter {
   animation: motion-row-enter var(--dur-enter) ease-out var(--dur-exit) backwards;
 }
-/* Suspense's content entrance starts when its loading fallback disappears. */
-.motion-content:has([data-motion-skeleton]) { animation: none; }
 
 .motion-splash {
   position: fixed;
@@ -262,8 +284,11 @@
   background-clip: text;
   -webkit-background-clip: text;
 }
-.motion-splash-content { overflow: clip; }
-.motion-splash ~ .motion-splash-content > * {
+.motion-splash ~ .motion-splash-content {
+  animation: motion-splash-reveal var(--dur-splash) var(--spring-default) backwards;
+}
+/* Scale only designated content with no viewport-fixed descendants. */
+.motion-splash ~ .motion-splash-content .motion-splash-surface {
   animation: motion-splash-content var(--dur-splash) var(--spring-default) backwards;
 }
 @keyframes motion-splash-mask {
@@ -276,9 +301,13 @@
   0%, 65% { opacity: 1; }
   100% { opacity: 0; }
 }
+@keyframes motion-splash-reveal {
+  0%, 50% { opacity: 0; }
+  100% { opacity: 1; }
+}
 @keyframes motion-splash-content {
-  0%, 50% { opacity: 0; transform: scale(1.05); }
-  100% { opacity: 1; transform: scale(1); }
+  0%, 50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -293,8 +322,9 @@
   @starting-style {
     .motion-sheet[open] { transform: none; }
   }
-  :is(.motion-stagger > *, .motion-stagger-row):nth-child(-n + 8),
-  .motion-content {
+  .motion-stagger > *:nth-child(-n + 8),
+  .motion-chat-thread [data-entrance] > :first-child,
+  .motion-content-enter {
     animation-name: motion-fade-enter;
     animation-duration: var(--dur-enter) !important;
     animation-delay: 0ms;
@@ -303,7 +333,8 @@
   .motion-skeleton-exit { animation-duration: var(--dur-exit) !important; }
   .motion-splash { animation-duration: var(--dur-splash) !important; }
   .motion-splash-mask { animation: none; }
-  .motion-splash ~ .motion-splash-content > * {
+  .motion-splash ~ .motion-splash-content .motion-splash-surface { animation: none; }
+  .motion-splash ~ .motion-splash-content {
     animation-name: motion-fade-enter;
     animation-duration: var(--dur-splash) !important;
   }
