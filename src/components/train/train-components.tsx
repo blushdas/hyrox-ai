@@ -112,7 +112,7 @@ export function WeekStrip({
           <ChevronRight size={20} />
         </button>
       </div>
-      <div className="grid grid-cols-7 border-y">
+      <div className="motion-stagger grid grid-cols-7 border-y">
         {DAYS.map((d, i) => (
           <button
             key={d}
@@ -206,7 +206,7 @@ export function StepList({
         <span>{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <ol>
+        <ol className="motion-stagger">
           {block.exercises.map((e, i) => (
             <li key={i} className="flex gap-3 border-t py-4">
               <span className="font-mono text-[11px] text-text-3">

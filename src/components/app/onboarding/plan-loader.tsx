@@ -1,14 +1,14 @@
 "use client"
 
 import { motion, useReducedMotion } from "framer-motion"
-import { motionTransition, planSequence, planStages } from "@/lib/motion"
+import { springTransition, planSequence, planStages } from "@/lib/motion"
 import { Logo } from "@/components/shared/logo"
 
 export function PlanLoader({ elapsed = 0 }: { elapsed?: number }) {
   const reduced = useReducedMotion()
   const stage = planSequence(elapsed)
   return (
-    <motion.div initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={motionTransition(reduced)} className="fixed inset-0 z-50 flex min-h-dvh items-start pt-[24vh] justify-center bg-background px-6 text-foreground">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={springTransition(reduced)} className="fixed inset-0 z-50 flex min-h-dvh items-start pt-[24vh] justify-center bg-background px-6 text-foreground">
       <div
         role="status"
         aria-live="polite"
@@ -22,14 +22,17 @@ export function PlanLoader({ elapsed = 0 }: { elapsed?: number }) {
           aria-hidden="true"
           className="my-5 h-0.5 w-full overflow-hidden bg-hairline"
         >
-          <motion.div className="h-full origin-left bg-accent" initial={false} animate={{ scaleX: reduced ? 1 : stage.progress }} transition={motionTransition(reduced)} />
+          <motion.div className="motion-plan-progress h-full origin-left bg-accent" initial={false} animate={{ scaleX: stage.progress }} transition={reduced ? { duration: 0 } : springTransition(false)} />
         </div>
-        <p className="sr-only">{reduced ? "Preparing your training plan" : stage.complete ? "Your plan is ready" : planStages[stage.index].label}</p>
+        <p className="sr-only">
+          <span className="motion-reduce:hidden">{stage.complete ? "Your plan is ready" : planStages[stage.index].label}</span>
+          <span className="hidden motion-reduce:inline">Preparing your training plan</span>
+        </p>
         <ol aria-hidden="true" className="w-full space-y-4 text-sm">
           {planStages.map((item, index) => {
             const done = stage.complete || index < stage.index
-            return <li key={item.label} className={`flex items-center gap-3 ${!reduced && index === stage.index ? "text-foreground" : "text-text-2"}`}>
-              <span className="w-4 font-mono text-accent">{!reduced && done ? "✓" : String(index + 1).padStart(2, "0")}</span>
+            return <li key={item.label} className={`flex items-center gap-3 ${index === stage.index ? "text-foreground motion-reduce:text-text-2" : "text-text-2"}`}>
+              <span className="w-4 font-mono text-accent">{done ? <><span className="motion-reduce:hidden">✓</span><span className="hidden motion-reduce:inline">{String(index + 1).padStart(2, "0")}</span></> : String(index + 1).padStart(2, "0")}</span>
               {item.label}
             </li>
           })}

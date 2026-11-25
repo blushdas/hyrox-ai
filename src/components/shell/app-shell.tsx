@@ -1,7 +1,7 @@
 "use client"
 import { createContext, useContext, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import { motionTransition } from "@/lib/motion"
+import { springTransition } from "@/lib/motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -35,7 +35,7 @@ function NavLinks({ rail = false }: { rail?: boolean }) {
       layoutId={rail ? "rail-indicator" : "tab-indicator"}
       initial={false}
       animate={rail ? { y: `${activeIndex * 100}%` } : { x: `${activeIndex * 100}%` }}
-      transition={motionTransition(reduced)}
+      transition={reduced ? { duration: 0 } : springTransition(false, "snappy")}
       className={rail ? "absolute left-3 right-3 top-6 h-14 rounded-md bg-accent-soft" : "absolute left-0 top-0 h-0.5 w-1/3 bg-accent"}
     />}
     {list.map(({ href, label, icon: Icon }, i) => {

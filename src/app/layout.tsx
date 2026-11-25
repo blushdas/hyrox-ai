@@ -4,6 +4,7 @@ import "./globals.css"
 import { tokens } from "@/lib/theme"
 import { Toaster } from "@/components/ui/sonner"
 import { NativeAuthGate } from "@/components/shared/native-auth-gate"
+import { ColdStartSplash } from "@/components/shared/logo"
 import { StoreHydrator } from "@/components/shared/store-hydrator"
 
 import { InstallEventListener } from "@/components/shared/install-event-listener"
@@ -48,7 +49,10 @@ export default function RootLayout({
       >
         <StoreHydrator />
         <InstallEventListener />
-        <NativeAuthGate>{children}</NativeAuthGate>
+        <ColdStartSplash />
+        <div className="motion-splash-content">
+          <NativeAuthGate>{children}</NativeAuthGate>
+        </div>
         <Toaster />
       </body>
     </html>
