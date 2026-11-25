@@ -27,7 +27,7 @@ wordmark:
   letterSpacing: "-0.025em"
   case: "uppercase"
 motion:
-  splash: "900ms, existing mask-expand; solid silhouette only"
+  splash: "900ms, existing wordmark mask-expand, unchanged"
   segment-step: "150 to 250ms, ease-out-expo, opacity only"
 ---
 
@@ -46,7 +46,7 @@ The app's north star is the race clock: tight, tabular, decisive. The logo is th
 Why this fits the product:
 
 - **Glanceable first.** A block F in one colour on near-black is readable on a home screen, in a tab strip and through gym sweat. It is already the shipped icon, so recognition carries over.
-- **AI work is visible but restrained.** Plan generation has three named stages plus "ready" (`planStages` in `src/lib/motion.ts`). Four segments can light one per stage, so the logo shows real progress instead of a sparkle or shimmer.
+- **AI work is visible but restrained.** Plan generation shows three named stages plus "ready" (`planStages` in `src/lib/motion.ts`). Four segments can light one per stage, so the logo shows staged work instead of a sparkle or shimmer. Today those stages run on a fixed 800ms timer, not on real generation events (see section 7).
 - **One go signal.** The mark is the same green as every actionable element in the app. It introduces no second brand colour.
 - **Finisher, not starter.** The last segment to light is the mid bar, which closes the letter. The mark completes when the work completes.
 
@@ -65,23 +65,23 @@ Measured from the repo on 2026-11-25.
 
 | Surface | File | State |
 |---|---|---|
-| PWA icons (192, 512, maskable 512, apple-touch 180) | `public/icons/*` | Solid block F, `#3DDC84` on `#0A0B0A`. Glyph is 215 x 267 px on the 512 canvas (52% of height), stroke about 62 to 67 px. |
+| PWA icons (192, 512, maskable 512, apple-touch 180) | `public/icons/*` | Solid block F, `#3DDC84` on `#0A0B0A`, on all four files. Glyph is 215 x 267 px on the 512 canvas (52% of height), stroke about 62 to 67 px; the 192 and 180 files are the same drawing scaled. |
 | Wordmark | `src/components/shared/logo.tsx` | Live text, Geist 600, tight tracking. Green F, white INISHER. |
-| Web cold-start splash | `src/app/globals.css` (`.motion-splash*`) | Wordmark letterforms filled with accent green, scale 1 to 0.8 to 40 over 900ms, then fade. |
+| Web cold-start splash | `src/app/globals.css` (`.motion-splash*`) | The whole wordmark (all eight letters) filled with accent green, scale 1 to 0.8 to 40 over 900ms, then fade. |
 | In-app placements | sidebar, sign-in, onboarding header, plan loader | Wordmark only. The symbol never appears inside the app. |
 
 ### 2.2 Defects found
 
 1. **iOS app icon is the Capacitor placeholder.** `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png` is the blue cross on a white grid, not the F. Any native build ships with it.
-2. **Favicon is the framework default.** `src/app/favicon.ico` is unchanged since the initial commit (black disc, white shape). Browser tabs do not show the brand.
-3. **Native splash does not match the web splash.** The iOS splash image is an all-green wordmark in a different typeface, `#22C55E` on `#0F1A0E`. The web splash is Geist, `#3DDC84` on `#0A0B0A`, with only the F green.
+2. **Favicon is not the brand.** `src/app/favicon.ico` has one commit, the initial one, and renders as a black disc with a white shape. It looks like the framework default. Browser tabs do not show the F.
+3. **Native splash does not match the web splash.** Both show an all-green wordmark, but the iOS image uses a different typeface, `#22C55E` and a `#0F1A0E` ground. The web splash is Geist, `#3DDC84` on `#0A0B0A`. The hand-off from one to the other shifts typeface, green and ground.
 4. **Maskable icon reuses the "any" icon.** It passes the PWA safe zone today (farthest glyph corner is 171 px from centre against a 204.8 px limit) but would exceed the tighter Android adaptive safe zone if reused there.
 5. **No vector source.** The F exists only as PNGs. There is no SVG master and no icon generator in `scripts/`.
 
 ### 2.3 Hard constraints the logo must meet
 
-- **Solid silhouette.** The splash uses the logo as a fill that expands past the viewport. The splash form must have no gaps.
-- **16 px legibility.** The favicon and the 29 pt settings icon are the smallest uses.
+- **Works as a flat fill.** The splash paints the logo as one flat green fill and scales it 40x. Whatever is used there must be a single-colour shape with no internal detail that matters at that scale.
+- **16 px legibility.** The favicon is the smallest use, followed by the small system icon sizes on iOS ([I] about 58 px for Settings at 2x).
 - **Circle-safe.** Android and PWA launchers crop to a circle or squircle.
 - **Single-colour reducible.** iOS tinted and clear modes and Android themed icons recolour a monochrome layer.
 
@@ -91,7 +91,7 @@ Root `DESIGN.md` documents `#22C55E`, Inter and `#0A0A0A`. Shipped CSS and icons
 
 ## 3. Research
 
-Findings marked **[S]** are sourced (links in section 9). Findings marked **[I]** are inference or recalled knowledge and should be checked before they are relied on.
+Findings marked **[S]** are sourced (links under Sources at the end). Findings marked **[I]** are inference or recalled knowledge and should be checked before they are relied on.
 
 ### 3.1 Platform rules
 
@@ -167,7 +167,7 @@ This geometry was proof-rendered at 512, 180, 120, 58, 32 and 16 px. It has not 
 | Below 64 px (favicon, tab, notification) | Solid | 75% of canvas |
 | Android adaptive foreground and monochrome | Segmented | 44% of canvas |
 
-On iOS the system scales the 1024 master down to 58 px for Settings. At that size the gaps are about 1 px and close up toward the solid form. That is acceptable.
+[I] On iOS the system scales the master down to about 58 px for Settings. At that size the gaps are about 1 px and close up toward the solid form. That is acceptable.
 
 ### 4.3 Placement
 
@@ -216,14 +216,14 @@ Green on white is 1.78:1 and is not allowed. On a light surface, use the primary
 
 Motion follows the root system: 150 to 250ms, ease-out-expo, transform and opacity only.
 
-- **Cold-start splash (900ms, existing).** Use the solid silhouette. Keep the current mask-expand behaviour. Segments do not animate here, because the splash must not delay the first glance.
-- **Plan generation.** Segments start at 12% opacity and step to 100% one per stage: E (lower stem) for "Reading your profile", F (upper stem) for "Building your 12 weeks", A (top bar) for "Scheduling sessions", G (mid bar) for "Your plan is ready". Each step is a 200ms opacity change tied to the real stage boundary, never a loop.
+- **Cold-start splash (900ms, existing).** Stays as shipped: the all-green wordmark with the current mask-expand. Segments do not animate here, because the splash must not delay the first glance. Swapping the wordmark for the solid symbol is a possible later change and needs its own test of the 40x expand.
+- **Plan generation.** Segments start at 12% opacity and step to 100% one per stage: E (lower stem) for "Reading your profile", F (upper stem) for "Building your 12 weeks", A (top bar) for "Scheduling sessions", G (mid bar) for "Your plan is ready". Each step is a 200ms opacity change on the stage boundary, never a loop. The loader is currently driven by elapsed time (`planSequence(elapsed)`, 800ms per stage), so the segments would follow that timer at first. Wiring the stages to real generation events is a prerequisite for the rule below to be true.
 - **Coach AI.** No animated logo while streaming. The existing thinking indicator covers it.
 - **Reduced motion.** Show the full mark at once; progress is carried by the stage labels.
 
 ### Named Rules
 
-**The Real Progress Rule.** A segment lights only when a real stage completes. The mark never pulses, spins or shimmers on a timer.
+**The Real Progress Rule.** Target behaviour: a segment lights only when a real stage completes. In every case the mark never pulses, spins or shimmers on a loop.
 
 ## 8. Exports and Follow-ups
 
@@ -232,11 +232,11 @@ Required assets, all generated from one SVG master:
 | Asset | Spec |
 |---|---|
 | `logo-mark.svg`, `logo-mark-solid.svg` | Masters, viewBox 600 x 800 |
-| iOS app icon | Icon Composer file: background layer `#0A0B0A`, one foreground group (segmented mark), mono annotation for clear and tinted. 1024 master, no baked corner radius. |
+| iOS app icon | Icon Composer file: background layer `#0A0B0A`, one foreground group (segmented mark), mono annotation for clear and tinted. [I] 1024 px master with no baked corner radius; confirm against the current Apple page. |
 | PWA icons | 192, 512 ("any"), 512 maskable, apple-touch 180. Segmented, 52%. |
 | Favicon | `icon.svg` (solid, 75%, on its own near-black rounded tile so it survives light tab bars) plus a 32 px `.ico` fallback |
 | Android adaptive (when needed) | 108 dp foreground and monochrome at 44%, background `#0A0B0A` |
-| Native splash | Outlined wordmark, `#3DDC84` F and white INISHER on `#0A0B0A`, matching the web splash |
+| Native splash | Outlined Geist wordmark, all `#3DDC84`, on `#0A0B0A`, matching the first frame of the web splash |
 | OG / store art | Symbol above wordmark on `#0A0B0A` |
 
 Open items outside the logo, found during research:
@@ -253,7 +253,7 @@ Alternates considered and not chosen: keep the plain block F (zero work, but gen
 - **Do** use the segmented form at 64 px and up and the solid form below.
 - **Do** keep the mark in the accent green on near-black, or in a single mono colour.
 - **Do** keep 2u of clear space around the mark.
-- **Do** tie segment lighting to real stage boundaries.
+- **Do** tie segment lighting to stage boundaries, and to real generation events once they exist.
 - **Do** generate every raster from the SVG master.
 
 ### Don't:
